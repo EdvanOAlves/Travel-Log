@@ -28,12 +28,13 @@ Adicione links, prints, commits, PRs ou arquivos relacionados.
 - 
 
 ## Responsáveis
-- Principal:
-- Colaboradores (opcional):
+- Gerencia de Projeto / Representante Front-end / Representante Back-end
+- colaboradores:
 
 ## Impacto / Próximos Passos (opcional)
 Explique se essa tarefa gera continuidade ou se está totalmente finalizada.
 - 
 
 ## Status
-**Concluída**
+**Inicio:**
+**Conclusão:**
