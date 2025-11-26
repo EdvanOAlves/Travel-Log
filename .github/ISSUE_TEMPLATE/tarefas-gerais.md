@@ -2,7 +2,7 @@
 name: Tarefas Gerais
 about: Tarefas não relacionadas a desenvolvimento
 title: "[Chore]"
-labels: ''
+labels: documentation
 assignees: ''
 
 ---
@@ -21,10 +21,14 @@ Qual o propósito desta tarefa?
 - [ ] 
 - [ ] 
 
-## 📎 Recursos / Referências
+## Recursos / Referências
 - Link(s) da documentação atual:
 
-## ✔ Checklist Final
+## Responsáveis
+- Principal:
+- Colaboradores (opcional):
+
+## Checklist Final
 - [ ] Tarefa concluída
 - [ ] Revisada por outro colaborador
 - [ ] Documentação atualizada (se necessário)
