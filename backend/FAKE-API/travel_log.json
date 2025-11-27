@@ -1,0 +1,156 @@
+{
+  "user": [
+            {
+                "id": "1",
+                "nome": "Mercury",
+                "usuario": "mercury.cxs",
+                "email": "mercury@email.com",
+                "telefone": "(11) 91234-2099",
+                "senha": "1234@Mer",
+                "foto_perfil": "user_photo.png",
+                "biografia": "Hi, i'm Mercury! Nice to meet you. ",
+                "data_entrada": "2025-11-20",
+                "status": true
+            },
+            {
+                "id": "2",
+                "nome": "Abyss",
+                "usuario": "Abyss.cxs",
+                "email": "abyss@email.com",
+                "telefone": "(11) 91234-2099",
+                "senha": "1234@Aby",
+                "foto_perfil": "user_photo.png",
+                "biografia": "Hi, i'm Abyss! Nice to meet you. ",
+                "data_entrada": "2025-11-20",
+                "status": true
+            },
+            {
+                "id": "3",
+                "nome": "Akira",
+                "usuario": "akira.cxs",
+                "email": "akira@email.com",
+                "telefone": "(11) 91234-2099",
+                "senha": "1234@Aki",
+                "foto_perfil": "user_photo.png",
+                "biografia": "Hi, i'm Akira! Nice to meet you. ",
+                "data_entrada": "2025-11-20",
+                "status": true
+            }
+    ],
+
+  "travel": [
+
+            {
+                "id": 1,
+                "titulo": "Férias bem legais!!!",
+                "data_inicio": "2025-10-24",
+                "data_fim": "2025-10-24",
+                "link_thumbnail": "http://storage/photo.png",
+                "id_usuario": 1,
+                "id_tipo_viagem": 1
+            },
+            {
+                "id": 2,
+                "titulo": "Férias bem maneiras!!!",
+                "data_inicio": "2025-10-24",
+                "data_fim": "2025-10-24",
+                "link_thumbnail": "http://storage/photo.png",
+                "id_usuario": 1,
+                "id_tipo_viagem": 1
+            },
+            {
+                "id": 3,
+                "titulo": "Férias bem supimpas!!!",
+                "data_inicio": "2025-10-24",
+                "data_fim": "2025-10-24",
+                "link_thumbnail": "http://storage/photo.png",
+                "id_usuario": 1,
+                "id_tipo_viagem": 1
+            }
+
+    ],
+
+    "midia": [
+
+        {
+            
+            "id": 1,
+            "link": "http://storagephoto/midia.png",
+            "index": 1,
+            "id_postagem": 1
+
+        }
+
+    ],
+
+    "log": [
+
+        {
+            "id": 1,
+            "descricao": "Férias nas maldivas, com minha linda companheira no ano de 2025.",
+            "id_collection": 1,
+            "id_local": 1
+        },
+        {
+            "id": 2,
+            "descricao": "Férias na índia, com minha linda companheira no ano de 2025.",
+            "id_collection": 1,
+            "id_local": 1
+        },
+        {
+            "id": 3,
+            "descricao": "Férias no Japão, com minha linda companheira no ano de 2025.",
+            "id_collection": 1,
+            "id_local": 1
+        }
+
+    ],
+
+    "local": [
+
+        {
+            "id": 1,
+            "nome": "SENAI Prof Vicente Amato",
+            "estado": "São Paulo",
+            "cidade": "Jandira",
+            "id_pais": 1
+        },
+        {
+            "id": 2,
+            "nome": "Monte Fuji",
+            "estado": "Shizuoka",
+            "cidade": "Shizuoka",
+            "id_pais": 2
+        },
+        {
+            "id": 3,
+            "nome": "Monte Castello",
+            "estado": "Toscana",
+            "cidade": "Emília-Romanha",
+            "id_pais": 3
+        }
+
+    ],
+
+    "comment": [
+        {
+            "id": 1,
+            "conteudo": "Nossa! Que legal hein cara!!",
+            "usuario": 1,
+            "postagem": 1
+        },
+        {
+            "id": 2,
+            "conteudo": "Nossa! Que legal hein parça!!",
+            "usuario": 1,
+            "postagem": 1
+        },
+        {
+            "id": 3,
+            "conteudo": "Slk! Mó fita em veinho!!",
+            "usuario": 1,
+            "postagem": 1
+        }
+    ]
+    
+}
