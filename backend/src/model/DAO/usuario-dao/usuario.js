@@ -14,13 +14,13 @@ const { PrismaClient } = require('../../../generated/prisma')
 const prisma = new PrismaClient()
 
 //Retorna todos os usuários
-const getSelectAllUsers = () => {
+const getSelectAllUsers = async () => {
 
     try {
     
         sql = "select * from tbl_usuario"
 
-        response = prisma.$queryRawUnsafe(sql)
+        response = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(response)) {
             return response
@@ -35,13 +35,13 @@ const getSelectAllUsers = () => {
 }
 
 //Retorna um usuário pelo id
-const getSelectUserById = (id) => {
+const getSelectUserById = async (id) => {
 
     try {
         
         sql = `select * from tbl_usuario where id = ${id}`
 
-        response = prisma.$queryRawUnsafe(sql)
+        response = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(response)) {
             return response
@@ -56,13 +56,13 @@ const getSelectUserById = (id) => {
 }
 
 //Retorna o último usuário registrado na tabela de usuários
-const getSelectLastUser = () => {
+const getSelectLastUser = async () => {
 
     try {
         
         sql = `select * from tbl_usuario order by id desc limit 1`
 
-        response = prisma.$queryRawUnsafe(sql)
+        response = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(response)) {
             return response
@@ -78,7 +78,7 @@ const getSelectLastUser = () => {
 
 
 //Registra um usuário na tabela de usuários
-const setInsertUser = (user) => {
+const setInsertUser = async (user) => {
 
     try {
         
@@ -102,7 +102,7 @@ const setInsertUser = (user) => {
         );
         `
 
-        response = prisma.$executeRawUnsafe(sql)
+        response = await prisma.$executeRawUnsafe(sql)
 
         if(response) {
             return response
@@ -117,7 +117,7 @@ const setInsertUser = (user) => {
 }
 
 //Atualiza um usuário na tabela de usuários
-const setUpdateUser = (id, user) => {
+const setUpdateUser = async (id, user) => {
 
     try {
         
@@ -134,7 +134,7 @@ const setUpdateUser = (id, user) => {
         where id = ${id}
         `
 
-        response = prisma.$executeRawUnsafe(sql)
+        response = await prisma.$executeRawUnsafe(sql)
 
         if(response) {
             return response
@@ -150,7 +150,7 @@ const setUpdateUser = (id, user) => {
 
 //Desativa um usuário na tabela de usuários
 //Toggle -> significa altenar entre dois estados, nesse caso true ou false.
-const setToggleUser = (id, status) => {
+const setToggleUser = async (id, status) => {
 
      try {
         
@@ -160,7 +160,7 @@ const setToggleUser = (id, status) => {
         where id = ${id}
         `
 
-        response = prisma.$executeRawUnsafe(sql)
+        response = await prisma.$executeRawUnsafe(sql)
 
         if(response) {
             return response
