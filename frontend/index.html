@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style_index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <script src="modulo/login.js" defer></script>
+    <title>TraveLog | Login</title>
+</head>
+
+<body>
+    <div id="backgroundFilterColor"></div>
+    <div id="filterBlack"></div>
+    <header>
+        <h1>TRAVELOG</h1>
+        <img src="" alt="">
+    </header>
+    <main>
+        <div class="backgroundImg"></div>
+        <div class="containerCard">
+            <div class="containerImg">
+                <img src="img/goldenGate.jpg" alt="">
+                <div class="containerLocation">
+                    <img src="img/location.png" alt="">
+                    <span></span>
+                </div>
+            </div>
+            <p>Viajar é colecionar histórias, e cada momento merece ser lembrado. TraveLog foi criado
+                para que você registre suas experiências de forma simples e inspiradora: escreva sobre suas aventuras,
+                compartilhe fotos que capturam emoções e marque os lugares que fizeram parte da sua jornada.
+                Mais do que um diário, é um espaço para reviver emoções, inspirar outras pessoas e construir uma coleção
+                única de momentos. Cada entrada é um capítulo da sua própria narrativa, e cada viagem é uma oportunidade
+                de se conectar com o mundo e com quem você ama.
+            </p>
+            <span>Registre cada passo, eternize cada lembrança.</span>
+        </div>
+        <div id="cardLogin">
+            <span>Login</span>
+            <form class="containerInputsLogin">
+                <input type="text" id="email" autocomplete="off" placeholder="e-mail">
+                <span></span>
+                <input type="text" id="pass" autocomplete="off" placeholder="senha">
+                <span></span>
+            </form>
+            <div class="animationVerify">
+                <div class="circle">
+                    <img src="" alt="">
+                </div>
+                <p>Verificando usuário</p>
+            </div>
+            <div class="containerButtons">
+                <button id="register">Cadastre-se</button>
+                <button id="enter">Entrar</button>
+            </div>
+        </div>
+        <div id="cardRegister">
+            <div class="containerClose">
+                <p>Cadastro</p>
+                <img src="img/closeBlack.png" alt="">
+            </div>
+            <form class="containerInputsRegister" autocomplete="off">
+                <div class="containerInputSpan">
+                    <input type="text" id="name" placeholder="nome">
+                    <span></span>
+                </div>
+                <div class="containerInputSpan">
+                    <input type="text" id="nickname" placeholder="apelido">
+                    <span></span>
+                </div>
+                <div class="containerInputSpan">
+                    <input type="text" id="phone" placeholder="telefone">
+                    <span></span>
+                </div>
+                <div class="containerInputSpan">
+                    <input type="text" id="e_mail" placeholder="e-mail">
+                    <span></span>
+                </div>
+                <div class="containerPassInput">
+                    <input type="password" id="password" placeholder="senha">
+                    <img id="eyePass" src="img/eye.png" alt="">
+                    <div class="notView"></div>
+                </div>
+                <span></span>
+                <div class="containerConfirmPass">
+                    <p>Confirme sua senha</p>
+                    <div class="containerPassInput">
+                        <input type="password" id="confirmPass" placeholder="senha">
+                        <img id="eyeConfirm" src="img/eye.png" alt="">
+                        <div class="notView"></div>
+                    </div>
+                    <span></span>
+                </div>
+            </form>
+            <div class="containerCheckbox">
+                <input type="checkbox" id="checkTerms">
+                <label for="checkTerms">Li e aceito os termos e condições</label>
+            </div>
+            <button id="registerGo">Cadastrar</button>
+        </div>
+        <div id="cardResultRegister">
+            <img src="img/closeBlack.png" alt="">
+            <span>Cadastro concluído com sucesso!</span>
+            <div class="containerButton">
+                <button id="goLogin">Realizar Login</button>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
