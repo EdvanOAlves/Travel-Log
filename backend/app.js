@@ -32,6 +32,13 @@ app.use((req, res, next) => {
     next() // Próximo, carregar os próximos EndPoints 
 })
 
+//Import da rota
+const usuarioRoutes = require("./src/routes/usuario_routes.js")
+
+//EndPoints
+app.use('/v1/travellog', usuarioRoutes)
+
+//EndPoint da documentação
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.listen(PORT, () => {

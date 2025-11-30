@@ -3,7 +3,7 @@
  * de dados da tabela de usuário do BD.
  * Data: 28/11/2025
  * Developer: Gabriel Lacerda Correia
- * Versão: 1.0.0
+ * Versão: 1.0.1
  *********************************************************************/
 
 // Importando funções de dependência de dados do usuário
@@ -20,14 +20,14 @@ const listarUsuarios = async () => {
 
     try {
 
-        resultUsuarios = await usuarioDAO.listarUsuarios()
+        resultUsuarios = await usuarioDAO.getSelectAllUsers()
 
         if (resultUsuarios) {
 
             if (resultUsuarios.length > 0) {
 
-                MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_REQUEST.status
-                MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_REQUEST.status_code
+                MESSAGES.DEFAULT_HEADER.status          = DEFAULT_MESSAGES.SUCCESS_REQUEST.status
+                MESSAGES.DEFAULT_HEADER.status_code     = DEFAULT_MESSAGES.SUCCESS_REQUEST.status_code
                 MESSAGES.DEFAULT_HEADER.items.usuarios  = resultUsuarios
 
                 return MESSAGES.DEFAULT_HEADER //200
@@ -94,16 +94,16 @@ const inserirUsuario = async (usuario, contentType) => {
         
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
-            validarUsuario = validarUsuario(usuario)
+            validaUsuario = validarUsuario(usuario)
 
-            if(!validarUsuario) {
+            if(!validaUsuario) {
 
                 resultUsuario = await usuarioDAO.setInsertUser(usuario)
 
                 if(resultUsuario) {
 
                     ultimoUsuario = await usuarioDAO.getSelectLastUser()
-
+            
                     MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_CREATED_ITEM.status
                     MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_CREATED_ITEM.message
@@ -116,7 +116,7 @@ const inserirUsuario = async (usuario, contentType) => {
                 }
 
             } else {
-                return validarUsuario //400
+                return validaUsuario //400
             }
 
         } else {
@@ -124,6 +124,7 @@ const inserirUsuario = async (usuario, contentType) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -140,11 +141,11 @@ const atualizarUsuario = async (id, usuario, contentType) => {
 
             validarId = await usuarioDAO.getSelectUserById(id) 
 
-            if (validarId.status_code == 200) {
+            if (validarId) {
 
-                validarUsuario = validarUsuario(usuario)
+                validaUsuario = validarUsuario(usuario)
 
-                if(!validar) {
+                if(!validaUsuario) {
 
                     resultUsuario = await usuarioDAO.setUpdateUser(id, usuario)
 
@@ -162,7 +163,7 @@ const atualizarUsuario = async (id, usuario, contentType) => {
                     }
 
                 } else {
-                    return validarUsuario 
+                    return validarUsuario // 400
                 }
 
             } else {
@@ -174,25 +175,28 @@ const atualizarUsuario = async (id, usuario, contentType) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
 }
 
-//Desativar usuário
-const desativarUsuario = async (id, status) => {
+//Desativar ou ativar usuário
+const altenarStatusUsuario = async (status, contentType) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
         
-        validarId = await usuarioDAO.getSelectUserById(id)
+        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
-        if(!validarId) {
+            usuarioId = status.id
 
-            if(typeof status === 'boolean') {
+            validarId = await buscarUsuarioId(usuarioId)
 
-                resultUsuario = await usuarioDAO.setToggleUser(id, status)
+            if (validarId.status_code == 200) {
+
+                resultUsuario = await usuarioDAO.setToggleUser(usuarioId, status)
 
                 if(resultUsuario) {
 
@@ -208,16 +212,17 @@ const desativarUsuario = async (id, status) => {
                 }
 
             } else {
-                return MESSAGES.ERROR_REQUIRED_FIELDS //400
+                return validarId //400, 404, 500
             }
 
         } else {
-            return validarId //400 ou 404 ou 500
+            return MESSAGES.ERROR_CONTENT_TYPE //415
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
-    }
+    }        
 
 }
 
@@ -226,38 +231,51 @@ const validarUsuario = (usuario) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
-    if (usuario.nome == null || usuario.nome == undefined || usuario.nome == "" || !isNaN(usuario.nome) || usuario.nome.length > 100) {
+    if (usuario.nome == null || usuario.nome == undefined || usuario.nome == "" || typeof usuario.nome !== "string" || usuario.nome.length > 100) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.apelido == null || usuario.apelido == undefined || usuario.apelido == "" || !isNaN(usuario.apelido) || usuario.apelido.length > 100) {
+    } else if (usuario.apelido == null || usuario.apelido == undefined || usuario.apelido == "" || typeof usuario.telefone !== "string" || usuario.apelido.length > 25) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [APELIDO INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.email == null || usuario.email == undefined || usuario.email == "" || !isNaN(usuario.email) || usuario.email.length > 100) {
+    } else if (usuario.email == null || usuario.email == undefined || usuario.email == "" || typeof usuario.telefone !==  "string" || usuario.email.length > 255) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [EMAIL INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.telefone == null || usuario.telefone == undefined || usuario.telefone == "" || !isNaN(usuario.telefone) || usuario.telefone.length > 100) {
+    } else if (usuario.telefone == null || usuario.telefone == undefined || usuario.telefone == "" || typeof usuario.telefone !==  "string" || usuario.telefone.length > 20) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [TELEFONE INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.senha == null || usuario.senha == undefined || usuario.senha == "" || !isNaN(usuario.senha) || usuario.senha.length > 100) {
+    } else if (usuario.senha == null || usuario.senha == undefined || usuario.senha == "" || typeof usuario.telefone !== "string" || usuario.senha.length > 25) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [SENHA INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.foto_perfil == undefined || !isNaN(usuario.foto_perfil) || usuario.foto_perfil.length > 255) {
+    } else if (usuario.foto_perfil == undefined || typeof usuario.telefone !== "string" || usuario.foto_perfil.length > 255) {
         
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [FOTO DE PERFIL INCORRETA]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.descricao == undefined || !isNaN(usuario.descricao) || usuario.descricao.length > 250) {
+    } else if (usuario.descricao == undefined || typeof usuario.telefone !== "string" || usuario.descricao.length > 250) {
         
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [DESCRICAO INCORRETA]'
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+
+    } else {
+        return false
     }
 
-} 
+}
+
+module.exports = {
+    listarUsuarios,
+    buscarUsuarioId,
+    inserirUsuario,
+    atualizarUsuario,
+    altenarStatusUsuario
+}

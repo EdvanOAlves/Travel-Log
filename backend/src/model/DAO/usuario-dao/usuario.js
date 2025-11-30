@@ -6,24 +6,24 @@
  * Versão: 1.0.0
  *********************************************************************/
 
-//Importando dependência do prisma responsável por executar scripts SQL no BD.
-const { response } = require('express')
-const { PrismaClient } = require('../../../generated/prisma')
+// Import da dependência do client do prisma para conexão com o BD.
+const { PrismaClient } = require("../../../generated/prisma")
 
-//Criando objeto novo objeto da classe PrismaClient
+// Criando novo objeto baseado na classe PrismaClient
 const prisma = new PrismaClient()
+
 
 //Retorna todos os usuários
 const getSelectAllUsers = async () => {
 
     try {
-    
+        
         sql = "select * from tbl_usuario"
 
-        response = await prisma.$queryRawUnsafe(sql)
-
-        if(Array.isArray(response)) {
-            return response
+        result = await prisma.$queryRawUnsafe(sql)    
+        
+        if(Array.isArray(result)) {
+            return result
         } else {
             return false
         }
@@ -41,10 +41,10 @@ const getSelectUserById = async (id) => {
         
         sql = `select * from tbl_usuario where id = ${id}`
 
-        response = await prisma.$queryRawUnsafe(sql)
-
-        if(Array.isArray(response)) {
-            return response
+        result = await prisma.$queryRawUnsafe(sql)
+        
+        if(Array.isArray(result)) {
+            return result
         } else {
             return false
         }
@@ -62,10 +62,10 @@ const getSelectLastUser = async () => {
         
         sql = `select * from tbl_usuario order by id desc limit 1`
 
-        response = await prisma.$queryRawUnsafe(sql)
+        result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(response)) {
-            return response
+        if(Array.isArray(result)) {
+            return result
         } else {
             return false
         }
@@ -75,7 +75,6 @@ const getSelectLastUser = async () => {
     }
 
 }
-
 
 //Registra um usuário na tabela de usuários
 const setInsertUser = async (user) => {
@@ -89,28 +88,31 @@ const setInsertUser = async (user) => {
             email,
             telefone,
             senha,
-            data_cadastro,
+            link_foto_perfil,
+            descricao,
+            data_cadastro
         ) VALUES (
-        
             '${user.nome}',
             '${user.apelido}',
             '${user.email}',
             '${user.telefone}',
             '${user.senha}',
-            'curdate()'
-
-        );
+            '${user.foto_perfil}',
+            '${user.descricao}',
+            curdate()
+        )
         `
+        
+        result = await prisma.$executeRawUnsafe(sql)
 
-        response = await prisma.$executeRawUnsafe(sql)
-
-        if(response) {
-            return response
+        if(result) {
+            return result
         } else {
             return false
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 
@@ -134,10 +136,10 @@ const setUpdateUser = async (id, user) => {
         where id = ${id}
         `
 
-        response = await prisma.$executeRawUnsafe(sql)
+        result = await prisma.$executeRawUnsafe(sql)
 
-        if(response) {
-            return response
+        if(result) {
+            return result
         } else {
             return false
         }
@@ -156,14 +158,14 @@ const setToggleUser = async (id, status) => {
         
         sql = `
         update tbl_usuario set
-        ativo = '${status.tipo}'
+        ativo = ${status.tipo}
         where id = ${id}
         `
 
-        response = await prisma.$executeRawUnsafe(sql)
+        result = await prisma.$executeRawUnsafe(sql)
 
-        if(response) {
-            return response
+        if(result) {
+            return result
         } else {
             return false
         }
