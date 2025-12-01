@@ -13,9 +13,9 @@ CREATE TABLE tbl_usuario(
 	apelido VARCHAR(25) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	telefone VARCHAR(20) NOT NULL,
-	senha VARCHAR(25) NOT NULL,  -- Realizar criptografia
+	senha VARCHAR(60) NOT NULL,  -- Utilizar do bcrypt para criptografar a senha
 	data_cadastro DATE NOT NULL,
-	link_foto_perfil VARCHAR(255) NULL,
+	foto_perfil VARCHAR(255) NULL,
 	descricao VARCHAR(250) NULL,
 	ativo BOOLEAN DEFAULT TRUE
 );
@@ -48,7 +48,7 @@ CREATE TABLE tbl_viagem(
 	titulo VARCHAR(50) NOT NULL,
 	data_inicio DATE NOT NULL,
 	data_fim DATE NULL,
-	link_thumbnail VARCHAR(255) NOT NULL,
+	thumbnail VARCHAR(255) NOT NULL,
 	usuario_id INT NOT NULL,
 	tipo_viagem_id INT NOT NULL,
 
@@ -132,6 +132,6 @@ CREATE TABLE tbl_curtida(
 CREATE TABLE tbl_seguidor(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     data_inicio DATE NOT NULL,
-    seguido_id INT NOT NULL,
+    usuario_id INT NOT NULL,
     seguidor_id INT NOT NULL,
 )
