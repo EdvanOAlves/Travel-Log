@@ -1,9 +1,9 @@
 CREATE DATABASE db_travelog_ds2m;
 USE db_travelog_ds2m;
 
-----------------------------------------------------------
+-- --------------------------------------------------------
 -- ENTIDADES CENTRAIS
-----------------------------------------------------------
+-- --------------------------------------------------------
 
 -- REFERENTE A USUARIO
 	-- Usuario
@@ -17,7 +17,7 @@ CREATE TABLE tbl_usuario(
 	data_cadastro DATE NOT NULL,
 	link_foto_perfil VARCHAR(255) NULL,
 	descricao VARCHAR(250) NULL,
-	ativa BOOLEAN DEFAULT TRUE,
+	ativo BOOLEAN DEFAULT TRUE
 );
 
 -- REFERENTE A LOCAL
@@ -112,7 +112,7 @@ CREATE TABLE tbl_favorito(
     FOREIGN KEY(usuario_id) REFERENCES tbl_usuario(id),
 
     CONSTRAINT fk_favorito_log
-    FOREIGN KEY (log_id) REFERENCES tbl_log
+    FOREIGN KEY (log_id) REFERENCES tbl_log(id)
 );
 
 	-- Curtida
@@ -130,7 +130,8 @@ CREATE TABLE tbl_curtida(
 
 	-- Seguidor
 CREATE TABLE tbl_seguidor(
-    data_inicio DATE NOT NULL
+	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    data_inicio DATE NOT NULL,
     seguido_id INT NOT NULL,
     seguidor_id INT NOT NULL,
 )
