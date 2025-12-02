@@ -12,27 +12,6 @@ const { PrismaClient } = require("../../../generated/prisma")
 // Criando novo objeto baseado na classe PrismaClient
 const prisma = new PrismaClient()
 
-//Retorna todos os seguidores de determinado usuário
-const getSelectFollowersByUserId = async (id) => {
-
-    try {
-        
-        sql = `CALL ListarSeguidores(${id})`
-
-        result = await prisma.$queryRawUnsafe(sql)
-        
-        if(Array.isArray(result)) {
-            return result
-        } else {
-            return false
-        }
-
-    } catch (error) {
-        return false
-    }
-
-}
-
 //Retorna o última relação registrada
 const getSelectLastFollow = async () => {
 
@@ -97,7 +76,6 @@ const setDeleteFollower = async (follow) => {
 }
 
 module.exports = {
-    getSelectFollowersByUserId,
     getSelectLastFollow,
     setInsertFollower,
     setDeleteFollower
