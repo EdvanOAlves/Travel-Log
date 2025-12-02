@@ -3,7 +3,9 @@
  * de dados da tabela de usuário do BD.
  * Data: 28/11/2025
  * Developer: Gabriel Lacerda Correia
- * Versão: 1.0.1
+ * Versão: 
+ * 1.0.0 # Somente informações básicas
+ * 1.0.1 # Adiciona seguidores dos usuários nos gets
  *********************************************************************/
 
 // Importando funções de dependência de dados do usuário
@@ -11,6 +13,9 @@ const usuarioDAO = require("../../model/DAO/usuario-dao/usuario.js")
 
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
+
+// Importando arquivo de relação entre usuário e seguidor
+const usuarioSeguidorController = require("./controller_usuario_seguidor.js")
 
 //Listar todos os usuários
 const listarUsuarios = async () => {
@@ -26,9 +31,46 @@ const listarUsuarios = async () => {
 
             if (resultUsuarios.length > 0) {
 
-                MESSAGES.DEFAULT_HEADER.status          = DEFAULT_MESSAGES.SUCCESS_REQUEST.status
-                MESSAGES.DEFAULT_HEADER.status_code     = DEFAULT_MESSAGES.SUCCESS_REQUEST.status_code
-                MESSAGES.DEFAULT_HEADER.items.usuarios  = resultUsuarios
+                for (usuario of resultUsuarios) {
+                    
+                    resultSeguidores = await usuarioSeguidorController
+                                        .listarSeguidoresUsuarioid(usuario.id)
+
+                    arraySeguidores = resultSeguidores.items.seguidores
+
+                    seguidores = []
+
+                    for(seguidor of arraySeguidores) {
+                        
+                        id = seguidor.id_seguidor
+
+                        resultUsuario = await usuarioDAO.getSelectUserById(id)
+
+                        usuarioObject = resultUsuario[0]
+
+                        seguidores.push({
+
+                            id: usuarioObject.id,
+                            nome: usuarioObject.nome,
+                            apelido: usuarioObject.apelido,
+                            foto_perfil: usuarioObject.link_foto_perfil
+
+                        })
+
+
+                    }
+
+                    
+                    usuario.qtd_seguidores  = arraySeguidores.length
+                    usuario.seguidores      = seguidores
+
+                }
+
+                delete MESSAGES.DEFAULT_HEADER.items.seguidores
+
+                MESSAGES.DEFAULT_HEADER.status         = DEFAULT_MESSAGES.SUCCESS_REQUEST.status
+                MESSAGES.DEFAULT_HEADER.status_code    = DEFAULT_MESSAGES.SUCCESS_REQUEST.status_code
+                MESSAGES.DEFAULT_HEADER.items.usuario  = resultUsuarios
 
                 return MESSAGES.DEFAULT_HEADER //200
 
@@ -61,6 +103,41 @@ const buscarUsuarioId = async (id) => {
 
                 if (resultUsuario.length > 0) {
 
+                    for (usuario of resultUsuario) {
+                    
+                        resultSeguidores = await usuarioSeguidorController
+                                            .listarSeguidoresUsuarioid(usuario.id)
+
+                        arraySeguidores = resultSeguidores.items.seguidores
+
+                        seguidores = []
+
+                        for(seguidor of arraySeguidores) {
+                            
+                            id = seguidor.id_seguidor
+
+                            resultSeguidor = await usuarioDAO.getSelectUserById(id)
+
+                            usuarioObject = resultSeguidor[0]
+
+                            seguidores.push({
+
+                                id: usuarioObject.id,
+                                nome: usuarioObject.nome,
+                                apelido: usuarioObject.apelido,
+                                foto_perfil: usuarioObject.link_foto_perfil
+
+                            })
+
+                        }
+
+                        usuario.qtd_seguidores  = arraySeguidores.length
+                        usuario.seguidores = seguidores
+
+                    }
+
+                    delete  MESSAGES.DEFAULT_HEADER.items.seguidores
+
                     MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.usuario   = resultUsuario
@@ -80,6 +157,7 @@ const buscarUsuarioId = async (id) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
