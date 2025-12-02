@@ -15,17 +15,6 @@ const bodyParser = require('body-parser')    // Responsável por gerenciar a che
 
 const bodyParserJSON = bodyParser.json()
 
-router.get('/follow/:id', cors(), async (req, res) => {
-
-    const id = req.params.id
-
-    const seguidor = await controllerSeguidor.listarSeguidores(id)
-
-    res.status(seguidor.status_code)
-    res.json(seguidor)
-
-})
-
 router.post('/follow', cors(), bodyParserJSON, async (req, res) => {
 
     const dadosBody     = req.body
