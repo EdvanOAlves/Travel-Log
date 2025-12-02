@@ -2,7 +2,7 @@
 -- PROCEDURES SEGUIDOR
 -- --------------------------------------------------------
 DELIMITER $$
-
+-- Para seguir um usuário
 CREATE PROCEDURE criar_relacao_seguidor(
     IN input_usuario_id INT,
     IN input_seguidor_id INT
@@ -44,7 +44,7 @@ BEGIN
             AND seguidor_id = input_seguidor_id;
     END IF;
 END $$
-
+-- Para deixar de seguir um usuário
 CREATE PROCEDURE remover_relacao_seguidor(
     IN input_usuario_id INT,
     IN input_seguidor INT
@@ -67,6 +67,18 @@ BEGIN
             -- deletando registro
             DELETE FROM tbl_seguidor
             WHERE id = id_relacao
-        END IF;
-    END$$
+    END IF;
+END$$
+
+-- Para remover todas as relações (tanto de seguidor como sendo seguido)
+-- que o usuário está registrado, quando ele for desativado
+CREATE PROCEDURE remover_relacoes_seguidores(
+    IN input_usuario_id INT
+)
+BEGIN
+    DELETE FROM tbl_seguidor
+    WHERE usuario_id = input_usuario_id
+    OR seguidor_id = input_usuario_id;
+END$$
+
 DELIMITER ;
