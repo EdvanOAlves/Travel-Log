@@ -13,7 +13,7 @@ const dataAtual = new Date()
 const DEFAULT_HEADER = 
 {
     development: "Gabriel Lacerda",
-    api_description: 'API para manipular dados de filmes',
+    api_description: 'API para manipular dados de usuários',
     status: Boolean,
     status_code: Number,
     request_date: dataAtual.toString(),
