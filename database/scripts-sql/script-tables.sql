@@ -1,9 +1,9 @@
 CREATE DATABASE db_travelog_ds2m;
 USE db_travelog_ds2m;
 
-----------------------------------------------------------
+-- --------------------------------------------------------
 -- ENTIDADES CENTRAIS
-----------------------------------------------------------
+-- --------------------------------------------------------
 
 -- REFERENTE A USUARIO
 	-- Usuario
@@ -13,11 +13,11 @@ CREATE TABLE tbl_usuario(
 	apelido VARCHAR(25) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	telefone VARCHAR(20) NOT NULL,
-	senha VARCHAR(25) NOT NULL,  -- Realizar criptografia
+	senha VARCHAR(60) NOT NULL,  -- Utilizar do bcrypt para criptografar a senha
 	data_cadastro DATE NOT NULL,
-	link_foto_perfil VARCHAR(255) NULL,
+	foto_perfil VARCHAR(255) NULL,
 	descricao VARCHAR(250) NULL,
-	ativa BOOLEAN DEFAULT TRUE,
+	ativo BOOLEAN DEFAULT TRUE
 );
 
 -- REFERENTE A LOCAL
@@ -48,9 +48,10 @@ CREATE TABLE tbl_viagem(
 	titulo VARCHAR(50) NOT NULL,
 	data_inicio DATE NOT NULL,
 	data_fim DATE NULL,
-	link_thumbnail VARCHAR(255) NOT NULL,
+	thumbnail VARCHAR(255) NULL,
 	usuario_id INT NOT NULL,
 	tipo_viagem_id INT NOT NULL,
+	visivel BOOLEAN DEFAULT TRUE,
 
 	CONSTRAINT fk_viagem_usuario
 	FOREIGN KEY (usuario_id) REFERENCES tbl_usuario(id),
@@ -112,7 +113,7 @@ CREATE TABLE tbl_favorito(
     FOREIGN KEY(usuario_id) REFERENCES tbl_usuario(id),
 
     CONSTRAINT fk_favorito_log
-    FOREIGN KEY (log_id) REFERENCES tbl_log
+    FOREIGN KEY (log_id) REFERENCES tbl_log(id)
 );
 
 	-- Curtida
@@ -130,7 +131,8 @@ CREATE TABLE tbl_curtida(
 
 	-- Seguidor
 CREATE TABLE tbl_seguidor(
-    data_inicio DATE NOT NULL
-    seguido_id INT NOT NULL,
-    seguidor_id INT NOT NULL,
+	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    data_inicio DATE NOT NULL,
+    usuario_id INT NOT NULL,
+    seguidor_id INT NOT NULL
 )
