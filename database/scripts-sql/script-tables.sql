@@ -51,6 +51,7 @@ CREATE TABLE tbl_viagem(
 	thumbnail VARCHAR(255) NULL,
 	usuario_id INT NOT NULL,
 	tipo_viagem_id INT NOT NULL,
+	visivel BOOLEAN DEFAULT TRUE,
 
 	CONSTRAINT fk_viagem_usuario
 	FOREIGN KEY (usuario_id) REFERENCES tbl_usuario(id),

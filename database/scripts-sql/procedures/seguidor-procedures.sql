@@ -1,8 +1,6 @@
 -- --------------------------------------------------------
--- PROCEDURES DE INTERAÇÃO
+-- PROCEDURES SEGUIDOR
 -- --------------------------------------------------------
-
--- Seguidor
 DELIMITER $$
 
 CREATE PROCEDURE criar_relacao_seguidor(
