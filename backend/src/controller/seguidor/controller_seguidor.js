@@ -12,101 +12,6 @@ const seguidorDAO = require("../../model/DAO/seguidor-dao/seguidor.js")
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
-const usuarioController = require("../usuario/controller_usuario")
-
-//Retorna todos os seguidores de determinado usuário
-const listarSeguidores = async (id) => {
-
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
-    try {
-        
-        validarId = await usuarioController.buscarUsuarioId(id)
-
-        if (validarId.status_code == 200) {
-
-            resultSeguidores = await seguidorDAO.getSelectFollowersByUserId(id)
-
-            //Nescessário por conta de estar utilizando uma procedure
-
-            /*
-            
-            Não é um problema no código nem na procedure, e sim no driver
-            de conexão (PrismaClient), que executa de maneira "errada" a
-            procedure e acaba retornando: {f0: 2}
-
-            */
-
-            // Percorre cada elemento do array, aplica a modifição e guarda
-            //na variável nova
-            resultadosFormatados = resultSeguidores.map( atributo => {
-                //callback
-                return {
-                    //Mapeando atributo default do banco
-                    id: atributo.f0
-                }
-            })
-
-            if(resultSeguidores) {
-
-                if(resultSeguidores.length > 0) {
-
-                    let seguidores = []
-
-                    for (let seguidor of resultadosFormatados) {
-
-                        idSeguidor = seguidor.id
-
-                        buscarUsuario = await usuarioController.buscarUsuarioId(idSeguidor)
-
-                        if(buscarUsuario.status_code == 200) {
-
-
-                            usuarioEntity = buscarUsuario.items.usuario[0]
-
-                            seguidores.push(
-                                {
-                                    id: usuarioEntity.id,
-                                    nome: usuarioEntity.nome,
-                                    apelido: usuarioEntity.apelido,
-                                    foto_perfil: usuarioEntity.link_foto_perfil
-                                }
-                            )
-
-                        } else {
-                            return buscarUsuario //400 ou 404 ou 500
-                        }
-
-                    }
-
-                    // Necessário, pois usamos a função buscarUsuarioId para retorna os
-                    //atributos dos seguidores (id, nome, apelido)
-                    delete MESSAGES.DEFAULT_HEADER.items.usuario
-
-                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.seguidores    = seguidores
-
-                    return MESSAGES.DEFAULT_HEADER //200
-
-                } else {
-                    return MESSAGES.ERROR_NOT_FOUND //404
-                }
-
-            } else {
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-            }
-
-        } else {
-            return validarId //400 ou 404 ou 500
-        }
-
-    } catch (error) {
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
-    }
-
-}
-
 //Segue um determinado usuário
 const segueUsuario = async (follow_up, contentType) => {
 
@@ -226,7 +131,6 @@ const validarFollow = (follow) => {
 }
 
 module.exports = {
-    listarSeguidores,
     segueUsuario,
     unfollowUsuario
 }
