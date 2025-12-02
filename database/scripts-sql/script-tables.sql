@@ -48,7 +48,7 @@ CREATE TABLE tbl_viagem(
 	titulo VARCHAR(50) NOT NULL,
 	data_inicio DATE NOT NULL,
 	data_fim DATE NULL,
-	thumbnail VARCHAR(255) NOT NULL,
+	thumbnail VARCHAR(255) NULL,
 	usuario_id INT NOT NULL,
 	tipo_viagem_id INT NOT NULL,
 
@@ -133,5 +133,5 @@ CREATE TABLE tbl_seguidor(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     data_inicio DATE NOT NULL,
     usuario_id INT NOT NULL,
-    seguidor_id INT NOT NULL,
+    seguidor_id INT NOT NULL
 )
