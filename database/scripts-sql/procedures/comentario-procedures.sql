@@ -83,6 +83,26 @@ BEGIN
 	END IF;
 END$$
 
--- esconder comentários por id de usuário (para desativação de usuário)
+-- desativar comentários por id de usuário (para desativação de usuário)
+CREATE PROCEDURE desativar_comentarios(IN input_usuario_id INT)
+BEGIN	
+    DECLARE usuario_existe INT;
+        -- Verificando existencia de input no db
+    SELECT COUNT(id) FROM tbl_usuario WHERE id = input_usuario_id INTO usuario_existe;
 
-DELIMITER $$
+    -- Caso de erro
+    IF usuario_existe = 0
+    THEN
+        SELECT "ERRO_404: O usuário inserido não foi encontrado na base de dados" message;
+        /*
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'ERRO_404: O usuário inserido não foi encontrado na base de dados';
+        */
+    ELSE
+		UPDATE tbl_comentario
+        SET visivel = 0
+        WHERE usuario_id = input_usuario_id;
+    END IF;
+END$$
+
+DELIMITER ;
