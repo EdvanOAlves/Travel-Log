@@ -89,7 +89,7 @@ CREATE TABLE tbl_log_midia(
 	log_id INT NOT NULL,
 
 	CONSTRAINT fk_midia_log
-	FOREIGN KEY (log_id) REFERENCES tbl_log(id);
+	FOREIGN KEY (log_id) REFERENCES tbl_log(id)
 
 );
 
@@ -144,8 +144,8 @@ CREATE TABLE tbl_seguidor(
     seguidor_id INT NOT NULL, -- O usuario que segue
 
 	CONSTRAINT fk_seguidor_usuario_seguido
-	FOREIGN KEY (usuario_id) REFERENCES tbl_usuario(id);
+	FOREIGN KEY (usuario_id) REFERENCES tbl_usuario(id),
 
 	CONSTRAINT fk_seguidor_usuario_seguidor
-	FOREIGN KEY (seguidor_id) REFERENCES tbl_usuario(id);
+	FOREIGN KEY (seguidor_id) REFERENCES tbl_usuario(id)
 );
