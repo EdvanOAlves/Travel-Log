@@ -13,7 +13,7 @@ CREATE TABLE tbl_usuario(
 	apelido VARCHAR(25) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	telefone VARCHAR(20) NOT NULL,
-	senha VARCHAR(60) NOT NULL,  -- Utilizar do bcrypt para criptografar a senha
+	senha VARCHAR(60) NOT NULL,  -- Utilizar do bcrypt em backend para criptografar a senha
 	data_cadastro DATE NOT NULL,
 	foto_perfil VARCHAR(255) NULL,
 	descricao VARCHAR(250) NULL,
@@ -126,13 +126,19 @@ CREATE TABLE tbl_curtida(
     FOREIGN KEY(usuario_id) REFERENCES tbl_usuario(id),
 
     CONSTRAINT fk_curtida_log
-    FOREIGN KEY (log_id) REFERENCES tbl_log
+    FOREIGN KEY (log_id) REFERENCES tbl_log(id)
 );
 
 	-- Seguidor
 CREATE TABLE tbl_seguidor(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     data_inicio DATE NOT NULL,
-    usuario_id INT NOT NULL,
-    seguidor_id INT NOT NULL
-)
+    usuario_id INT NOT NULL, -- O usuario que é seguido
+    seguidor_id INT NOT NULL, -- O usuario que segue
+
+	CONSTRAINT fk_seguidor_usuario_seguido
+	FOREIGN KEY (usuario_id) REFERENCES tbl_usuario(id);
+
+	CONSTRAINT fk_seguidor_usuario_seguidor
+	FOREIGN KEY (seguidor_id) REFERENCES tbl_usuario(id);
+);
