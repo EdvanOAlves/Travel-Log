@@ -32,7 +32,10 @@ CREATE TABLE tbl_local(
 	nome VARCHAR(255) NOT NULL,
 	estado VARCHAR(75) NULL,
 	cidade VARCHAR(75) NULL,
-	pais_id INT NOT NULL
+	pais_id INT NOT NULL,
+
+	CONSTRAINT fk_local_pais
+	FOREIGN KEY (pais_id) REFERENCES tbl_pais(id)
 );
 
 -- REFERENTE AO CONTEÚDO
@@ -82,7 +85,12 @@ CREATE TABLE tbl_log(
 CREATE TABLE tbl_log_midia(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     link VARCHAR(255) NOT NULL,
-    indice INT NOT NULL
+    indice INT NOT NULL,
+	log_id INT NOT NULL,
+
+	CONSTRAINT fk_midia_log
+	FOREIGN KEY (log_id) REFERENCES tbl_log(id);
+
 );
 
 
@@ -101,7 +109,6 @@ CREATE TABLE tbl_comentario(
 
     CONSTRAINT fk_comentario_log
     FOREIGN KEY (log_id) REFERENCES tbl_log(id)
-
 );
 	-- Favorito
 CREATE TABLE tbl_favorito(
