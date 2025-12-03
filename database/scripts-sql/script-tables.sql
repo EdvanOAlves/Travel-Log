@@ -13,7 +13,7 @@ CREATE TABLE tbl_usuario(
 	apelido VARCHAR(25) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	telefone VARCHAR(20) NOT NULL,
-	senha VARCHAR(60) NOT NULL,  -- Utilizar do bcrypt em backend para criptografar a senha
+	senha VARCHAR(75) NOT NULL,  -- Utilizar do bcrypt em backend para criptografar a senha
 	data_cadastro DATE NOT NULL,
 	foto_perfil VARCHAR(255) NULL,
 	descricao VARCHAR(250) NULL,
