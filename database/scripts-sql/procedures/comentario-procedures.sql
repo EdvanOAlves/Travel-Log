@@ -62,7 +62,27 @@ BEGIN
 	END IF;
 END$$ 
 
--- Deletar um comentário por id
--- deletar comentários por id de usuário (para desativação)
+-- Desativar um comentário por id
+CREATE PROCEDURE desativar_comentario(IN input_comentario_id INT)
+BEGIN
+	DECLARE comentario_existe INT;
+    -- Verificando a existencia do comentario
+    SELECT COUNT(id) FROM tbl_comentario WHERE id = input_comentario_id INTO comentario_existe;
+    -- Caso de erro
+    IF comentario_existe = 0
+    THEN
+        SELECT "ERRO_404: O comentario inserido não foi encontrado na base de dados" message;
+        /*
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'ERRO_404: O comentario inserido não foi encontrado na base de dados';
+        */
+	ELSE 
+		UPDATE tbl_comentario
+        SET visivel = 0
+        WHERE id = input_comentario_id;
+	END IF;
+END$$
+
+-- esconder comentários por id de usuário (para desativação de usuário)
 
 DELIMITER $$
