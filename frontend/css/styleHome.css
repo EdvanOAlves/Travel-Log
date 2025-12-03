@@ -116,7 +116,7 @@ header {
 
 main {
     width: 100%;
-    height: calc(100% - 150px);
+    height: calc(100% - 140px);
     padding-top: 15px;
 }
 
@@ -183,7 +183,7 @@ main {
     flex-direction: column;
     width: 100%;
     height: calc(100% - 50px);
-    padding: 0px 15px 0px 15px;
+    padding: 15px 15px 15px 15px;
     gap: 15px;
     overflow: auto;
 }
@@ -272,13 +272,13 @@ main {
     align-items: center;
     width: 10%;
     height: 100%;
-    gap: 4px;
-    padding-top: 14px;
+    gap: 3px;
+    padding-top: 13px;
 }
 
 .likesLog img {
     width: auto;
-    height: 14px;
+    height: 15px;
 }
 
 .likesLog span {
@@ -288,12 +288,11 @@ main {
 .favLog {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     width: 10%;
     height: 100%;
     gap: 3px;
-    padding-top: 8px;
+    padding-top: 13px;
 }
 
 .favLog img {
@@ -308,9 +307,9 @@ main {
 .containerLocationLog {
     display: flex;
     justify-content: end;
-    align-items: end;
     width: 80%;
     height: 70%;
+    padding-top: 13px;
     gap: 5px;
     padding-right: 5px;
 }
@@ -322,6 +321,7 @@ main {
 
 .locationLog {
     font-size: 14px;
+    padding-top: 4px;
 }
 
 #navMob {
@@ -389,13 +389,36 @@ main {
         height: 450px;
     }
 
+    .likesLog {
+        padding-top: 10px;
+    }
+
+    .likesLog img {
+        width: auto;
+        height: 20px;
+    }
+
+    .favLog {
+        padding-top: 10px;
+    }
+
+    .containerLocationLog {
+        padding-top: 10px;
+    }
+
+
+    .favLog img {
+        width: auto;
+        height: 20px;
+    }
+
     #sectionFollowersTerms {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         width: 35%;
         height: 100%;
-        padding: 15px 14px 15px 15px;
+        padding: 15px;
     }
 
     .containerFollowerSearch {
@@ -474,9 +497,15 @@ main {
         border-radius: 100%;
     }
 
-    .containerButtonNewSection {
+    .containerButtonLogFollower {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
+        width: 100%;
+    }
+
+    #newLogSection {
+        all: unset;
+        display: flex;
         align-items: center;
         width: 100%;
         height: 40px;
@@ -488,21 +517,18 @@ main {
         border-width: 2px;
     }
 
-    .containerButtonNewSection img {
-        width: 17px;
+    #newLogSection img {
+        width: auto;
+        height: 15px;
     }
 
-    #newLogSection {
-        all: unset;
+    #newLogSection span {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 90%;
+        width: calc(100% - 15px);
         height: 100%;
-        padding-right: 15px;
-        border-top-right-radius: 30px;
-        border-bottom-right-radius: 30px;
-        background-color: var(--cinza_default);
+        padding-right: 10px;
     }
 
     #navMob div {
@@ -546,8 +572,7 @@ main {
 
     #containerLogs {
         align-items: center;
-        width: 80%;
-        padding-bottom: 15px;
+        width: 73%;
     }
 
     .log {
@@ -556,8 +581,34 @@ main {
         min-height: 680px;
     }
 
+    .likesLog {
+        width: 7%;
+        padding-top: 10px;
+    }
+
+    .likesLog img {
+        width: auto;
+        height: 20px;
+    }
+
+    .favLog {
+        width: 5%;
+        padding-top: 10px;
+    }
+
+    .containerLocationLog {
+        width: 88%;
+        padding-top: 10px;
+    }
+
+
+    .favLog img {
+        width: auto;
+        height: 20px;
+    }
+
     #sectionFollowersTerms {
-        width: 20%;
+        width: 27%;
     }
 
     #navMob {
@@ -575,8 +626,6 @@ main {
         box-shadow: var(--default_shadow);
         border-radius: 20px;
     }
-
-
 
     #navDesk h1 {
         font-size: 2rem;
@@ -685,4 +734,49 @@ main {
         width: auto;
         height: 80%;
     }
+
+    .containerButtonLogFollower {
+        justify-content: start;
+    }
+
+    #newLogSection {
+        all: unset;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 30px;
+        background-color: var(--cinza_default);
+        transition: 0.5s ease-in-out;
+        border-style: solid;
+        border-color: var(--cinza_escuro);
+        border-width: 2px;
+    }
+
+    #newLogSection:hover {
+        width: 100%;
+    }
+
+    #newLogSection:hover span {
+        opacity: 1;
+    }
+
+    #newLogSection:hover img {
+        transform: rotate(360deg);
+    }
+
+    #newLogSection img {
+        width: auto;
+        height: 20px;
+        margin-right: -35px;
+        transition: 1.5s ease-in-out;
+    }
+
+    #newLogSection span {
+        opacity: 0;
+        transition: 0.5s ease-in-out;
+    }
+
+
 }
