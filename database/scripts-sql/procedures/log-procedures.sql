@@ -3,9 +3,9 @@
 -- --------------------------------------------------------
 DELIMITER $$
 -- Para publicar um log
+-- Não vai precisar passar a data
 CREATE PROCEDURE publicar_log(
     IN input_descricao VARCHAR(1500),
-    IN input_data_publicacao DATE DEFAULT '1000-01-01', -- Default é um valor para ser substituido por current_date
     IN input_viagem_id INT,
     IN input_visivel BOOLEAN,
     -- IN local_id INT,
@@ -18,6 +18,7 @@ CREATE PROCEDURE publicar_log(
 )
 BEGIN 
     DECLARE viagem_existe INT;
+    DECLARE created_local_id INT;
 
     -- Verificando existencia de inputs no db
     SELECT COUNT(id) FROM tbl_viagem WHERE id = input_viagem_id INTO viagem_existe;
@@ -25,16 +26,15 @@ BEGIN
     -- Caso de erro
     IF viagem_existe = 0
     THEN
-        SELECT "ERRO_404: A viagem escolhida não foi encontrada na base de dados" message;
+        SELECT "ERRO_404: A viagem escolhida não foi encontrada na base de dados desse usuário" message;
         /*
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'ERRO_404: A viagem escolhida não foi encontrada na base de dados';
         */
     ELSE
-        DECLARE local_id INT DEFAULT 0; -- Precisa de uma validação do local?
         -- Cadastro de tbl_local
-        CALL publicar_local(input_pais_nome, input_estado, input_cidade, input_nome_local) INTO created_local_id;
-            --Essa função deve retornar o id de local
+        CALL publicar_local(input_pais_nome, input_estado, input_cidade, input_nome_local, created_local_id);
+            -- TODO: Alinhar com a procedure de publicar local, ESPECIALMENTE o created_local_id
         -- Inserindo valores
         INSERT INTO tbl_log(descricao, data_publicacao, visivel, viagem_id, local_id)
         VALUES(
@@ -49,22 +49,37 @@ BEGIN
 END $$
 
 -- Procedure de Logs mais recentes, para a aba de explorar
-CREATE PROCEDURE buscar_logs_recentes(IN id_usuario)
+CREATE PROCEDURE buscar_logs_recentes(IN input_usuario_id INT)
 BEGIN
     SELECT 
-    tbl_usuario.id AS usuario_id, tbl_usuario.apelido AS usuario_apelido, tbl_usuario.foto_perfil AS usuario_foto, 
-    tbl_log.*,
-    curtido
+    tbl_usuario.id AS autor_id, 
+    tbl_usuario.apelido AS autor_apelido, 
+    tbl_usuario.foto_perfil AS autor_foto, 
+    
+    tbl_log.id AS log_id, 
+    tbl_log.descricao AS log_descricao, 
+    tbl_log.data_publicacao AS data_postagem, 
+    tbl_log.contagem_curtidas AS qtde_curtidas,
+    tbl_log.contagem_favoritos AS qtde_favoritos,
+    tbl_log.viagem_id,
+    tbl_viagem.titulo AS titulo_viagem,
+    tbl_local.nome AS ponto_interesse,
+    tbl_local.cidade AS cidade,
+    tbl_local.estado AS estado,
+    
+    tbl_pais.nome AS pais,
+    
+    -- Incluindo se o usuario interagiu, seja por curtida ou favorito
+    (SELECT COUNT(id) FROM tbl_curtida WHERE tbl_curtida.usuario_id = input_usuario_id AND tbl_curtida.log_id = tbl_log.id) AS curtido,
+    (SELECT COUNT(id) FROM tbl_favorito WHERE tbl_favorito.usuario_id = input_usuario_id AND tbl_favorito.log_id = tbl_log.id) AS favoritado
+    
+    -- Fontes
     FROM tbl_log
-    JOIN tbl_viagem ON tbl_log.id_viagem = tbl_viagem.id
+    JOIN tbl_viagem ON tbl_log.viagem_id = tbl_viagem.id
     JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
+    -- JOIN tbl_curtida ON tbl_curtida.usuario_id = input_usuario_id
+    JOIN tbl_local ON tbl_log.local_id = tbl_local.id
+    JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
     WHERE tbl_log.visivel = 1
-    ORDER BY tbl_log.data_publicacao;
+    ORDER BY tbl_log.data_publicacao DESC;
 END $$
-
--- Buscar posts de um usuário, com midia inclusa
--- Atualizar Log com edições
--- desativar Log (Porque deletar é ruim)
--- esconder logs por id de usuario (para quando este tiver o perfil desativado) 
-
-DELIMITER ;
