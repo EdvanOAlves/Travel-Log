@@ -29,7 +29,7 @@ BEGIN
     ELSEIF relacao_existe = 0
     THEN 
         SELECT "Já existe um registro de relação seguido seguidor entre esses usuários"
-
+    ELSE
         -- Inserindo valores
         INSERT INTO tbl_seguidor(usuario_id, seguidor_id, data_inicio)
         VALUES(
@@ -80,5 +80,46 @@ BEGIN
     WHERE usuario_id = input_usuario_id
     OR seguidor_id = input_usuario_id;
 END$$
+
+-- PROCEDURE INACABADA (Essa vai ser bem complicada por sinal)
+-- Para obter a linha de tempo (Logs criados pelos usuários que são seguidos pelo nosso usuario)
+CREATE PROCEDURE buscar_feed_seguindo(
+    IN input_usuario_id INT
+)
+BEGIN
+    DECLARE usuario_existe INT;
+
+    -- Verificando existencia de inputs no db
+    SELECT COUNT(id) FROM tbl_usuario WHERE id = input_usuario_id INTO usuario_existe;
+    
+    -- Validação
+    IF usuario_existe = 0
+    THEN
+        SELECT "ERRO_404: Não foi encontrado nenhum usuário correspondente a esse id" message;
+        /*
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'ERRO_404: Não foi encontrado nenhum usuário correspondente a esse id';
+        */
+    ELSE
+        SELECT IFNULL(
+            -- Requisição de dados com base nos seguidores
+            (tbl_log.*, 
+            MIN(tbl_midia.link), 
+            tbl_usuario.id, tbl_usuario.nome, tbl_usuario.nickname, tbl_usuario.foto_perfil
+            ), 
+            -- fallback, caso não tenha nenhum post de seguidor ele puxa os mais populares:
+            view_logs_populares
+        ) FROM tbl_log 
+        JOIN tbl_viagem
+            ON tbl_viagem.id = tbl_log.id
+        JOIN tbl_usuario
+            ON tbl_usuario.id = tbl_viagem.usuario_id
+        JOIN tbl_seguidor
+            ON tbl_seguidor.seguidor_id = tbl_usuario.id 
+        JOIN tbl_midia
+            ON tbl_log.id = tbl_midia.log_id
+        WHERE tbl_log.visivel = 1;
+    END IF
+END$$   
 
 DELIMITER ;
