@@ -9,8 +9,7 @@ CREATE PROCEDURE PublicarLog(
     IN input_viagem_id INT,
     IN input_visivel BOOLEAN,
     -- IN local_id INT,
-    /* Vai depender de como vai ficar o procedure de local e como o back vai preferir, vou fazer a procedure
-    incluindo dados de local pra ficar completo, qualquer coisa é só apagar */
+    
     IN input_pais_nome VARCHAR(255),
     IN input_estado VARCHAR(75),
     IN input_cidade VARCHAR(75),
