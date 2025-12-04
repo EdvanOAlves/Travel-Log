@@ -9,6 +9,10 @@ a {
     all: unset;
 }
 
+ul {
+    list-style: none;
+}
+
 :root {
     --branco: white;
     --cor_web: #F8F9FA;
@@ -19,7 +23,8 @@ a {
     --cinza_default: #D9D9D9;
     --cinza_escuro: #929292;
     --cinza_escuro_hover: #9292928f;
-    --preto_hover: #0000008e;
+    --preto_hover: #0000001c;
+    --preto_click: #00000091;
     --preto_font: black;
     --default_shadow: 6px 6px 10px #0000006b;
 }
@@ -45,6 +50,7 @@ body {
     background-color: var(--cor_web);
 }
 
+/* Elemtos ocultos do mobile */
 #navDesk {
     display: none;
 }
@@ -70,6 +76,7 @@ body {
     margin: 10px 10px 0px 0px;
 }
 
+/* Header */
 header {
     display: flex;
     width: 100%;
@@ -114,6 +121,7 @@ header {
     border-radius: 100%;
 }
 
+/* Main */
 main {
     width: 100%;
     height: calc(100% - 140px);
@@ -150,13 +158,6 @@ main {
     height: 15px;
 }
 
-#closeInputMob {
-    display: none;
-    width: 15px;
-    height: 10px;
-    padding-right: 5px;
-}
-
 #inputFollowerMob {
     all: unset;
     width: calc(100% - 20px);
@@ -164,6 +165,13 @@ main {
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     padding-left: 5px;
+}
+
+#closeInputMob {
+    display: none;
+    width: 15px;
+    height: 10px;
+    padding-right: 5px;
 }
 
 #resultFollower {
@@ -178,6 +186,7 @@ main {
     background-color: var(--cor_web);
 }
 
+/* Container dos Logs */
 #containerLogs {
     display: flex;
     flex-direction: column;
@@ -324,6 +333,7 @@ main {
     padding-top: 4px;
 }
 
+/* Barra de navegação Mobile */
 #navMob {
     display: flex;
     justify-content: space-around;
@@ -402,14 +412,13 @@ main {
         padding-top: 10px;
     }
 
-    .containerLocationLog {
-        padding-top: 10px;
-    }
-
-
     .favLog img {
         width: auto;
         height: 20px;
+    }
+
+    .containerLocationLog {
+        padding-top: 10px;
     }
 
     #sectionFollowersTerms {
@@ -467,7 +476,7 @@ main {
         flex-direction: column;
         width: 100%;
         height: calc(100% - 35px);
-        margin: 10px 0px 10px 0px;
+        padding: 10px 5px 0px 5px;
         gap: 10px;
         overflow: scroll;
     }
@@ -477,8 +486,10 @@ main {
         align-items: center;
         gap: 10px;
         width: 100%;
-        min-height: 45px;
+        min-height: 50px;
+        padding-left: 10px;
         border-radius: 15px;
+        transition: 0.3s ease-in-out;
     }
 
     .profileFollower {
@@ -531,10 +542,6 @@ main {
         padding-right: 10px;
     }
 
-    #navMob div {
-        display: none;
-    }
-
     .termsFooter {
         display: flex;
         flex-direction: column;
@@ -552,6 +559,10 @@ main {
         width: 100%;
         height: 80%;
         font-size: 14px;
+    }
+
+    #navMob div {
+        display: none;
     }
 }
 
@@ -596,147 +607,23 @@ main {
         padding-top: 10px;
     }
 
-    .containerLocationLog {
-        width: 88%;
-        padding-top: 10px;
-    }
-
-
     .favLog img {
         width: auto;
         height: 20px;
     }
 
+    .containerLocationLog {
+        width: 88%;
+        padding-top: 10px;
+    }
+
+    .follower:hover {
+        transform: scale(1.02);
+        background-color: var(--preto_hover);
+    }
+
     #sectionFollowersTerms {
         width: 27%;
-    }
-
-    #navMob {
-        display: none;
-    }
-
-    #navDesk {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 280px;
-        height: 100%;
-        padding: 15px;
-        background-color: var(--azul_default);
-        box-shadow: var(--default_shadow);
-        border-radius: 20px;
-    }
-
-    #navDesk h1 {
-        font-size: 2rem;
-        width: 100%;
-        height: 5%;
-    }
-
-    .containerNav {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-        height: 40%;
-    }
-
-    .containerFilter {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: end;
-        width: 100%;
-        height: 60%;
-    }
-
-    .titleFilter {
-        display: flex;
-        justify-content: start;
-        width: 100%;
-    }
-
-    .containerFilter button {
-        all: unset;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 80%;
-        height: 35px;
-        background-color: var(--branco);
-        border-radius: 20px;
-    }
-
-    .containerFilter div {
-        display: flex;
-        justify-content: end;
-        align-items: center;
-        width: 80%;
-        height: 35px;
-        gap: 33%;
-        padding: 0px 10px 0px 10px;
-        background-color: var(--branco);
-        border-radius: 20px;
-    }
-
-    #arrowType {
-        width: auto;
-        height: 8px;
-        transform: rotate(180deg);
-    }
-
-    .containerSettingsNav {
-        display: flex;
-        flex-direction: column;
-        justify-content: end;
-        width: 100%;
-        height: 15%;
-        gap: 10px;
-    }
-
-    #settingsNav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        height: 50px;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 15px;
-    }
-
-    #settingsNav img {
-        width: auto;
-        height: 25px;
-    }
-
-    #profileNav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        height: 50px;
-        gap: 10px;
-        padding: 5px;
-        border-radius: 15px;
-    }
-
-    #profileNav div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 30px;
-        height: 30px;
-        background-color: var(--cinza_escuro);
-        border-radius: 100%;
-    }
-
-    #profileNav div img {
-        border-radius: 100%;
-        width: auto;
-        height: 80%;
-    }
-
-    .containerButtonLogFollower {
-        justify-content: start;
     }
 
     #newLogSection {
@@ -778,5 +665,207 @@ main {
         transition: 0.5s ease-in-out;
     }
 
+    #navMob {
+        display: none;
+    }
 
+    #navDesk {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 280px;
+        height: 100%;
+        padding: 15px;
+        background-color: var(--azul_default);
+        box-shadow: var(--default_shadow);
+        border-radius: 20px;
+        z-index: 10;
+    }
+
+    #navDesk h1 {
+        font-size: 2rem;
+        width: 100%;
+        height: 5%;
+    }
+
+    .containerNav {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 40%;
+    }
+
+    .containerNav span {
+        display: flex;
+        align-items: center;
+        height: 30px;
+        border-radius: 15px;
+        padding-left: 10px;
+        transition: 0.2s ease-in-out;
+    }
+
+    .containerNav span:hover {
+        background-color: var(--preto_hover);
+    }
+
+    .containerFilter {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: end;
+        width: 100%;
+        height: 60%;
+    }
+
+    .containerFilter span {
+        pointer-events: none;
+    }
+
+    .titleFilter {
+        display: flex;
+        justify-content: start;
+        width: 100%;
+    }
+
+    .containerFilter input {
+        all: unset;
+        display: flex;
+        text-align: center;
+        width: 80%;
+        height: 35px;
+        background-color: var(--branco);
+        border-radius: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--cinza_escuro);
+        font-size: 14px;
+        transition: 0.5s ease-in-out;
+    }
+
+    .containerFilter input:hover {
+        transform: scale(1.05);
+    }
+
+    .containerListTypeLog {
+        position: relative;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        width: 80%;
+        height: 40px;
+        gap: 33%;
+        padding: 0px 10px 0px 10px;
+        background-color: var(--branco);
+        border-radius: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--cinza_escuro);
+        transition: 0.5s ease-in-out;
+    }
+
+    #listTypeLog {
+        position: absolute;
+        display: flex;
+        width: 100%;
+        height: 30px;
+        top: 0;
+        left: 0;
+        padding-top: 33px;
+        z-index: -10;
+        background-color: var(--branco);
+        border-style: none;
+        border-radius: 20px;
+        transition: 0.5s ease-in-out;
+    }
+
+    #listTypeLog ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    #listTypeLog li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 30px;
+        width: 80%;
+        border-bottom-style: solid;
+        border-color: var(--cinza_default);
+        border-width: 1px;
+    }
+
+    #arrowType {
+        width: auto;
+        height: 8px;
+        transition: 0.3s ease-in-out;
+    }
+
+    #arrowType:hover {
+        transform: scale(1.15);
+    }
+
+    .containerSettingsNav {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        width: 100%;
+        height: 15%;
+        gap: 10px;
+    }
+
+    .containerSettingsNav div:hover {
+        background-color: var(--preto_hover);
+    }
+
+    #settingsNav {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 15px;
+        transition: 0.2s ease-in-out;
+    }
+
+    #settingsNav img {
+        width: auto;
+        height: 25px;
+    }
+
+    #profileNav {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        gap: 10px;
+        padding: 5px;
+        border-radius: 15px;
+        transition: 0.2s ease-in-out;
+    }
+
+    #profileNav div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        background-color: var(--cinza_escuro);
+        border-radius: 100%;
+    }
+
+    #profileNav div img {
+        border-radius: 100%;
+        width: auto;
+        height: 80%;
+    }
+
+    .containerButtonLogFollower {
+        justify-content: start;
+    }
 }
