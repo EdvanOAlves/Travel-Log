@@ -16,11 +16,11 @@ BEGIN
     
 		SELECT 
 			tbl_viagem.id as id_viagem,
-			tbl_viagem.titulo,
-			tbl_viagem.data_inicio,
-			tbl_viagem.data_fim,
-			tbl_viagem.thumbnail,
-			tbl_viagem.visivel,
+			tbl_viagem.titulo as viagem_titulo,
+			tbl_viagem.data_inicio as data_inicio,
+			tbl_viagem.data_fim as data_fim,
+			tbl_viagem.thumbnail as thumbnail,
+			tbl_viagem.visivel as visivel,
 			tbl_tipo_viagem.nome as tipo_viagem
 			
 			FROM tbl_viagem JOIN tbl_usuario
@@ -29,7 +29,7 @@ BEGIN
 			JOIN tbl_tipo_viagem 
 			ON tbl_viagem.tipo_viagem_id = tbl_tipo_viagem.id
 			
-			WHERE tbl_usuario.id = 1;
+			WHERE tbl_usuario.id = u_id;
     
     ELSE
     
