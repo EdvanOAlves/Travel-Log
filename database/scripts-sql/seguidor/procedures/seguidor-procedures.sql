@@ -137,7 +137,8 @@ BEGIN
         SET MESSAGE_TEXT = 'ERRO_404: Este usuário não foi encontrado na base de dados';
         */
     ELSE
-		SELECT tbl_seguidor.id, tbl_usuario.id AS usuario_seguido_id, tbl_usuario.nome
+		SELECT tbl_seguidor.id, 
+        tbl_usuario.id AS usuario_seguido_id, tbl_usuario.nome, tbl_usuario.apelido, tbl_usuario.foto_perfil
         FROM tbl_seguidor
         JOIN tbl_usuario ON tbl_seguidor.usuario_id = tbl_usuario.id
         WHERE tbl_seguidor.seguidor_id = input_usuario_id;
@@ -145,4 +146,27 @@ BEGIN
 END$$
 
 -- Para consultar os seguidores de um usuario
+CREATE PROCEDURE BuscarSeguidores(IN input_usuario_id INT)
+BEGIN
+    DECLARE usuario_existe INT;
+
+    -- Verificando existencia de inputs no db
+    SELECT COUNT(id) FROM tbl_usuario WHERE id = input_usuario_id INTO usuario_existe;
+
+    -- Caso de erro
+    IF usuario_existe = 0
+	THEN
+        SELECT "ERRO_404: Este usuário não foi encontrado na base de dados" message;
+        /*
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'ERRO_404: Este usuário não foi encontrado na base de dados';
+        */
+    ELSE
+		SELECT tbl_seguidor.id, 
+        tbl_usuario.id AS usuario_seguidor_id, tbl_usuario.nome, tbl_usuario.apelido, tbl_usuario.foto_perfil
+        FROM tbl_seguidor
+        JOIN tbl_usuario ON tbl_seguidor.usuario_id = tbl_usuario.id
+        WHERE tbl_seguidor.seguidor_id = input_usuario_id;
+	END IF;
+END$$
 DELIMITER ;
