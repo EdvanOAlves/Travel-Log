@@ -1,6 +1,5 @@
--- Procedure para alternar a relação dos favoritos
 DELIMITER $$
-CREATE PROCEDURE altenar_relacao_favoritos(
+CREATE PROCEDURE AltenarRelacaoFavoritos(
 		IN input_log_id INT,
         IN input_usuario_id INT
 )
@@ -25,31 +24,4 @@ BEGIN
         VALUES(input_usuario_id, input_log_id);
     END IF;
 END $$
-DELIMITER ;
-
--- Triggers para contagem dos Favoritos após um insert e delete
-DELIMITER $$
-CREATE TRIGGER trg_atualizar_favoritos_insert
-AFTER INSERT ON tbl_favorito FOR EACH ROW
-BEGIN
-	DECLARE numero_favoritos INT;
-    
-    SELECT COUNT(id) INTO numero_favoritos FROM tbl_favorito WHERE log_id = NEW.log_id; 
-	
-	UPDATE tbl_log SET contagem_favoritos = numero_favoritos
-	WHERE id = NEW.log_id;
-END$$	
-DELIMITER ;
-
-DELIMITER $$
-CREATE TRIGGER trg_atualizar_favoritos_delete
-AFTER DELETE ON tbl_favorito FOR EACH ROW
-BEGIN
-	DECLARE numero_favoritos INT;
-    
-    SELECT COUNT(id) INTO numero_favoritos FROM tbl_favorito WHERE log_id = OLD.log_id; 
-
-    UPDATE tbl_log SET contagem_favoritos = numero_favoritos
-	WHERE id = OLD.log_id;
-END$$	
 DELIMITER ;

@@ -3,7 +3,7 @@
 -- --------------------------------------------------------
 DELIMITER $$
 -- Criar Comentário
-CREATE PROCEDURE publicar_comentario(
+CREATE PROCEDURE PublicarComentario(
 	input_conteudo VARCHAR(255),
     IN input_usuario_id INT,
     IN input_log_id INT
@@ -30,7 +30,7 @@ BEGIN
 END$$
 
 -- Puxar comentários de um log
-CREATE PROCEDURE buscar_comentarios_log(
+CREATE PROCEDURE BuscarComentariosLog(
 	IN input_log_id INT
 )
 BEGIN
@@ -63,7 +63,7 @@ BEGIN
 END$$ 
 
 -- Desativar um comentário por id
-CREATE PROCEDURE desativar_comentario(IN input_comentario_id INT)
+CREATE PROCEDURE DesativarComentario(IN input_comentario_id INT)
 BEGIN
 	DECLARE comentario_existe INT;
     -- Verificando a existencia do comentario
@@ -84,7 +84,7 @@ BEGIN
 END$$
 
 -- desativar comentários por id de usuário (para desativação de usuário)
-CREATE PROCEDURE desativar_comentarios(IN input_usuario_id INT)
+CREATE PROCEDURE DesativarComentarios(IN input_usuario_id INT)
 BEGIN	
     DECLARE usuario_existe INT;
         -- Verificando existencia de input no db

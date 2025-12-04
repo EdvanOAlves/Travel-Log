@@ -1,12 +1,12 @@
 DELIMITER $$
-CREATE PROCEDURE obter_paises()
+CREATE PROCEDURE ListarPaises()
 BEGIN
     SELECT * FROM tbl_pais;
 END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE obter_paise_id(
+CREATE PROCEDURE BuscarPaisId(
   IN pais_id INT
 )
 BEGIN

@@ -3,7 +3,7 @@
 -- --------------------------------------------------------
 DELIMITER $$
 -- Para seguir um usuário
-CREATE PROCEDURE criar_relacao_seguidor(
+CREATE PROCEDURE CriarRelacaoSeguidor(
     IN input_usuario_id INT,
     IN input_seguidor_id INT
 )
@@ -45,7 +45,7 @@ BEGIN
     END IF;
 END $$
 -- Para deixar de seguir um usuário
-CREATE PROCEDURE remover_relacao_seguidor(
+CREATE PROCEDURE RemoverRelacaoSeguidores(
     IN input_usuario_id INT,
     IN input_seguidor INT
 )
@@ -72,7 +72,7 @@ END$$
 
 -- Para remover todas as relações (tanto de seguidor como sendo seguido)
 -- que o usuário está registrado, quando ele for desativado
-CREATE PROCEDURE remover_relacoes_seguidores(
+CREATE PROCEDURE RemoverRelacoesSeguidores(
     IN input_usuario_id INT
 )
 BEGIN
@@ -82,7 +82,7 @@ BEGIN
 END$$
 
 -- Para obter a linha de tempo (Logs cujos autores são seguidos pelo nosso usuario)
-CREATE PROCEDURE buscar_feed_seguindo(
+CREATE PROCEDURE BuscarFeedSeguindo(
     IN input_usuario_id INT
 )
 BEGIN
@@ -119,9 +119,4 @@ SELECT
     AND tbl_seguidor.usuario_id = tbl_usuario.id AND tbl_seguidor.seguidor_id = input_usuario_id
     ORDER BY tbl_log.data_publicacao DESC;
 END$$   
-DROP PROCEDURE buscar_feed_seguindo$$
-CALL buscar_feed_seguindo(2)$$
 DELIMITER ;
-SELECT * from tbl_curtida;
-INSERT INTO tbl_curtida(usuario_id, log_id)
-VALUES(2, 33);
