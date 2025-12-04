@@ -37,7 +37,11 @@
             <span id="deskFav">Favoritos</span>
             <div class="containerFilter">
                 <span class="titleFilter">Filtro:</span>
-                <input id="filterDate" type="text" placeholder="Data">
+                <div class="containerFilterDate">
+                    <input id="filterDateBegin" class="filterDate" type="date">
+                    <span>Data</span>
+                    <input id="filterDateEnd" class="filterDate" type="date">
+                </div>
                 <input id="filterLocation" type="text" placeholder="Localização">
                 <div class="containerListTypeLog">
                     <span>Tipo</span>
@@ -237,11 +241,93 @@
                 </button>
             </div>
         </section>
+        <div id="logFull">
+            <div class="headerLogFull">
+                <div class="profileLogFull">
+                    <img src="img/profile.png" alt="">
+                </div>
+                <span class="nameProfileLogFull">@edvanOalves</span>
+            </div>
+            <div class="containerLocationTitle">
+                <span class="nameTravel">Férias Bem Legais</span>
+                <div class="containerLocationLogFull">
+                    <img src="img/location.png" alt="">
+                    <span class="locationLogFull">Xique-Xique - BA</span>
+                </div>
+            </div>
+            <div class="backgroundImgLogFull">
+                <div>
+                    <img class="arrowImgLogLeftFull" src="img/arrowWhite.png" alt="">
+                </div>
+                <img class="imgLogFull" src="./img/esfinge.jpg" alt="">
+                <div>
+                    <img class="arrowImgLogRightFull" src="img/arrowWhite.png" alt="">
+                </div>
+            </div>
+            <div class="footerLogFull">
+                <div class="likesLogFull">
+                    <img src="img/likeDisable.png" alt="">
+                    <span class="numberLikesFull">123</span>
+                </div>
+                <div class="favLogFull">
+                    <img src="img/favDisable.png" alt="">
+                    <span class="numberFavFull">233</span>
+                </div>
+                <div class="containerDateLog">
+                    <span class="dateLog">22/09/2025</span>
+                </div>
+            </div>
+            <div class="containerScrollLogFull">
+                <p class="descriptionLog">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam minus neque non
+                    expedita iste beatae, pariatur quas doloremque debitis dolorem repellat, quos fugiat magnam nesciunt
+                    facere reiciendis porro facilis maiores.
+                </p>
+                <div class="commentsLog">
+                    <div class="numberComments">
+                        <img src="img/comments.png" alt="">
+                        <span class="numberComments">182</span>
+                    </div>
+                    <div class="comment">
+                        <div class="headerComments">
+                            <div class="profileComment">
+                                <img src="img/profile.png" alt="">
+                            </div>
+                            <span class="nameCommentLog">@edvanOalves</span>
+                        </div>
+                        <p class="commentText">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
+                            repudiandae aut nostrum vel. Maxime consequatur saepe explicabo sequi, numquam fugit iure
+                            tempora corrupti ducimus hic enim doloribus in labore exercitationem.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <nav id="navMob">
+        <div id="containerFilterMob">
+            <input id="filterDateMob" type="text" placeholder="Data">
+            <input id="filterLocationMob" type="text" placeholder="Localização">
+            <div class="containerListTypeLogMob">
+                <span>Tipo</span>
+                <img id="arrowTypeMob" src="img/arrowBlackDown.png" alt="">
+                <div id="listTypeLogMob">
+                    <ul>
+                        <li>Gastronômica</li>
+                        <li>Trabalho</li>
+                        <li>Lazer</li>
+                        <li>Gastronômica</li>
+                        <li>Trabalho</li>
+                        <li>Lazer</li>
+                        <li>Gastronômica</li>
+                        <li>Trabalho</li>
+                        <li>Lazer</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <span id="mobHome">Home</span>
         <span id="mobLikes">Curtidos</span>
-        <div>
+        <div class="containerButtonNewLogMob">
             <button id="newPost">
                 <img src="img/plusWhite.png" alt="">
             </button>

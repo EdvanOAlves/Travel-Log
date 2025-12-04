@@ -25,6 +25,7 @@ ul {
     --cinza_escuro_hover: #9292928f;
     --preto_hover: #0000001c;
     --preto_click: #00000091;
+    --preto_fosco: #000000bb;
     --preto_font: black;
     --default_shadow: 6px 6px 10px #0000006b;
 }
@@ -123,6 +124,7 @@ header {
 
 /* Main */
 main {
+    position: relative;
     width: 100%;
     height: calc(100% - 140px);
     padding-top: 15px;
@@ -346,7 +348,7 @@ main {
     border-width: 1px;
 }
 
-#navMob div {
+.containerButtonNewLogMob {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -377,6 +379,298 @@ main {
     width: 13px;
     height: 15px;
 }
+
+#containerFilterMob {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    right: 0px;
+    bottom: 70px;
+    width: 220px;
+    height: 150px;
+    padding: 10px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: var(--preto_fosco);
+    z-index: 20;
+    opacity: 0;
+    transition: 1s ease-in-out;
+    pointer-events: none;
+}
+
+#containerFilterMob input {
+    all: unset;
+    display: flex;
+    text-align: center;
+    width: 90%;
+    height: 35px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--cinza_escuro);
+    font-size: 12px;
+    z-index: -15;
+}
+
+.containerListTypeLogMob {
+    position: relative;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    padding-right: 10px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--cinza_escuro);
+}
+
+.containerListTypeLogMob span {
+    display: flex;
+    justify-content: center;
+    padding-left: 18%;
+    width: 100%;
+    font-size: 12px;
+}
+
+#arrowTypeMob {
+    width: auto;
+    height: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#listTypeLogMob {
+    position: absolute;
+    width: 177px;
+    height: 30px;
+    bottom: 0px;
+    right: 0px;
+    padding: 5px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    z-index: -10;
+    transition: 0.5s ease-in-out;
+}
+
+#listTypeLogMob ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+#listTypeLogMob li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 30px;
+    width: 80%;
+    border-bottom-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 1px;
+    font-size: 12px;
+}
+
+/* Log em destaque */
+#logFull {
+    position: absolute;
+    width: 95%;
+    height: 95%;
+    left: 0;
+    right: 0;
+    top: 30px;
+    bottom: 0;
+    margin: auto;
+    z-index: 60;
+    background-color: var(--cor_web_post);
+    background-color: red;
+}
+
+.headerLogFull {
+    background-color: var(--azul_default);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 7%;
+    gap: 5px;
+    padding-left: 10px;
+}
+
+.profileLogFull {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background-color: var(--cinza_escuro);
+}
+
+.profileLogFull img {
+    width: auto;
+    height: 75%;
+    border-radius: 100%;
+}
+
+.nameProfileLogFull {
+    font-size: 16px;
+}
+
+.containerLocationTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+    height: 8%;
+    padding: 0px 10px 0px 10px;
+}
+
+.nameTravel {
+    font-size: 20px;
+}
+
+.containerLocationLogFull img {
+    width: auto;
+    height: 15px;
+}
+
+.locationLogFull {
+    font-size: 14px;
+}
+
+.backgroundImgLogFull {
+    position: relative;
+    width: 100%;
+    height: 45%;
+}
+
+.backgroundImgLogFull div {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    top: calc(50% - 8px);
+    margin: 0px 5px 0px 5px;
+    border-radius: 100%;
+    background-color: var(--cinza_escuro_hover);
+}
+
+.backgroundImgLogFull div:nth-child(1) {
+    right: 0;
+}
+
+.arrowImgLogRightFull {
+    transform: rotate(180deg);
+}
+
+.imgLogFull {
+    width: 100%;
+    height: 100%;
+}
+
+.footerLogFull {
+    display: flex;
+    width: 100%;
+    height: 7%;
+}
+
+.likesLogFull {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    width: 10%;
+}
+
+.likesLogFull img {
+    width: auto;
+    height: 20px;
+}
+
+.numberLikesFull {
+    font-size: 12px;
+}
+
+.favLogFull {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    gap: 3px;
+    margin-left: 10px;
+}
+
+.favLogFull img {
+    width: auto;
+    height: 20px;
+}
+
+.numberFavFull {
+    font-size: 12px;
+}
+
+.containerDateLog {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 10px;
+    width: 80%;
+}
+
+.containerScrollLogFull {
+    width: 100%;
+    height: 33%;
+    overflow: auto;
+    background-color: orange;
+}
+
+.descriptionLog {
+    width: 100%;
+    height: 50%;
+    font-size: 14px;
+    padding: 0px 10px 0px 10px;
+}
+
+.commentsLog {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: 100%;
+    height: 50%;
+    padding: 0px 10px 0px 10px;
+    background-color: orange;
+}
+
+.commentsLog img {
+    width: auto;
+    height: 20px;
+}
+
+.numberComments {}
+
+.comment {}
+
+.headerComments {}
+
+.profileComment {}
+
+.profileComment img {}
+
+.nameCommentLog {}
+
+.commentText {}
+
 
 @media (min-width: 768px) {
     main {
@@ -561,8 +855,39 @@ main {
         font-size: 14px;
     }
 
-    #navMob div {
+    .containerButtonNewLogMob {
         display: none;
+    }
+
+    #containerFilterMob {
+        width: 260px;
+        height: 190px;
+        opacity: 0;
+        transition: 1s ease-in-out;
+        pointer-events: none;
+    }
+
+    #containerFilterMob input {
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .containerListTypeLogMob {
+        height: 40px;
+    }
+
+    .containerListTypeLogMob span {
+        padding-left: 16%;
+        font-size: 14px;
+    }
+
+    #listTypeLogMob {
+        width: 214px;
+        height: 35px;
+    }
+
+    #listTypeLogMob li {
+        font-size: 14px;
     }
 }
 
@@ -590,6 +915,11 @@ main {
         width: 90%;
         height: 680px;
         min-height: 680px;
+        transition: 0.5s ease-in-out;
+    }
+
+    .log:hover {
+        box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.534);
     }
 
     .likesLog {
@@ -728,7 +1058,55 @@ main {
         width: 100%;
     }
 
-    .containerFilter input {
+    .containerFilterDate {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80%;
+        height: 35px;
+        border-radius: 20px;
+        background-color: var(--branco);
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--cinza_escuro);
+        overflow: hidden;
+    }
+
+    .containerFilterDate span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        padding: 0;
+        width: 10%;
+        height: 100%;
+        color: var(--cinza_escuro);
+    }
+
+    .filterDate {
+        all: unset;
+        display: flex;
+        text-align: center;
+        width: 45%;
+        height: 100%;
+        background-color: var(--branco);
+        border-color: var(--cinza_escuro);
+        font-size: 14px;
+        z-index: -10;
+    }
+
+    #filterDateBegin {
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+    }
+
+    #filterDateEnd {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding-right: 0px;
+    }
+
+    #filterLocation {
         all: unset;
         display: flex;
         text-align: center;
@@ -740,11 +1118,6 @@ main {
         border-width: 1px;
         border-color: var(--cinza_escuro);
         font-size: 14px;
-        transition: 0.5s ease-in-out;
-    }
-
-    .containerFilter input:hover {
-        transform: scale(1.05);
     }
 
     .containerListTypeLog {
@@ -761,7 +1134,6 @@ main {
         border-style: solid;
         border-width: 1px;
         border-color: var(--cinza_escuro);
-        transition: 0.5s ease-in-out;
     }
 
     #listTypeLog {
