@@ -33,8 +33,7 @@ BEGIN
         */
     ELSE
         -- Cadastro de tbl_local
-        CALL publicar_local(input_pais_nome, input_estado, input_cidade, input_nome_local, created_local_id);
-            -- TODO: Alinhar com a procedure de publicar local, ESPECIALMENTE o created_local_id
+        CALL CriarLocal(input_pais_nome, input_estado, input_cidade, input_nome_local, created_local_id);
         -- Inserindo valores
         INSERT INTO tbl_log(descricao, data_publicacao, visivel, viagem_id, local_id)
         VALUES(
