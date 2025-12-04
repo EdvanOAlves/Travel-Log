@@ -100,8 +100,10 @@ BEGIN
         */
     ELSE
 		UPDATE tbl_log
-        SET visivel = 0
-        WHERE usuario_id = input_usuario_id;
+        JOIN tbl_viagem ON tbl_viagem.id = tbl_log.viagem_id
+        JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
+        SET tbl_log.visivel = 0
+        WHERE tbl_usuario.id = input_usuario_id;
     END IF;
 END$$
 
