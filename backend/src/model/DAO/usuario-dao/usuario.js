@@ -81,27 +81,14 @@ const setInsertUser = async (user) => {
 
     try {
         
-        sql = `
-        insert into tbl_usuario(
-            nome,
-            apelido,
-            email,
-            telefone,
-            senha,
-            link_foto_perfil,
-            descricao,
-            data_cadastro
-        ) VALUES (
-            '${user.nome}',
-            '${user.apelido}',
-            '${user.email}',
-            '${user.telefone}',
-            '${user.senha}',
-            '${user.foto_perfil}',
-            '${user.descricao}',
-            curdate()
-        )
-        `
+        sql = `CALL CriarUsuario(
+            ${user.nome},
+            ${user.apelido},
+            ${user.email},
+            ${user.senha},
+            ${user.foto_perfil},
+            ${user.descricao}
+        )`
         
         result = await prisma.$executeRawUnsafe(sql)
 
@@ -123,44 +110,16 @@ const setUpdateUser = async (id, user) => {
 
     try {
         
-        sql = `
-        update tbl_usuario set
-        nome = '${user.nome}',
-        apelido = '${user.apelido}',
-        email = '${user.email}',
-        telefone = '${user.telefone}',
-        senha = '${user.senha}',
-        link_foto_perfil = '${user.foto_perfil}',
-        descricao = '${user.descricao}'
-        
-        where id = ${id}
-        `
-
-        result = await prisma.$executeRawUnsafe(sql)
-
-        if(result) {
-            return result
-        } else {
-            return false
-        }
-
-    } catch (error) {
-        return false
-    }
-
-}
-
-//Desativa um usuário na tabela de usuários
-//Toggle -> significa altenar entre dois estados, nesse caso true ou false.
-const setToggleUser = async (id, status) => {
-
-     try {
-        
-        sql = `
-        update tbl_usuario set
-        ativo = ${status.tipo}
-        where id = ${id}
-        `
+        sql = `CALL AtualizaUsuario(
+            ${id},
+            ${user.nome},
+            ${user.apelido},
+            ${user.email},
+            ${user.senha},
+            ${user.foto_perfil},
+            ${user.descricao},
+            ${user.status}
+        )`
 
         result = await prisma.$executeRawUnsafe(sql)
 
@@ -184,3 +143,4 @@ module.exports = {
     setUpdateUser,
     setToggleUser
 }
+
