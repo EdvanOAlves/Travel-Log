@@ -29,6 +29,8 @@
 
 }
 
+
+
 body{
     position: relative;
     height: 100dvh;
@@ -213,7 +215,6 @@ main{
 }
 
 .viagemFooter{
-    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 4px;
@@ -221,8 +222,12 @@ main{
     padding: 4px;
 }
 
-.viagemFooter span{
-    font-size: 10px;
+.viagemFooter footerTxt{
+    font-size: 16px;
+}
+
+.viagemData{
+    font-size: 14px;
 }
 
 /* Log Creator */
@@ -260,4 +265,11 @@ main{
 
 .newLogButton{
     height: 80%;
+}
+
+
+/*Classes designáveis*/
+
+.hidden{
+    display: none;
 }
