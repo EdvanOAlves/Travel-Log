@@ -133,6 +133,8 @@ buttonLogin.addEventListener('click', () => {
                 circleProgress.classList.remove('disableCircle')
                 circleProgress.classList.add('enableCircle')
             }, 760);
+
+            window.open(`home.html`, "_self")
         }
     }
 
