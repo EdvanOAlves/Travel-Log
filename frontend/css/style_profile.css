@@ -141,3 +141,47 @@ main{
     opacity: 100%;
 }
 
+
+/* CONTAINER DE LOGS */
+
+.containerLogs{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    padding: 25px;
+    gap: 14px;
+}
+
+
+.log{
+    width: 48%;
+    box-shadow: 5px 5px 15px #0004;
+}
+
+.logThumbnail{
+    width: 100%;
+}
+
+.logFooter{
+    display: flex;
+    align-items: center;
+    place-content: end;
+    gap: 4px;
+    width: 100%;
+    padding: 4px;
+}
+
+.logFooter span{
+    font-size: 12px;
+}
+
+/* Log Creator */
+.logCreator-thumbnail{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+    background-color: var(--cinza_default);
+    height: 83%;
+}
