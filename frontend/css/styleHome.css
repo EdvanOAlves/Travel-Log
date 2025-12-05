@@ -64,11 +64,11 @@ body {
     position: absolute;
     display: none;
     justify-content: end;
-    top: 70px;
-    width: 100vw;
-    height: calc(100vh - 140px);
-    background-color: var(--preto_hover);
-    z-index: 10;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--preto_fosco);
+    z-index: 30;
 }
 
 #closeFilter {
@@ -152,7 +152,7 @@ main {
     border-style: solid;
     border-color: var(--cinza_escuro);
     border-width: 1px;
-    z-index: 20;
+    z-index: 50;
 }
 
 .containerInputMob img {
@@ -179,13 +179,50 @@ main {
 #resultFollower {
     position: absolute;
     display: none;
+    flex-direction: column;
     top: 0;
     left: 10px;
-    width: 65%;
+    width: 95%;
     height: 400px;
+    padding: 35px 5px 0px 5px;
+    gap: 10px;
+    overflow: scroll;
     border-radius: 20px;
-    z-index: 15;
+    z-index: 40;
     background-color: var(--cor_web);
+}
+
+.follower {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 50px;
+    padding-left: 10px;
+    border-radius: 15px;
+    transition: 0.3s ease-in-out;
+}
+
+.profileFollower {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    background-color: var(--cinza_escuro);
+    border-radius: 100%;
+}
+
+.profileFollower img {
+    width: 70%;
+    height: 70%;
+    border-radius: 100%;
+}
+
+.containerButtonLogFollower {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 /* Container dos Logs */
@@ -488,9 +525,10 @@ main {
     top: 30px;
     bottom: 0;
     margin: auto;
+    opacity: 0;
     z-index: 60;
     background-color: var(--cor_web_post);
-    background-color: red;
+    pointer-events: none;
 }
 
 .headerLogFull {
@@ -564,6 +602,11 @@ main {
     background-color: var(--cinza_escuro_hover);
 }
 
+.backgroundImgLogFull div img {
+    width: auto;
+    height: 17px;
+}
+
 .backgroundImgLogFull div:nth-child(1) {
     right: 0;
 }
@@ -632,24 +675,45 @@ main {
     width: 100%;
     height: 33%;
     overflow: auto;
-    background-color: orange;
 }
 
 .descriptionLog {
     width: 100%;
-    height: 50%;
     font-size: 14px;
-    padding: 0px 10px 0px 10px;
+    padding: 0px 10px 15px 10px;
 }
 
 .commentsLog {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: end;
     width: 100%;
-    height: 50%;
-    padding: 0px 10px 0px 10px;
-    background-color: orange;
+    height: 1fr;
+    gap: 10px;
+    padding: 0px 10px 10px 10px;
+}
+
+.containerInputComment {
+    display: flex;
+    width: 100%;
+}
+
+#addComment {
+    all: unset;
+    width: calc(100% - 90px);
+    height: 100%;
+    font-size: 14px;
+    border-bottom-style: solid;
+    border-color: var(--cinza_escuro);
+    border-width: 2px;
+}
+
+.containerInputComment div {
+    display: flex;
+    justify-content: end;
+    width: 90px;
+    gap: 5px;
 }
 
 .commentsLog img {
@@ -657,20 +721,286 @@ main {
     height: 20px;
 }
 
-.numberComments {}
+.numberComments {
+    font-size: 14px;
+}
 
-.comment {}
+.comment {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.233);
+}
 
-.headerComments {}
+.headerComments {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    padding-left: 5px;
+    gap: 5px;
+    background-color: var(--cinza_default);
+}
 
-.profileComment {}
+.profileComment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    background-color: var(--cinza_escuro);
+    border-radius: 100%;
+}
 
-.profileComment img {}
+.profileComment img {
+    width: auto;
+    height: 75%;
+    border-radius: 100%;
+}
 
-.nameCommentLog {}
+.nameCommentLog {
+    font-size: 14px;
+}
 
-.commentText {}
+.commentText {
+    font-size: 14px;
+    padding: 5px 10px 5px 10px;
+}
 
+.dateComment {
+    display: flex;
+    justify-content: end;
+    font-size: 12px;
+}
+
+#newLog {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 95%;
+    height: 85%;
+    padding: 10px;
+    z-index: 60;
+    background-color: var(--cor_web_post);
+}
+
+.imgNewLog {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    padding: 0px 5px 0px 5px;
+    background-color: var(--cinza_default);
+}
+
+#newLogIcon {
+    width: auto;
+    height: 50px;
+}
+
+.imgNewLog div {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: var(--cinza_default);
+    border-radius: 100%;
+}
+
+.imgNewLog div:nth-child(1) {
+    right: 5px;
+}
+
+.imgNewLog div:nth-child(3) {
+    left: 5px;
+}
+
+.arrowImgLogLeftFull {
+    width: auto;
+    height: 20px;
+}
+
+.arrowImgLogRightFull {
+    width: auto;
+    height: 20px;
+}
+
+.containerTravel {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 15%;
+    padding: 10px 0px 15px 0px;
+}
+
+.containerSelectTravel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100%;
+    gap: 10px;
+}
+
+.selectTravel {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    z-index: 20;
+}
+
+.selectTravel span {
+    width: 90%;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+#arrowSelectTravel {
+    width: auto;
+    height: 10px;
+}
+
+#listTravel {
+    position: absolute;
+    top: 75%;
+    width: 90%;
+    height: 20px;
+    background-color: var(--branco);
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    z-index: 10;
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    opacity: 0;
+}
+
+#listTravel ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-top: 20px;
+    overflow: auto;
+}
+
+#listTravel li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 25px;
+    border-bottom-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 1px;
+    font-size: 14px;
+}
+
+#visibleTravel {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 30px;
+    background-color: var(--azul_default);
+    color: var(--azul_escuro);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 2px;
+}
+
+.containerLocationNewLog {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 10%;
+    gap: 10px;
+}
+
+.locationNewLog {
+    display: flex;
+    align-items: center;
+    width: 1005;
+    height: 100%;
+    gap: 5px;
+    padding-left: 10px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.locationNewLog img {
+    width: auto;
+    height: 20px;
+}
+
+#locationNewLogInput {
+    all: unset;
+    width: 100%;
+    height: 100%;
+    background-color: var(--branco);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#descriptionNewLog {
+    all: unset;
+    width: 97%;
+    height: 20%;
+    padding: 5px;
+    margin-top: 5px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.contianerButtonNewLog {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    padding-top: 5px;
+}
+
+#saveLog {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    color: var(--azul_escuro);
+    background-color: var(--azul_default);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 1px;
+}
 
 @media (min-width: 768px) {
     main {
@@ -713,6 +1043,11 @@ main {
 
     .containerLocationLog {
         padding-top: 10px;
+    }
+
+    #logFull {
+        width: 85%;
+        height: 90%;
     }
 
     #sectionFollowersTerms {
@@ -775,33 +1110,6 @@ main {
         overflow: scroll;
     }
 
-    .follower {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        min-height: 50px;
-        padding-left: 10px;
-        border-radius: 15px;
-        transition: 0.3s ease-in-out;
-    }
-
-    .profileFollower {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 35px;
-        height: 35px;
-        background-color: var(--cinza_escuro);
-        border-radius: 100%;
-    }
-
-    .profileFollower img {
-        width: 70%;
-        height: 70%;
-        border-radius: 100%;
-    }
-
     .containerButtonLogFollower {
         display: flex;
         justify-content: center;
@@ -834,6 +1142,26 @@ main {
         width: calc(100% - 15px);
         height: 100%;
         padding-right: 10px;
+    }
+
+    #newLog {
+        width: 80%;
+    }
+
+    .selectTravel {
+        width: 70%;
+    }
+
+    .selectTravel span {
+        width: 92%;
+    }
+
+    #listTravel {
+        width: 70%;
+    }
+
+    #listTravel li {
+        height: 30px;
     }
 
     .termsFooter {
@@ -891,9 +1219,20 @@ main {
     }
 }
 
+@media (min-width: 1024px) and (max-width: 1280px) and (height: 600px) {
+    .containerFollowerSearch {
+        height: 250px;
+    }
+}
+
 @media (min-width: 1280px) {
     body {
         display: flex;
+    }
+
+    #filterBlack {
+        width: calc(100% + 150px);
+        right: 0px;
     }
 
     header {
@@ -947,6 +1286,12 @@ main {
         padding-top: 10px;
     }
 
+    #logFull {
+        width: 60%;
+        height: 95%;
+        top: 0px;
+    }
+
     .follower:hover {
         transform: scale(1.02);
         background-color: var(--preto_hover);
@@ -995,6 +1340,10 @@ main {
         transition: 0.5s ease-in-out;
     }
 
+    #newLog {
+        width: 70%;
+    }
+
     #navMob {
         display: none;
     }
@@ -1008,8 +1357,9 @@ main {
         padding: 15px;
         background-color: var(--azul_default);
         box-shadow: var(--default_shadow);
-        border-radius: 20px;
-        z-index: 10;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        z-index: 40;
     }
 
     #navDesk h1 {
