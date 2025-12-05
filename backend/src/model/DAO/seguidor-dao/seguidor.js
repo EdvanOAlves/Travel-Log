@@ -20,7 +20,7 @@ const getSelectLastFollow = async () => {
         sql = `select * from tbl_seguidor order by id desc limit 1;`
 
         result = await prisma.$queryRawUnsafe(sql)
-        
+
         if(Array.isArray(result)) {
             return result
         } else {
@@ -33,12 +33,81 @@ const getSelectLastFollow = async () => {
 
 }
 
+//Retorna seguidores pelo id de usuario
+const getSelectFollowersByUserId = async (id_usuario) => {
+
+    try {
+    
+        sql = `CALL BuscarSeguidores(${id_usuario})`
+
+        result = await prisma.$queryRawUnsafe(sql)
+
+        formattedResult = result.map(item => {
+            
+            return {
+                id_relacao: item.f0,
+                id_seguidor: item.f1,
+                nome: item.f2,
+                apelido: item.f3,
+                foto: item.f4
+            }
+
+        })
+
+        if(Array.isArray(result)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+//Busca todos os usuários que determinado usuário segue
+const getSelectFollowingByUserId = async (id_usuario) => {
+
+    try {
+    
+        sql = `CALL BuscarSeguindo(${id_usuario})`
+
+        result = await prisma.$queryRawUnsafe(sql)
+
+        formattedResult = result.map(item => {
+            
+            return {
+                id_relacao: item.f0,
+                id_seguido: item.f1,
+                nome: item.f2,
+                apelido: item.f3,
+                foto: item.f4
+            }
+
+        })
+
+        console.log(formattedResult)
+
+        if(Array.isArray(result)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+
+}
+
 //Segue determinado usuário
 const setInsertFollower = async (follow) => {
 
     try {
         
-        sql = `CALL Follow(${follow.seguidor_id}, ${follow.usuario_id})`
+        sql = `CALL CriarRelacaoSeguidor(${follow.usuario_id}, ${follow.seguidor_id})`
 
         result = await prisma.$queryRawUnsafe(sql)
 
@@ -59,7 +128,7 @@ const setDeleteFollower = async (follow) => {
 
     try {
         
-        sql = `CALL Unfollow(${follow.usuario_id}, ${follow.seguidor_id})`
+        sql = `CALL RemoverRelacaoSeguidor(${follow.usuario_id}, ${follow.seguidor_id})`
 
         result = await prisma.$queryRawUnsafe(sql)
 
@@ -75,8 +144,36 @@ const setDeleteFollower = async (follow) => {
 
 }
 
+//Deleta todas as relações de quem o usuário segue, e quem segue ele
+const setDeleteFollowersAndFollowingById = async (usuario_id) => {
+
+    try {
+        
+        sql = `CALL RemoverRelacoesSeguidores(${usuario_id})`
+
+        result = await prisma.$executeRawUnsafe(sql)
+
+        if(Array.isArray(result)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+// getSelectLastFollow()
+// getSelectFollowersByUserId(1)
+// getSelectFollowingByUserId(1)
+
 module.exports = {
     getSelectLastFollow,
+    getSelectFollowersByUserId,
+    getSelectFollowingByUserId,
     setInsertFollower,
-    setDeleteFollower
+    setDeleteFollower,
+    setDeleteFollowersAndFollowingById
 }
