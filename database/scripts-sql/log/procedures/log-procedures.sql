@@ -2,6 +2,7 @@
 -- PROCEDURES LOG
 -- --------------------------------------------------------
 DELIMITER $$
+SELECT * FROM TBL_log$$
 -- Para publicar um log
 -- Não vai precisar passar a data
 CREATE PROCEDURE PublicarLog(
@@ -9,8 +10,7 @@ CREATE PROCEDURE PublicarLog(
     IN input_viagem_id INT,
     IN input_visivel BOOLEAN,
     -- IN local_id INT,
-    /* Vai depender de como vai ficar o procedure de local e como o back vai preferir, vou fazer a procedure
-    incluindo dados de local pra ficar completo, qualquer coisa é só apagar */
+    
     IN input_pais_nome VARCHAR(255),
     IN input_estado VARCHAR(75),
     IN input_cidade VARCHAR(75),
@@ -47,9 +47,6 @@ BEGIN
     END IF;
 END $$
 
-DELIMITER ;
-
-DELIMITER $$
 
 -- Procedure de Logs mais recentes, para a aba de explorar
 CREATE PROCEDURE BuscarLogsRecentes(IN input_usuario_id INT)
@@ -66,10 +63,14 @@ BEGIN
     tbl_log.contagem_favoritos AS qtde_favoritos,
     tbl_log.viagem_id,
     tbl_viagem.titulo AS titulo_viagem,
+    tbl_tipo_viagem.id AS tipo_viagem_id,
+    tbl_tipo_viagem.nome AS tipo_viagem,
+    tbl_local.id AS local_id,
     tbl_local.nome AS ponto_interesse,
     tbl_local.cidade AS cidade,
     tbl_local.estado AS estado,
     
+    tbl_pais.id AS pais_id,
     tbl_pais.nome AS pais,
     
     -- Incluindo se o usuario interagiu, seja por curtida ou favorito
@@ -79,11 +80,12 @@ BEGIN
     -- Fontes
     FROM tbl_log
     JOIN tbl_viagem ON tbl_log.viagem_id = tbl_viagem.id
+    JOIN tbl_tipo_viagem ON tbl_viagem.tipo_viagem_id = tbl_tipo_viagem.id
     JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
     -- JOIN tbl_curtida ON tbl_curtida.usuario_id = input_usuario_id
     JOIN tbl_local ON tbl_log.local_id = tbl_local.id
     JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
-    WHERE tbl_log.visivel = 1
+    WHERE tbl_log.visivel = 1 AND tbl_viagem.visivel = 1 -- Solução nova
     ORDER BY tbl_log.data_publicacao DESC;
 END $$
 

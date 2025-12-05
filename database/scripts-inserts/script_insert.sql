@@ -89,3 +89,18 @@ INSERT INTO tbl_viagem (
 ('Lua de Mel em Paris', '2025-06-01', '2025-06-10', 'paris.jpg', 1, 5, TRUE); -- Romântica
 
 SELECT * FROM tbl_viagem;
+
+INSERT INTO tbl_log (
+    descricao,
+    data_publicacao,
+    contagem_curtidas,
+    contagem_favoritos,
+    visivel,
+    viagem_id,
+    local_id
+) VALUES
+('Cheguei ao destino hoje, primeira impressão excelente! O clima ajudou bastante.', '2025-01-12', 0, 0, 1, 1, 3),
+('Visitei um parque local pela manhã, paisagens incríveis e muita tranquilidade.', '2025-01-14', 0, 0, 1, 2, 5),
+('Dia de explorar o centro histórico, bastante cultura e boa comida.', '2025-02-01', 0, 0, 1, 3, 2),
+('Fiz uma trilha leve durante a tarde, deu pra ver toda a cidade do alto.', '2025-02-10', 0, 0, 1, 4, 7),
+('Último dia da viagem, aproveitei para revisitar meus lugares favoritos.', '2025-02-15', 0, 0, 1, 5, 4);
