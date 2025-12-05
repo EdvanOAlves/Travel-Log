@@ -1,0 +1,275 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+:root {
+    --branco: white;
+    --cor_web: #F8F9FA;
+    --cor_web_post: #F8F9FA;
+    --azul_default: #E2EBF6;
+    --azul_escuro: #8EB4E2;
+    --azul_default_opacity: #e2ebf688;
+    --cinza_default: #D9D9D9;
+    --cinza_escuro: #929292;
+    --cinza_escuro_hover: #9292928f;
+    --preto_hover: #0000001c;
+    --preto_click: #00000091;
+    --preto_fosco: #000000bb;
+    --preto_font: black;
+    --default_shadow: 6px 6px 10px #0000006b;
+}
+
+.selectable:hover{
+    background-color: var(--azul_default_opacity);
+    cursor:pointer;
+    border-radius: 8px;
+
+}
+
+
+
+body{
+    position: relative;
+    height: 100dvh;
+}
+
+
+
+/* Header */
+header {
+    display: flex;
+    width: 100%;
+    height: 70px;
+    padding: 10px;
+    background-color: var(--azul_default);
+    box-shadow: var(--default_shadow);
+}
+
+.containerLogo {
+    display: flex;
+    align-items: center;
+    width: 50%;
+}
+
+.containerSettings {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 30px;
+    width: 50%;
+}
+
+#settingsHeader {
+    width: auto;
+    height: 25px;
+}
+
+#profileHeader {
+    border-radius: 100%;
+    width: auto;
+    height: 70%;
+}
+
+.containerSettings div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--cinza_escuro);
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+}
+
+/* MAIN */
+
+main{
+
+    padding-bottom: 72px;
+}
+
+/* Itens do usuário */
+.userProfileHeader{
+    display: flex;
+    flex-direction: column;
+    padding-top:20px;
+    padding-inline: 15px;
+
+}
+.profileIdentifier{
+    display: flex;
+
+}
+
+.profileTitle{
+    display: flex;
+    flex-direction: column;
+    padding-inline: 18px;
+    padding-block: 16px;
+    gap: 16px;
+}
+
+.profileNickname{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.titleInfo{
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.followerInfo{
+    display: flex;
+    padding-block: 8px;
+    gap: 16px;
+}
+
+.profileDescription{
+    padding-block: 16px;
+}
+
+.profileNavBar{
+    padding-inline: 40px;
+    display: flex;
+    justify-content: space-between;
+
+    border-top: solid 2px var(--cinza_escuro);
+    padding-block: 12px;
+}
+
+
+/*Perfil Abas*/
+.navItem{
+    display: flex;
+    place-content: center;
+    gap: 2px;
+    color: var(--cinza_escuro);
+    padding:4px;
+}
+.navIcon{
+    opacity: 50%;
+}
+
+.navItem.selected{
+    color: black;
+}
+
+.navItem.selected .navIcon{
+    opacity: 100%;
+}
+
+
+/* CONTAINER DE LOGS */
+
+.containerLogs{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    padding: 25px;
+    gap: 2.5%;
+}
+
+
+.log{
+    width: 48%;
+    margin-top: 3%;
+    box-shadow: 5px 5px 15px #0004;
+}
+
+.logThumbnail{
+    width: 100%;
+}
+
+.logFooter{
+    display: flex;
+    align-items: center;
+    place-content: end;
+    gap: 4px;
+    width: 100%;
+    padding: 4px;
+}
+
+.logFooter span{
+    font-size: 12px;
+}
+
+/* Log Creator */
+.logCreator-thumbnail{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+    background-color: var(--cinza_default);
+    height: 83%;
+}
+
+/* Viagem */
+.viagem{
+    width: 48%;
+    margin-top: 3%;
+    box-shadow: 5px 5px 15px #0004;
+}
+
+.viagemFooter{
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    width: 100%;
+    padding: 4px;
+}
+
+.viagemFooter footerTxt{
+    font-size: 16px;
+}
+
+.viagemData{
+    font-size: 14px;
+}
+
+/* Log Creator */
+.logCreator-thumbnail{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+    background-color: var(--cinza_default);
+    height: 83%;
+}
+
+/* Footer */
+
+.navMob{
+    display: flex;
+    justify-content: space-around;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+
+    align-items: center;
+    
+    background-color: var(--azul_default) ;
+    font-size: 16px;
+
+}
+
+.navItem{
+    color: black;
+}
+
+.newLogButton{
+    height: 80%;
+}
+
+
+/*Classes designáveis*/
+
+.hidden{
+    display: none;
+}

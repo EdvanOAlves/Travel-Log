@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style_profile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- NAVEGAÇÃO -->
+    <header>
+        <div class="containerLogo">
+            <h1>TraveLog</h1>
+            <img src="" alt="">
+        </div>
+        <div class="containerSettings">
+            <img id="settingsHeader" src="img/settings.png" alt="">
+            <div>
+                <img id="profileHeader" src="img/profile.png" alt="">
+            </div>
+        </div>
+    </header>
+    <!-- MAIN -->
+    <main>
+        <div class="userProfileHeader">
+            <div class="profileIdentifier">
+                <img src="./img/emptyProfilePic.svg" alt="" class="profilePic">
+                <div class="profileTitle">
+                    <h3 class="profileNickname">
+                        @jãozinhoMoraes
+                    </h3>
+                    <span class="titleInfo">Logs 20</span>
+                </div>
+            </div>
+            <div class="followerInfo">
+                <span class="titleInfo">Seguidores 11</span>
+                <span class="titleInfo">Seguindo 11</span>
+            </div>
+            <p class="profileDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. </p>
+        </div>
+
+        <div class="profileContent">
+            <div class="profileNavBar">
+                <div class="navItem selected selectable">
+                    <img src="./img/navIcon_log.svg" alt="" class="navIcon">
+                    <span class="navTitle">Logs</span>
+                </div>
+                <div class="navItem selectable">
+                    <img src="./img/navIcon_viagem.svg" alt="" class="navIcon">
+                    <span class="navTitle">Viagens</span>
+                </div>
+                <div class="navItem selectable">
+                    <img src="./img/navIcon_graph.svg" alt="" class="navIcon">
+                    <span class="navTitle">Estatísticas</span>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- CONTAINERS -->
+        <div class="containerLogs hidden">
+            <div class="log logCreator">
+                <div class="logCreator-thumbnail">
+                    <img src="./img/newLog_Icon.svg" alt="">
+                    <span class="logCreatorTxt">Novo Log</span>
+                </div>
+
+                <footer class="logFooter">
+                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                    <span class="footerTxt">?</span>
+                </footer>
+
+            </div>
+
+            <div class="log">
+                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                <footer class="logFooter">
+                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                    <span class="footerTxt">Xique-Xique - BA</span>
+                </footer>
+            </div>
+            <div class="log">
+                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                <footer class="logFooter">
+                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                    <span class="footerTxt">Xique-Xique - BA</span>
+                </footer>
+            </div>
+            <div class="log">
+                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                <footer class="logFooter">
+                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                    <span class="footerTxt">Xique-Xique - BA</span>
+                </footer>
+            </div>
+            <div class="log">
+                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                <footer class="logFooter">
+                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                    <span class="footerTxt">Xique-Xique - BA</span>
+                </footer>
+            </div>
+            <div class="log">
+                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                <footer class="logFooter">
+                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                    <span class="footerTxt">Xique-Xique - BA</span>
+                </footer>
+            </div>
+        </div>
+
+        <div class="containerLogs">
+            <div class="viagem viagemCreator">
+                <div class="logCreator-thumbnail">
+                    <img src="./img/newViagem_Icon.svg" alt="">
+                </div>
+                <footer class="viagemFooter">
+                    <span class="footerTxt">Nova Viagem</span>
+                </footer>
+            </div>
+
+            <div class="viagem">
+                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                <footer class="viagemFooter">
+                    <span class="footerTxt">Férias Bem Legais</span>
+                    <span class="viagemData">21/11/2025</span>
+                </footer>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="navMob">
+        <span class="navItem">Home</span>
+        <span class="navItem">Explorar</span>
+
+        <img class="newLogButton" src="./img/newLogButton.svg" alt="">
+        <span class="navItem">Favoritos</span>
+        <span class="navItem">Filtro</span>
+
+    </footer>
+
+
+
+
+</body>
+
+</html>
