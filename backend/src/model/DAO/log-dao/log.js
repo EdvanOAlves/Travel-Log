@@ -15,42 +15,13 @@ const prisma = new PrismaClient();
 // Retorna os logs para o feed de explorar (os mais recentes)
 //Precisa do id de usuário para identificar se o log foi curtido
 const getExploreLogs = async (user_id) => {
-try {
+    try {
         result = await prisma.$queryRawUnsafe(`CALL BuscarLogsRecentes(${user_id})`);
 
         if (Array.isArray(result)) {
             const output = [];
             for (item of result) {
-                log = {
-                    log_id: item.f3,
-                    descricao: item.f4,
-                    data_publicacao: item.f5,
-                    qtde_curtidas: item.f6,
-                    qtde_favoritos:item.f7,
-                    local:{
-                        local_id: item.f11,
-                        ponto_interesse: item.f12,
-                        cidade: item.f13,
-                        estado: item.f14,
-                        pais_id: item.f15,
-                        pais: item.f16
-                    },
-                    autor:{
-                        autor_id: item.f0,
-                        autor_apelido: item.f1,
-                        autor_foto: item.f2
-                    },
-                    viagem: {
-                        titulo_viagem: item.f8,
-                        tipo_viagem_id: item.f9,
-                        tipo_viagem: item.f10,
-                    },
-                    interacao: {
-                        curtido: item.f17,
-                        favoritado: item.f18
-                    }
-                }
-                output.push(log);
+                output.push(modelarDadosLog(item));
             }
             return output;
         } else {
@@ -63,7 +34,7 @@ try {
 
 // Retorna a viagem que um log pertence
 const getTravelByLogId = async (id) => {
-    
+
 }
 
 
@@ -116,7 +87,7 @@ const setUpdateTravelById = async (travel) => {
 }
 
 // Deletar uma viagem
-const setDeleteTravelById = async (id) =>{
+const setDeleteTravelById = async (id) => {
     try {
         sql = `CALL DeletaViagem(${id})`;
         result = await prisma.$queryRawUnsafe(sql);
@@ -126,19 +97,53 @@ const setDeleteTravelById = async (id) =>{
         } else {
             return false
         }
-        
+
     } catch (error) {
-        
+
     }
 }
 
 //TODO: deletar o script de testes depois
-async function main(){
+async function main() {
     result = await getExploreLogs(1);
-    console.log(banana);
+    console.log(result);
 
 }
 main();
+
+const modelarDadosLog = (item) => {
+    log = {
+        autor: {
+            autor_id: item.f0,
+            autor_apelido: item.f1,
+            autor_foto: item.f2
+        },
+        log_id: item.f3,
+        descricao: item.f4,
+        data_publicacao: item.f5,
+        qtde_curtidas: item.f6,
+        qtde_favoritos: item.f7,
+        viagem: {
+            viagem_id: item.f8,
+            titulo_viagem: item.f9,
+            tipo_viagem_id: item.f10,
+            tipo_viagem: item.f11,
+        },
+        local: {
+            local_id: item.f12,
+            ponto_interesse: item.f13,
+            cidade: item.f14,
+            estado: item.f15,
+            pais_id: item.f16,
+            pais: item.f17
+        },
+        interacao: {
+            curtido: item.f18,
+            favoritado: item.f19
+        }
+    }
+    return log;
+}
 
 module.exports = {
     // getTravelByLogId,
