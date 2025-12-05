@@ -22,6 +22,19 @@
     --default_shadow: 6px 6px 10px #0000006b;
 }
 
+.selectable:hover{
+    background-color: var(--azul_default_opacity);
+    cursor:pointer;
+    border-radius: 8px;
+
+}
+
+body{
+    position: relative;
+    height: 100dvh;
+}
+
+
 
 /* Header */
 header {
@@ -72,8 +85,10 @@ header {
 
 main{
 
+    padding-bottom: 72px;
 }
 
+/* Itens do usuário */
 .userProfileHeader{
     display: flex;
     flex-direction: column;
@@ -123,11 +138,14 @@ main{
     padding-block: 12px;
 }
 
+
+/*Perfil Abas*/
 .navItem{
     display: flex;
     place-content: center;
     gap: 2px;
-    color: var(--cinza_escuro)
+    color: var(--cinza_escuro);
+    padding:4px;
 }
 .navIcon{
     opacity: 50%;
@@ -150,12 +168,13 @@ main{
     justify-content: flex-start;
     align-content: flex-start;
     padding: 25px;
-    gap: 14px;
+    gap: 2.5%;
 }
 
 
 .log{
     width: 48%;
+    margin-top: 3%;
     box-shadow: 5px 5px 15px #0004;
 }
 
@@ -184,4 +203,31 @@ main{
     place-content: center;
     background-color: var(--cinza_default);
     height: 83%;
+}
+
+/* Footer */
+
+.navMob{
+    display: flex;
+    justify-content: space-around;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+
+    align-items: center;
+    
+    background-color: var(--azul_default) ;
+    font-size: 16px;
+
+}
+
+.navItem{
+    color: black;
+}
+
+.newLogButton{
+    height: 80%;
 }
