@@ -205,6 +205,36 @@ main{
     height: 83%;
 }
 
+/* Viagem */
+.viagem{
+    width: 48%;
+    margin-top: 3%;
+    box-shadow: 5px 5px 15px #0004;
+}
+
+.viagemFooter{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    width: 100%;
+    padding: 4px;
+}
+
+.viagemFooter span{
+    font-size: 10px;
+}
+
+/* Log Creator */
+.logCreator-thumbnail{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+    background-color: var(--cinza_default);
+    height: 83%;
+}
+
 /* Footer */
 
 .navMob{
