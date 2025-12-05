@@ -45,7 +45,7 @@ BEGIN
     END IF;
 END $$
 -- Para deixar de seguir um usuário
-CREATE PROCEDURE RemoverRelacaoSeguidores(
+CREATE PROCEDURE RemoverRelacaoSeguidor(
     IN input_usuario_id INT,
     IN input_seguidor INT
 )
@@ -165,8 +165,8 @@ BEGIN
 		SELECT tbl_seguidor.id, 
         tbl_usuario.id AS usuario_seguidor_id, tbl_usuario.nome, tbl_usuario.apelido, tbl_usuario.foto_perfil
         FROM tbl_seguidor
-        JOIN tbl_usuario ON tbl_seguidor.usuario_id = tbl_usuario.id
-        WHERE tbl_seguidor.seguidor_id = input_usuario_id;
+        JOIN tbl_usuario ON tbl_seguidor.seguidor_id = tbl_usuario.id
+        WHERE tbl_seguidor.usuario_id = input_usuario_id;
 	END IF;
 END$$
 DELIMITER ;
