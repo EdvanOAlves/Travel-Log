@@ -90,6 +90,26 @@ const getSelectCommentById = async (id) => {
 
 }
 
+const getSelectLastComment = async (id) => {
+
+    try {
+        
+        sql = `SELECT * FROM tbl_comentario ORDER BY id DESC LIMIT 1`
+
+        result = await prisma.$queryRawUnsafe(sql)
+
+        if(Array.isArray(sql)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 //Registra um comentário
 const setInsertComment = async (comment) => {
 
@@ -139,6 +159,7 @@ const setDeactiveComment = async (comentario_id) => {
 module.exports = {
     getSelectCommentsByLogId,
     getSelectCommentById,
+    getSelectLastComment,
     setDeactiveComment,
     setInsertComment
 }
