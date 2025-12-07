@@ -17,11 +17,11 @@ const setToggleFavoriteLog = async (favorite) => {
 
     try {
         
-        sql = `CALL AltenarRelacaoFavoritos(${favorite.id_log}, ${favorite.id_usuario})`
+        sql = `CALL AltenarRelacaoFavoritos(${favorite.log_id}, ${favorite.usuario_id})`
 
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(Array.isArray(result)) {
+        if(result) {
             return result
         } else {
             return false
