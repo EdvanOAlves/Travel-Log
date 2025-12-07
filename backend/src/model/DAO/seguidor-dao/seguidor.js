@@ -39,7 +39,7 @@ const getSelectFollowing = async (user_id) => {
                 return {
 
                     relacao_id: item.f0,
-                    seguidor_id: item.f1,
+                    seguido_id: item.f1,
                     nome: item.f2,
                     apelido: item.f3,
                     foto_perfil: item.f4
@@ -47,8 +47,6 @@ const getSelectFollowing = async (user_id) => {
                 }
 
             })
-
-            console.log(formattedResult)
 
             return formattedResult
 
@@ -149,32 +147,9 @@ const setDeleteFollower = async (follow) => {
 
 }
 
-//Remove Seguidores
-const setDeleteAllFollowersByUserId = async (user_id) => {
-
-    try {
-
-        sql = `CALL RemoverRelacoesSeguidores(${user_id})`
-            
-        result = await prisma.$executeRawUnsafe(sql)   
-        
-        if(result) {
-            return result
-        } else {
-            return false
-        }
-
-    } catch (error) {
-        return false
-    }
-
-
-}
-
 module.exports = {
     getSelectFollowers,
     getSelectFollowing,
     setInsertFollower,
-    setDeleteFollower,
-    setDeleteAllFollowersByUserId
+    setDeleteFollower
 }
