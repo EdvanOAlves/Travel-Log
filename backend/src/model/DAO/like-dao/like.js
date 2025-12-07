@@ -17,7 +17,7 @@ const setToggleLikeLog = async (like) => {
 
     try {
 
-        sql = `CALL AltenarRelacaoLikes(${like.id_log}, ${like.id_usuario})`
+        sql = `CALL AltenarRelacaoLikes(${like.log_id}, ${like.usuario_id})`
 
         result = await prisma.$executeRawUnsafe(sql)
 
