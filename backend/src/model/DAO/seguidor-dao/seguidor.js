@@ -12,19 +12,46 @@ const { PrismaClient } = require("../../../generated/prisma")
 // Criando novo objeto baseado na classe PrismaClient
 const prisma = new PrismaClient()
 
-//Retorna o última relação registrada
-const getSelectLastFollow = async () => {
+//Retorna todos os usuários que o usuário segue pelo id
+const getSelectFollowing = async (user_id) => {
 
     try {
         
-        sql = `select * from tbl_seguidor order by id desc limit 1;`
+        sql = `CALL BuscarSeguindo(${user_id})`
 
         result = await prisma.$queryRawUnsafe(sql)
-        
-        if(Array.isArray(result)) {
+
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
             return result
-        } else {
-            return false
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
+            
+            formattedResult = result.map(item => {
+
+                return {
+
+                    relacao_id: item.f0,
+                    seguidor_id: item.f1,
+                    nome: item.f2,
+                    apelido: item.f3,
+                    foto_perfil: item.f4
+
+                }
+
+            })
+
+            console.log(formattedResult)
+
+            return formattedResult
+
         }
 
     } catch (error) {
@@ -33,15 +60,62 @@ const getSelectLastFollow = async () => {
 
 }
 
-//Segue determinado usuário
+//Retorna todos os seguidores do usuário pelo id
+const getSelectFollowers = async (user_id) => {
+
+    try {
+        
+        sql = `CALL BuscarSeguidores(${user_id})`
+
+        result = await prisma.$queryRawUnsafe(sql)
+
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
+            return result
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
+
+            formattedResult = result.map(item => {
+
+                return {
+
+                    relacao_id: item.f0,
+                    seguidor_id: item.f1,
+
+                }
+
+            })
+
+            return formattedResult
+
+        }
+
+    } catch(error) {
+        return false
+    }
+
+}
+
+//Registra uma relacao entre usuario e seguidor
 const setInsertFollower = async (follow) => {
 
     try {
         
-        sql = `CALL Follow(${follow.seguidor_id}, ${follow.usuario_id})`
+        if (follow.usuario_id == follow.seguidor_id) {
+            return false
+        }
 
+        sql = `CALL CriarRelacaoSeguidor(${follow.usuario_id}, ${follow.seguidor_id})`
+            
         result = await prisma.$queryRawUnsafe(sql)
-
+        
         if(Array.isArray(result)) {
             return result
         } else {
@@ -54,16 +128,16 @@ const setInsertFollower = async (follow) => {
 
 }
 
-//Deixa de seguir determinado usuário
+//Remove um seguidor
 const setDeleteFollower = async (follow) => {
 
     try {
+
+        sql = `CALL RemoverRelacaoSeguidores(${follow.usuario_id}, ${follow.seguidor_id})`
+            
+        result = await prisma.$executeRawUnsafe(sql)   
         
-        sql = `CALL Unfollow(${follow.usuario_id}, ${follow.seguidor_id})`
-
-        result = await prisma.$queryRawUnsafe(sql)
-
-        if(Array.isArray(result)) {
+        if(result) {
             return result
         } else {
             return false
@@ -72,11 +146,35 @@ const setDeleteFollower = async (follow) => {
     } catch (error) {
         return false
     }
+
+}
+
+//Remove Seguidores
+const setDeleteAllFollowersByUserId = async (user_id) => {
+
+    try {
+
+        sql = `CALL RemoverRelacoesSeguidores(${user_id})`
+            
+        result = await prisma.$executeRawUnsafe(sql)   
+        
+        if(result) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
 
 }
 
 module.exports = {
-    getSelectLastFollow,
+    getSelectFollowers,
+    getSelectFollowing,
     setInsertFollower,
-    setDeleteFollower
+    setDeleteFollower,
+    setDeleteAllFollowersByUserId
 }
