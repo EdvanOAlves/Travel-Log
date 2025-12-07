@@ -320,9 +320,11 @@ main {
     margin: 0px 5px 0px 5px;
     border-radius: 100%;
     background-color: var(--cinza_escuro_hover);
+    transition: 0.4s ease-in-out;
+    pointer-events: all;
 }
 
-.backgroundImgLog div:nth-last-child(1) {
+.containerArrowRight {
     right: 0;
 }
 
@@ -333,6 +335,11 @@ main {
 
 .arrowImgLogLeft {
     transform: rotate(180deg);
+}
+
+.hiddeArrowImg {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .footerLog {
@@ -648,6 +655,8 @@ main {
     margin: 0px 5px 0px 5px;
     border-radius: 100%;
     background-color: var(--cinza_escuro_hover);
+    transition: 0.4s ease-in-out;
+    pointer-events: all;
 }
 
 .backgroundImgLogFull div img {
@@ -655,17 +664,12 @@ main {
     height: 17px;
 }
 
-.backgroundImgLogFull div:nth-child(1) {
+.backgroundImgLogFull div:nth-child(3) {
     right: 0;
 }
 
-.arrowImgLogRightFull {
+.arrowImgLogLeftFull {
     transform: rotate(180deg);
-}
-
-.imgLogFull {
-    width: 100%;
-    height: 100%;
 }
 
 .footerLogFull {
@@ -822,6 +826,7 @@ main {
     font-size: 12px;
 }
 
+/* Aba de criação de Log */
 #newLog {
     position: absolute;
     display: flex;
@@ -863,6 +868,10 @@ main {
     height: 50px;
 }
 
+#selectImgInput {
+    display: none;
+}
+
 .imgNewLog div {
     position: absolute;
     display: flex;
@@ -877,11 +886,11 @@ main {
     border-radius: 100%;
 }
 
-.imgNewLog div:nth-child(1) {
+.containerArrowRightNewLog {
     right: 5px;
 }
 
-.imgNewLog div:nth-child(3) {
+.containerArrowLeftNewLog {
     left: 5px;
 }
 
@@ -934,12 +943,18 @@ main {
 #arrowSelectTravel {
     width: auto;
     height: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#arrowSelectTravel.changeArrowNewLog {
+    transform: rotate(180deg);
 }
 
 #listTravel {
     position: absolute;
-    top: 75%;
-    width: 90%;
+    top: 40px;
+    left: 1px;
+    width: 89%;
     height: 20px;
     background-color: var(--branco);
     border-bottom-right-radius: 20px;
@@ -949,6 +964,12 @@ main {
     border-color: var(--cinza_default);
     border-width: 2px;
     opacity: 0;
+    transition: 0.5s ease-in-out;
+}
+
+#listTravel.expandListTravelNewLog {
+    height: 150px;
+    opacity: 1;
 }
 
 #listTravel ul {
@@ -986,6 +1007,13 @@ main {
     border-style: solid;
     border-color: var(--azul_escuro);
     border-width: 2px;
+    transition: 0.2s ease-in-out;
+}
+
+#visibleTravel.ocultVisible {
+    background-color: var(--cinza_default);
+    border-color: var(--cinza_escuro);
+    color: var(--cinza_escuro);
 }
 
 .containerLocationNewLog {
@@ -1213,7 +1241,7 @@ main {
     }
 
     #listTravel {
-        width: 70%;
+        width: 69%;
     }
 
     #listTravel li {
@@ -1379,7 +1407,7 @@ main {
 
     #logFull {
         width: 50%;
-        height: 95%;
+        height: 90%;
         top: 0px;
     }
 
@@ -1433,6 +1461,10 @@ main {
 
     #newLog {
         width: 70%;
+    }
+
+    #listTravel {
+        width: 69.6%;
     }
 
     #navMob {
