@@ -1,9 +1,17 @@
 /**********************************************************************
  * Objetivo: Arquivo da camada de controle responsável pela validação
  * de dados da tabela de seguidor do BD.
+ * 
  * Data: 28/11/2025
- * Developer: Gabriel Lacerda Correia
  * Versão: 1.0.0
+ * Developer: Gabriel Lacerda Correia
+ * Sobre: Controller feita sem as procedures inicialmente
+ * 
+ * Data: 07/12/2025
+ * Versão: 1.1.0
+ * Developer: Gabriel Lacerda Correia
+ * Sobre: Adicionando camada de controle completa, inicio dos testes
+ * 
  *********************************************************************/
 
 // Importando funções de dependência de dados do usuário
@@ -12,48 +20,38 @@ const seguidorDAO = require("../../model/DAO/seguidor-dao/seguidor.js")
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
-//Segue um determinado usuário
-const segueUsuario = async (follow_up, contentType) => {
+//Retorna todos os usuários que o usuário segue pelo id
+const buscarSeguindo = async (user_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
+        
     try {
         
-        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
+        if(!isNaN(user_id) || user_id <= 0 || user_id == undefined || user_id == null || user_id == "") {
 
-            validaFollow = validarFollow(follow_up)
+            resultSeguidor = await seguidorDAO.getSelectFollowing(user_id)
 
-            if(!validaFollow) {
+            if(resultSeguidor) {
 
-                resultFollow = await seguidorDAO.setInsertFollower(follow_up)
+                if(resultSeguidor.length > 0) {
 
-                if(resultFollow) {
+                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.items.seguidores    = resultSeguidor
 
-                    if(resultFollow.length > 0) {
-
-                        lastFollow = await seguidorDAO.getSelectLastFollow()
-
-                        MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_CREATED_ITEM.status
-                        MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_CREATED_ITEM.status_code
-                        MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_CREATED_ITEM.message
-                        MESSAGES.DEFAULT_HEADER.items.follow    = lastFollow
-
-                        return MESSAGES.DEFAULT_HEADER //201
-
-                    } else {
-                        return MESSAGES.ERROR_NOT_FOUND //404
-                    }
+                    console.log(MESSAGES.DEFAULT_HEADER.items)
+                    return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
-                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                    return MESSAGES.ERROR_NOT_FOUND //404
                 }
 
             } else {
-                return validaFollow //400
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
 
         } else {
-            return MESSAGES.ERROR_CONTENT_TYPE //415
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
     } catch (error) {
@@ -62,75 +60,155 @@ const segueUsuario = async (follow_up, contentType) => {
 
 }
 
-//Deixa de seguir determinado usuário
-const unfollowUsuario = async (unfollow, contentType) => {
+//Retorna todos os seguidores do usuário pelo id
+const buscarSeguidores = async (user_id) => {
 
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
+     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+        
     try {
         
-        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
+        if(!isNaN(user_id) || user_id <= 0 || user_id == undefined || user_id == null || user_id == "") {
 
-            validaUnfollow = validarFollow(unfollow)
+            resultSeguidor = await seguidorDAO.getSelectFollowers(user_id)
 
-            if(!validaUnfollow) {
+            if(resultSeguidor) {
 
-                resultFollow = await seguidorDAO.setDeleteFollower(unfollow)
+                if(resultSeguidor.length > 0) {
 
-                if(resultFollow) {
+                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.items.seguidores    = resultSeguidor
 
-                    if(resultFollow.length == 0) {
+                    console.log(MESSAGES.DEFAULT_HEADER.items)
+                    return MESSAGES.DEFAULT_HEADER //200
 
+                } else {
+                    return MESSAGES.ERROR_NOT_FOUND //404
+                }
+
+            } else {
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+            }
+
+        } else {
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+
+}
+
+//Registra uma relacao entre usuario e seguidor
+const insereSeguidor = async (follow, contentType) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    
+    try {
+        
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON') {
+
+            validar = validarSeguidor(follow)
+            
+            if(!validar) {
+                
+                resultSeguidor = await seguidorDAO.setInsertFollower(follow)
+
+                if(resultSeguidor) {
+
+                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_CREATED_ITEM.status
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.message             = MESSAGES.SUCCESS_CREATED_ITEM.message
+                    delete MESSAGES.DEFAULT_HEADER.items
+    
+                    return MESSAGES.DEFAULT_HEADER //200
+    
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+    
+            } else {
+                return validar //400
+            }
+
+        } else {
+            return MESSAGES.ERROR_CONTENT_TYPE //415
+        }
+    
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+
+}
+
+//Remove um seguidor
+const deletaSeguidor = async (follow, contentType) => {
+
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    
+        try {
+    
+            if(String(contentType).toUpperCase() == 'APPLICATION/JSON') {
+            
+                validar = validarSeguidor(follow)
+
+                if (!validar) {
+        
+                    let resultSeguidor = await seguidorDAO.setDeleteFollower(follow)
+        
+                    if (resultSeguidor) {
+        
                         MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_DELETE.status
                         MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_DELETE.status_code
                         MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_DELETE.message
                         delete MESSAGES.DEFAULT_HEADER.items
-
-                        return MESSAGES.DEFAULT_HEADER //200
-
+        
+                        return MESSAGES.DEFAULT_HEADER // 200
+        
                     } else {
-                        return MESSAGES.ERROR_NOT_FOUND //404
+                        return MESSAGES.ERROR_INTERNAL_SERVER_MODEL // 500
                     }
-
+        
                 } else {
-                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                    return validar // 400
                 }
 
             } else {
-                return validaFollow //400
+                return MESSAGES.ERROR_CONTENT_TYPE //415
             }
-
-        } else {
-            return MESSAGES.ERROR_CONTENT_TYPE //415
+    
+        } catch (error) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER // 500
         }
-
-    } catch (error) {
-        console.log(error)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
-    }
 
 }
 
-//Valida dados do follow
-const validarFollow = (follow) => {
+//Valida dados vindos da requisição
+const validarSeguidor = (seguir) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
-    if(isNaN(follow.usuario_id) || follow.usuario_id == null || follow.usuario_id == undefined || follow.usuario_id == "") {
+    if (seguir.usuario_id == null || seguir.usuario_id == undefined || seguir.usuario_id == "" || typeof seguir.usuario_id !== "number") {
 
-        MESSAGES.ERROR_REQUIRED_FIELDS += " [USUARIO ID]"
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [USUÁRIO ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (isNaN(follow.seguidor_id) || follow.seguidor_id == null || follow.seguidor_id == undefined || follow.seguidor_id == ""){
-        MESSAGES.ERROR_REQUIRED_FIELDS += " [SEGUIDOR ID]"
+    } else if (seguir.seguidor_id == null || seguir.seguidor_id == undefined || seguir.seguidor_id == "" || typeof seguir.seguidor_id !== "number") {
+
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [SEGUIDOR ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
+
     } else {
         return false
     }
 
 }
 
+
 module.exports = {
-    segueUsuario,
-    unfollowUsuario
+    buscarSeguindo,
+    buscarSeguidores,
+    insereSeguidor,
+    deletaSeguidor
 }
