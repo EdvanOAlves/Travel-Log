@@ -21,7 +21,7 @@ const setToggleLikeLog = async (like) => {
 
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(Array.isArray(result)) {
+        if(result) {
             return result
         } else {
             return false
