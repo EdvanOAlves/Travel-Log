@@ -1,39 +1,247 @@
 'use strict'
 
-const inputDateContainer = document.querySelector('.containerFilterDate')
-const arrowTypeFilterDesk = document.getElementById('arrowType')
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
+const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
+const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
+const liListTravelNewLog = document.querySelectorAll('#listTravel li')
+const allFollower = document.querySelectorAll('.follower')
+const iconProfileUser = document.getElementById('profileNav')
+const iconProfileMobile = document.querySelector('.containerSettings div')
+const inputDateContainer = document.querySelector('.containerFilterDate')
+const inputDateBegin = document.getElementById('filterDateBegin')
+const inputDateEnd = document.getElementById('filterDateEnd')
+const inputLocationFilter = document.getElementById('filterLocation')
+const inputFollowerDesk = document.getElementById('inputFollowerDesk')
 const inputFollowerMobile = document.getElementById('inputFollowerMob')
 const closeInputMobile = document.getElementById('closeInputMob')
-const inputFollowerDesk = document.getElementById('inputFollowerDesk')
-const filterMobile = document.getElementById('mobFilter')
+const arrowChangeImgLogLeft = document.querySelectorAll('.containerArrowLeft')
+const arrowChangeImgLogRight = document.querySelectorAll('.containerArrowRight')
+const arrowChangeImgLogLeftLogFull = document.querySelector('.containerArrowImgLogLeftFull')
+const arrowChangeImgLogRightLogFull = document.querySelector('.containerArrowImgLogRightFull')
+const arrowTypeFilterDesk = document.getElementById('arrowType')
 const arrowTypeFilterMobile = document.getElementById('arrowTypeMob')
-var elementHigh = null
-const logs = document.querySelectorAll('.log')
+const arrowNewLog = document.getElementById('arrowSelectTravel')
 const newPostMobile = document.getElementById('newPost')
 const newLogDesk = document.getElementById('newLogSection')
+const buttonVisibleLog = document.getElementById('visibleTravel')
+const filterMobile = document.getElementById('mobFilter')
+const logs = document.querySelectorAll('.log')
+const likes = document.querySelectorAll('.likeImg')
+const favorites = document.querySelectorAll('.favImg')
+const profilesName = document.querySelectorAll('.nameProfileLog')
+const likeLogFull = document.querySelector('.likeLogFullImg')
+const favoriteLogFull = document.querySelector('.favLogFullImg')
+var elementHigh = null
 
-logs.forEach(log => {
-    log.addEventListener('click', () => {
-        logFull(event.currentTarget.id)
-    })
-});
+//Cria e adiciona os Logs a tela principal
+function createLogs(log) {
+    const containerLogs = document.getElementById('containerLogs')
+    let logDiv = document.createElement('div')
+    let headerLog = document.createElement('div')
+    let backImg = document.createElement('div')
+    let footerLog = document.createElement('div')
+    let divProfile = document.createElement('div')
+    let imgProfile = document.createElement('img')
+    let spanName = document.createElement('span')
+    let divArrow1 = document.createElement('div')
+    let divArrow2 = document.createElement('div')
+    let imgLog = document.createElement('img')
+    let arrowRight = document.createElement('img')
+    let arrowLeft = document.createElement('img')
+    let divLikes = document.createElement('div')
+    let imgLike = document.createElement('img')
+    let numberLikes = document.createElement('span')
+    let divFav = document.createElement('div')
+    let imgFav = document.createElement('img')
+    let numberFav = document.createElement('span')
+    let divLocation = document.createElement('div')
+    let imgLocation = document.createElement('img')
+    let spanLocation = document.createElement('span')
 
+    logDiv.classList.add('log')
+    headerLog.classList.add('headerLog')
+    backImg.classList.add('backgroundImgLog')
+    footerLog.classList.add('footerLog')
+    divProfile.classList.add('profileLog')
+    spanName.classList.add('nameProfileLog')
+    imgLog.classList.add('imgLog')
+    arrowRight.classList.add('arrowImgLogRight')
+    arrowLeft.classList.add('arrowImgLogLeft')
+    divLikes.classList.add('likesLog')
+    imgLike.classList.add('likeImg')
+    numberLikes.classList.add('numberLikes')
+    divFav.classList.add('favLog')
+    imgFav.classList.add('favImg')
+    numberFav.classList.add('numberFav')
+    divLocation.classList.add('containerLocationLog')
+    spanLocation.classList.add('lcoationLog')
+
+    headerLog.append(divProfile, spanName)
+    divProfile.appendChild(imgProfile)
+    backImg.append(divArrow1, divArrow2, imgLog)
+    divArrow1.appendChild(arrowLeft)
+    divArrow2.appendChild(arrowRight)
+    footerLog.append(divLikes, divFav, divLocation)
+    divLikes.append(imgLike, numberLikes)
+    divFav.append(imgFav, numberFav)
+    divLocation.append(imgLocation, spanLocation)
+    logDiv.append(headerLog, backImg, footerLog)
+    containerLogs.appendChild(logDiv)
+
+    //Validar quantidade Imgs
+    if (log.midia.length == 0) {
+        divArrow1.classList.add('hiddeArrowImg')
+        divArrow2.classList.add('hiddeArrowImg')
+
+    }
+
+}
+
+//Altera a imagem do log para a esquerda
+function changeImgLeft(arrow) {
+    let log = arrow.closest('.log')
+    let imgLog = document.querySelector(`#${log.id} .imgLog`)
+    let dataImg = imgLog.dataset.img.split(',')
+    let dataPosition = Number(imgLog.dataset.position)
+
+    if (dataPosition <= dataImg.length - 1 && dataPosition != 0) {
+        let dataImgPosition = dataPosition - 1
+        imgLog.src = `${dataImg[dataImgPosition]}`
+        imgLog.dataset.position = dataImgPosition
+
+        validePositionImgLog(dataImg, dataImgPosition, arrow)
+    }
+}
+
+//Altera a imagem do log para a direita
+function changeImgRight(arrow) {
+    let log = arrow.closest('.log')
+    let imgLog = document.querySelector(`#${log.id} .imgLog`)
+    let dataImg = imgLog.dataset.img.split(',')
+    let dataPosition = Number(imgLog.dataset.position)
+
+    if (dataPosition < dataImg.length - 1) {
+        let dataImgPosition = dataPosition + 1
+        imgLog.src = `${dataImg[dataImgPosition]}`
+        imgLog.dataset.position = dataImgPosition
+
+        validePositionImgLog(dataImg, dataImgPosition, arrow)
+    }
+}
+
+//Valida em qual posição a imagem está e trata possíveis erros na inserção da img
+function validePositionImgLog(dataImg, positionImg, arrow) {
+    if (positionImg == 0 || positionImg == dataImg.length - 1) {
+        arrow.classList.toggle('hiddeArrowImg')
+
+    } else {
+        if (arrow.classList == 'containerArrowLeft') {
+            let log = arrow.closest('.log')
+            let arrowRight = document.querySelector(`#${log.id} .containerArrowRight`)
+
+            arrowRight.classList.remove('hiddeArrowImg')
+
+        } else if (arrow.classList == 'containerArrowRight') {
+            let log = arrow.closest('.log')
+            let arrowLeft = document.querySelector(`#${log.id} .containerArrowLeft`)
+
+            arrowLeft.classList.remove('hiddeArrowImg')
+
+        } else if (arrow.classList == 'containerArrowImgLogLeftFull') {
+            arrowChangeImgLogRightLogFull.classList.remove('hiddeArrowImg')
+
+        } else if (arrow.classList == 'containerArrowImgLogRightFull') {
+            arrowChangeImgLogLeftLogFull.classList.remove('hiddeArrowImg')
+
+        }
+    }
+}
+
+//Cria e adiciona os seguidores
+function createFollower(follower) {
+    const containerFollower = document.querySelector('containerFollowerList')
+    const containerFollowerMobile = document.getElementById('resultFollower')
+
+    let divFollower = document.createElement('div')
+    let divProfile = document.createElement('div')
+    let imgProfile = document.createElement('img')
+    let spanName = document.createElement('span')
+
+    divFollower.classList.add('follower')
+    divProfile.classList.add('profileFollower')
+
+    divFollower.append(divProfile, spanName)
+    divProfile.appendChild(imgProfile)
+    containerFollower.appendChild(divFollower)
+
+    let divFollowerMob = document.createElement('div')
+    let divProfileMob = document.createElement('div')
+    let imgProfileMob = document.createElement('img')
+    let spanNameMob = document.createElement('span')
+
+    divFollowerMob.classList.add('follower')
+    divProfileMob.classList.add('profileFollower')
+
+    divFollowerMob.append(divProfileMob, spanNameMob)
+    divProfileMob.appendChild(imgProfileMob)
+    containerFollowerMobile.appendChild(divFollowerMob)
+
+}
+
+//Adiciona as viagens na lista
+function getTravelLi(li) {
+    const listTravel = document.querySelector('#listTravel ul')
+
+    let createLi = document.createElement('li')
+
+    listTravel.appendChild(createLi)
+}
+
+//Adiciona os tipos de viagens a lista
+function getTypeTravelDefault(li) {
+    const listTravelDesk = document.querySelector('#listTypeLog ul')
+    const listTravelMob = document.querySelector('#listTypeLogMob ul')
+
+    let liDesk = document.createElement('li')
+    let liMob = document.createElement('li')
+
+    listTravelDesk.appendChild(liDesk)
+    listTravelMob.appendChild(liMob)
+}
+
+//Insere a viagem no span de seleção
+function setTravel(li) {
+    const textTravel = document.querySelector('.selectTravel span')
+    const listTravel = document.getElementById('listTravel')
+
+    textTravel.innerHTML = li.textContent
+
+    listTravel.classList.remove('expandListTravelNewLog')
+}
+
+//Insere o tipo de viagem no span de seleção
+function setTypeTravel(li) {
+    const textTravelDesk = document.querySelector('.containerListTypeLog span')
+    const textTravelMob = document.querySelector('.containerListTypeLogMob span')
+    const listTypeTravelDesk = document.getElementById('listTypeLog')
+    const listTypeTravelMob = document.getElementById('listTypeLogMob')
+
+    textTravelDesk.innerHTML = li.textContent
+    textTravelMob.innerHTML = li.textContent
+
+    listTypeTravelMob.classList.remove('expandirListMob')
+    listTypeTravelDesk.classList.remove('expandirListDesk')
+
+    //Função chamar logs pelo filtro de tipo de viagem
+}
+
+//Destaca o Log clicado
 function logFull(id) {
     const logClick = document.getElementById(id).querySelectorAll('*')
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
-    console.log(logFull)
-    console.log(logClick)
-    // const imgLogFull = document.querySelector(`#${id} .profileLogFull img`)
-    // const nameProfile = document.querySelector(`#${id} .nameProfileLogFull`)
-    // const travelLog = document.querySelector(`#${id} .nameTravel`)
-    // const location = document.querySelector(`#${id} .locationLogFull`)
-    // const imgLog = document.querySelector(`#${id} .imgLogFull`)
-    // const numberLikes = document.querySelector(`#${id} .numberLikesFull`)
-    // const numberFav = document.querySelector(`#${id} .numberFavFull`)
-    // console.log(logClick[3].textContent)
+
     logFull[3].innerHTML = logClick[3].textContent
     logFull[5].innerHTML = ''
     logFull[8].innerHTML = logClick[19].textContent
@@ -42,82 +250,381 @@ function logFull(id) {
     logFull[21].innerHTML = logClick[14].textContent
 
     elementHigh = logFull1.id
-    filterBlack.style.display = 'flex'
-    logFull1.style.opacity = 1
-    logFull1.style.pointerEvents = 'all'
+    filterBlack.classList.toggle('showFilter')
+    logFull1.classList.toggle('showModal')
+
+    logFull[12].dataset.img = logClick[7].dataset.img
 }
 
-newLogDesk.addEventListener('click', showNewLog)
+//Destaca a aba de criação de Log
+function showNewLog() {
+    const newLog = document.getElementById('newLog')
+    filterBlack.classList.toggle('showFilter')
+    newLog.classList.toggle('showModal')
 
-newPostMobile.addEventListener('click', showNewLog)
+    elementHigh = 'newLog'
+}
 
-arrowTypeFilterDesk.addEventListener('click', () => {
-    const listTypeTravel = document.getElementById('listTypeLog')
-    listTypeTravel.classList.toggle('expandirDesk')
-})
+//Direciona o usuário ao perfil clicado
+function goProfileUser(id_use) {
+    alert('Direcionamento para perfil')
+}
 
+//Valida a data dos inputs do filtro de data
+function valideDateValue() {
+    if (inputDateBegin.value == '') {
+        inputDateBegin.animate([
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+        ],
+            {
+                duration: 2000
+            })
+    } else if (inputDateEnd.value == '') {
+        inputDateEnd.animate([
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+        ],
+            {
+                duration: 2000
+            })
+    } else {
+        //Função chamar logs pelo filtro de data
+    }
+}
+
+//Separa os seguidores selecionados pelo input
+function findFollower(name) {
+    allFollower.forEach(follower => {
+        let followerName = follower.childNodes[3].textContent
+
+        if (followerName.includes(name)) {
+            follower.style.display = 'flex'
+        } else {
+            follower.style.display = 'none'
+        }
+    })
+}
+
+//Fecha a aba destacada e o filtro escuro
 closeFilter.addEventListener('click', () => {
-    filterBlack.style.display = 'none'
+    filterBlack.classList.toggle('showFilter')
     const elementHide = document.getElementById(elementHigh)
 
-    elementHide.style.display = 'none'
-    elementHide.style.opacity = 0
-    elementHide.style.pointerEvents = 'none'
+    elementHide.classList.toggle('showModal')
 })
 
-filterMobile.addEventListener('click', () => {
-    const filterContainer = document.getElementById('containerFilterMob')
-
-    filterContainer.classList.toggle('show')
-})
-
-arrowTypeFilterMobile.addEventListener('click', () => {
-    const listTypeTravel = document.getElementById('listTypeLogMob')
-    listTypeTravel.classList.toggle('expandir')
-
-})
-
-inputFollowerMobile.addEventListener('click', () => {
-    filterBlack.style.display = 'flex'
-    const resultFollower = document.getElementById('resultFollower')
-    const containerInput = document.querySelector('.containerInputMob')
-    closeInputMobile.style.display = 'flex'
-    closeFilter.style.opacity = 0
-    containerInput.style.width = '95%'
-    resultFollower.style.display = 'flex'
-})
-
-closeInputMobile.addEventListener('click', () => {
-    filterBlack.style.display = 'none'
-    const resultFollower = document.getElementById('resultFollower')
-    const containerInput = document.querySelector('.containerInputMob')
-
-    closeFilter.style.opacity = 1
-    containerInput.style.width = '65%'
-    resultFollower.style.display = 'none'
-    closeInputMobile.style.display = 'none'
-})
-
+//Expande o container dos inputs de data e os expoe
 inputDateContainer.addEventListener('click', () => {
     const inputDate = document.querySelectorAll('.filterDate')
     const spanContainer = document.querySelector('.containerFilterDate span')
-    inputDateContainer.style.width = '95%'
 
+    inputDateContainer.classList.add('expandFilterDate')
     spanContainer.innerHTML = '-'
+
     for (let i = 0; i < inputDate.length; i++) {
-        inputDate[i].style.zIndex = 10
+        inputDate[i].classList.add('showFilterDate')
 
     }
 })
 
+//Input da data de início do filtro
+inputDateBegin.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDateValue()
+    }
+})
 
-function showNewLog() {
-    const newLog = document.getElementById('newLog')
-    filterBlack.style.display = 'flex'
-    newLog.style.display = 'flex'
-    newLog.style.pointerEvents = 'all'
-    newLog.style.opacity = 1
+//Input da data de fim do filtro
+inputDateEnd.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDateValue()
+    }
+})
 
+//Expande o input de filtro
+inputLocationFilter.addEventListener('click', () => {
+    inputLocationFilter.classList.add('expandFilterLocation')
 
-    elementHigh = 'newLog'
-}
+})
+
+//Filtra os logs pela localização
+inputLocationFilter.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        if (inputLocationFilter.value == '') {
+            inputLocationFilter.animate([
+                { transform: 'scale(1.05)' },
+                { transform: 'scale(1)' },
+                { transform: 'scale(1.05)' },
+                { transform: 'scale(1)' },
+            ],
+                {
+                    duration: 2000
+                })
+
+        } else {
+            //Função chamar logs pela localização
+
+        }
+    }
+})
+
+//Mostra a lista de tipos de viagens no desktop
+arrowTypeFilterDesk.addEventListener('click', () => {
+    const listTypeTravel = document.getElementById('listTypeLog')
+
+    arrowTypeFilterDesk.classList.toggle('arrowSelect')
+    listTypeTravel.classList.toggle('expandirListDesk')
+})
+
+//Mostra o filtro para mobile
+filterMobile.addEventListener('click', () => {
+    const filterContainer = document.getElementById('containerFilterMob')
+
+    filterContainer.classList.toggle('showFilterMob')
+})
+
+//Mostra a lista do tipo de viagem no mobile
+arrowTypeFilterMobile.addEventListener('click', () => {
+    const listTypeTravel = document.getElementById('listTypeLogMob')
+
+    arrowTypeFilterMobile.classList.toggle('arrowSelect')
+    listTypeTravel.classList.toggle('expandirListMob')
+
+})
+
+//Input de pesquisa dos seguidores para desktop
+inputFollowerDesk.addEventListener('input', () => {
+    findFollower(inputFollowerDesk.value)
+})
+
+//Aciona a aba de seguidores e o input de pesquisa de seguidores
+inputFollowerMobile.addEventListener('click', () => {
+    filterBlack.classList.toggle('showFilter')
+    const resultFollower = document.getElementById('resultFollower')
+    const containerInput = document.querySelector('.containerInputMob')
+
+    containerInput.classList.toggle('inputMobileIndex')
+    closeInputMobile.classList.toggle('showCloseMobileInput')
+    closeFilter.classList.toggle('hiddeCloseFilter')
+    containerInput.style.width = '95%'
+    resultFollower.classList.toggle('showResultFollowerMobile')
+
+    elementHigh = inputFollowerMobile.id
+})
+
+//Input de pesquisa dos seguidores
+inputFollowerMobile.addEventListener('input', () => {
+    findFollower(inputFollowerMobile.value)
+})
+
+//Fecha a aba de pesquisa de seguidores
+closeInputMobile.addEventListener('click', () => {
+    filterBlack.classList.toggle('showFilter')
+    const resultFollower = document.getElementById('resultFollower')
+    const containerInput = document.querySelector('.containerInputMob')
+
+    containerInput.classList.toggle('inputMobileIndex')
+    closeFilter.classList.toggle('hiddeCloseFilter')
+    containerInput.style.width = '65%'
+    resultFollower.classList.toggle('showResultFollowerMobile')
+    closeInputMobile.classList.toggle('showCloseMobileInput')
+})
+
+//Altera a imagem do Log em destaque para a esquerda
+arrowChangeImgLogLeftLogFull.addEventListener('click', () => {
+    let imgLog = document.querySelector(`#logFull .imgLog`)
+    let dataImg = imgLog.dataset.img.split(',')
+    let dataPosition = Number(imgLog.dataset.position)
+
+    if (dataPosition <= dataImg.length - 1 && dataPosition != 0) {
+        let dataImgPosition = dataPosition - 1
+        imgLog.src = `${dataImg[dataImgPosition]}`
+        imgLog.dataset.position = dataImgPosition
+
+        validePositionImgLog(dataImg, dataImgPosition, arrowChangeImgLogLeftLogFull)
+    }
+
+})
+
+//Altera a imagem do Log em destaque para a direita
+arrowChangeImgLogRightLogFull.addEventListener('click', () => {
+    let imgLog = document.querySelector(`#logFull .imgLog`)
+    let dataImg = imgLog.dataset.img.split(',')
+    let dataPosition = Number(imgLog.dataset.position)
+
+    if (dataPosition < dataImg.length - 1) {
+        let dataImgPosition = dataPosition + 1
+        imgLog.src = `${dataImg[dataImgPosition]}`
+        imgLog.dataset.position = dataImgPosition
+
+        validePositionImgLog(dataImg, dataImgPosition, arrowChangeImgLogRightLogFull)
+    }
+})
+
+//Destaca a aba de criação de Log para desktop
+newLogDesk.addEventListener('click', showNewLog)
+
+//Destaca a aba de criação de Log para mobile
+newPostMobile.addEventListener('click', showNewLog)
+
+//Icone do perfil do usuário e direcionamento para ele para desktop
+iconProfileUser.addEventListener('click', () => {
+    goProfileUser()
+})
+
+//Icone do perfil do usuário e direcionamento para ele para mobile
+iconProfileMobile.addEventListener('click', () => {
+    goProfileUser()
+})
+
+//Mostra lista de viagens do usuário
+arrowNewLog.addEventListener('click', () => {
+    const listTravel = document.getElementById('listTravel')
+
+    arrowNewLog.classList.toggle('changeArrowNewLog')
+    listTravel.classList.toggle('expandListTravelNewLog')
+
+})
+
+//Troca a visibilidade do botão na criação de Log
+buttonVisibleLog.addEventListener('click', () => {
+    buttonVisibleLog.classList.toggle('ocultVisible')
+    if (buttonVisibleLog.classList == 'ocultVisible') {
+        buttonVisibleLog.innerHTML = 'Privado'
+    } else {
+        buttonVisibleLog.innerHTML = 'Público'
+    }
+})
+
+//Adiciona event para as seta da esquerda
+arrowChangeImgLogLeft.forEach(arrowLeft => {
+    arrowLeft.addEventListener('click', () => {
+        changeImgLeft(arrowLeft)
+    })
+})
+
+//Adiciona event para as seta da direita
+arrowChangeImgLogRight.forEach(arrowRight => {
+    arrowRight.addEventListener('click', () => {
+        changeImgRight(arrowRight)
+    })
+})
+
+//Adiciona event para o logs e valida o event.target
+logs.forEach(log => {
+    log.addEventListener('click', () => {
+        if (event.target.classList != 'arrowImgLogRight' && event.target.classList != 'arrowImgLogLeft' && event.target.classList != 'nameProfileLog' && event.target.classList != 'likeImg' && event.target.classList != 'favImg') {
+            logFull(event.currentTarget.id)
+        }
+    })
+});
+
+//Adiciona event para as curtidas
+likes.forEach(like => {
+    like.addEventListener('click', () => {
+        let like = event.target
+        if (String(like.src).includes('img/likeEnable.png')) {
+            like.src = 'img/likeDisable.png'
+
+        } else {
+            like.src = 'img/likeEnable.png'
+
+        }
+    })
+})
+
+//Adiciona event para os favoritos
+favorites.forEach(favorite => {
+    favorite.addEventListener('click', () => {
+        let favorite = event.target
+        if (String(favorite.src).includes('img/favEnable.png')) {
+            favorite.src = 'img/favDisable.png'
+
+        } else {
+            favorite.src = 'img/favEnable.png'
+        }
+    })
+})
+
+//Event do clique da curtida no Log em destaque
+likeLogFull.addEventListener('click', () => {
+    if (String(likeLogFull.src).includes('img/likeEnable.png')) {
+        likeLogFull.src = 'img/likeDisable.png'
+
+    } else {
+        likeLogFull.src = 'img/likeEnable.png'
+    }
+})
+
+//Event do clique do favorito no Log em destaque
+favoriteLogFull.addEventListener('click', () => {
+    if (String(favoriteLogFull.src).includes('img/favEnable.png')) {
+        favoriteLogFull.src = 'img/favDisable.png'
+
+    } else {
+        favoriteLogFull.src = 'img/favEnable.png'
+    }
+})
+
+//Direciona para o perfil do usuário clicado
+allFollower.forEach(follower => {
+    follower.addEventListener('click', () => {
+        goProfileUser()
+    })
+})
+
+//Direcionamento para o perfil do usuário clicado no Log
+profilesName.forEach(userLog => {
+    userLog.addEventListener('click', () => {
+        goProfileUser()
+    })
+})
+
+//Adiciona event para os LI de tipo de viagem para mobile
+liListTravelMob.forEach(li => {
+    li.addEventListener('click', () => {
+        setTypeTravel(li)
+
+    })
+})
+
+//Adiciona event para os LI de tipo de viagem para desktop
+liListTravelDesk.forEach(li => {
+    li.addEventListener('click', () => {
+        setTypeTravel(li)
+
+    })
+})
+
+//Adiciona event para os LI de viagens
+liListTravelNewLog.forEach(li => {
+    li.addEventListener('click', () => {
+        setTravel(li)
+    })
+})
+
+//Fecha alguns icones clicando no corpo do web-site
+document.addEventListener('click', () => {
+    if (!inputDateContainer.contains(event.target)) {
+        const inputDate = document.querySelectorAll('.filterDate')
+        const spanContainer = document.querySelector('.containerFilterDate span')
+
+        spanContainer.innerHTML = 'Data'
+        inputDateContainer.classList.remove('expandFilterDate')
+
+        for (let i = 0; i < inputDate.length; i++) {
+            inputDate[i].classList.remove('showFilterDate')
+
+        }
+    }
+
+    if (!inputLocationFilter.contains(event.target)) {
+        inputLocationFilter.classList.remove('expandFilterLocation')
+
+    }
+})

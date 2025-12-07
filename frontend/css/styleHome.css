@@ -71,10 +71,19 @@ body {
     z-index: 30;
 }
 
+#filterBlack.showFilter {
+    display: flex;
+}
+
 #closeFilter {
     width: 15px;
     height: 15px;
     margin: 10px 10px 0px 0px;
+}
+
+#closeFilter.hiddeCloseFilter {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Header */
@@ -152,6 +161,11 @@ main {
     border-style: solid;
     border-color: var(--cinza_escuro);
     border-width: 1px;
+    transition: 0.2s ease-in-out;
+    z-index: 20;
+}
+
+.inputMobileIndex {
     z-index: 50;
 }
 
@@ -176,9 +190,13 @@ main {
     padding-right: 5px;
 }
 
+#closeInputMob.showCloseMobileInput {
+    display: flex;
+}
+
 #resultFollower {
     position: absolute;
-    display: none;
+    display: flex;
     flex-direction: column;
     top: 0;
     left: 10px;
@@ -189,7 +207,15 @@ main {
     overflow: scroll;
     border-radius: 20px;
     z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s ease-in-out;
     background-color: var(--cor_web);
+}
+
+#resultFollower.showResultFollowerMobile {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .follower {
@@ -237,10 +263,12 @@ main {
 }
 
 .log {
+    position: relative;
     min-height: 600px;
     width: 100%;
     background-color: var(--cor_web_post);
     box-shadow: var(--default_shadow);
+    overflow: hidden;
 }
 
 .headerLog {
@@ -269,7 +297,6 @@ main {
 }
 
 .backgroundImgLog {
-    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
@@ -293,9 +320,11 @@ main {
     margin: 0px 5px 0px 5px;
     border-radius: 100%;
     background-color: var(--cinza_escuro_hover);
+    transition: 0.4s ease-in-out;
+    pointer-events: all;
 }
 
-.backgroundImgLog div:nth-last-child(1) {
+.containerArrowRight {
     right: 0;
 }
 
@@ -306,6 +335,11 @@ main {
 
 .arrowImgLogLeft {
     transform: rotate(180deg);
+}
+
+.hiddeArrowImg {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .footerLog {
@@ -433,11 +467,11 @@ main {
     background-color: var(--preto_fosco);
     z-index: 20;
     opacity: 0;
-    transition: 1s ease-in-out;
+    transition: 0.4s ease-in-out;
     pointer-events: none;
 }
 
-#containerFilterMob.show {
+#containerFilterMob.showFilterMob {
     opacity: 1;
     pointer-events: all;
 }
@@ -486,6 +520,10 @@ main {
     transition: 0.3s ease-in-out;
 }
 
+#arrowTypeMob.arrowSelect {
+    transform: rotate(180deg);
+}
+
 #listTypeLogMob {
     position: absolute;
     width: 177px;
@@ -499,7 +537,7 @@ main {
     transition: 0.5s ease-in-out;
 }
 
-#listTypeLogMob.expandir {
+#listTypeLogMob.expandirListMob {
     height: 200px;
 }
 
@@ -527,6 +565,8 @@ main {
 /* Log em destaque */
 #logFull {
     position: absolute;
+    display: flex;
+    flex-direction: column;
     width: 95%;
     height: 95%;
     left: 0;
@@ -537,7 +577,13 @@ main {
     opacity: 0;
     z-index: 60;
     background-color: var(--cor_web_post);
+    transition: 0.2s ease-in-out;
     pointer-events: none;
+}
+
+#logFull.showModal {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .headerLogFull {
@@ -609,6 +655,8 @@ main {
     margin: 0px 5px 0px 5px;
     border-radius: 100%;
     background-color: var(--cinza_escuro_hover);
+    transition: 0.4s ease-in-out;
+    pointer-events: all;
 }
 
 .backgroundImgLogFull div img {
@@ -616,17 +664,12 @@ main {
     height: 17px;
 }
 
-.backgroundImgLogFull div:nth-child(1) {
+.backgroundImgLogFull div:nth-child(3) {
     right: 0;
 }
 
-.arrowImgLogRightFull {
+.arrowImgLogLeftFull {
     transform: rotate(180deg);
-}
-
-.imgLogFull {
-    width: 100%;
-    height: 100%;
 }
 
 .footerLogFull {
@@ -783,9 +826,10 @@ main {
     font-size: 12px;
 }
 
+/* Aba de criação de Log */
 #newLog {
     position: absolute;
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: center;
     top: 0;
@@ -797,7 +841,15 @@ main {
     height: 85%;
     padding: 10px;
     z-index: 60;
+    opacity: 0;
     background-color: var(--cor_web_post);
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+#newLog.showModal {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .imgNewLog {
@@ -816,6 +868,10 @@ main {
     height: 50px;
 }
 
+#selectImgInput {
+    display: none;
+}
+
 .imgNewLog div {
     position: absolute;
     display: flex;
@@ -830,11 +886,11 @@ main {
     border-radius: 100%;
 }
 
-.imgNewLog div:nth-child(1) {
+.containerArrowRightNewLog {
     right: 5px;
 }
 
-.imgNewLog div:nth-child(3) {
+.containerArrowLeftNewLog {
     left: 5px;
 }
 
@@ -887,12 +943,18 @@ main {
 #arrowSelectTravel {
     width: auto;
     height: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#arrowSelectTravel.changeArrowNewLog {
+    transform: rotate(180deg);
 }
 
 #listTravel {
     position: absolute;
-    top: 75%;
-    width: 90%;
+    top: 40px;
+    left: 1px;
+    width: 89%;
     height: 20px;
     background-color: var(--branco);
     border-bottom-right-radius: 20px;
@@ -902,6 +964,12 @@ main {
     border-color: var(--cinza_default);
     border-width: 2px;
     opacity: 0;
+    transition: 0.5s ease-in-out;
+}
+
+#listTravel.expandListTravelNewLog {
+    height: 150px;
+    opacity: 1;
 }
 
 #listTravel ul {
@@ -939,6 +1007,13 @@ main {
     border-style: solid;
     border-color: var(--azul_escuro);
     border-width: 2px;
+    transition: 0.2s ease-in-out;
+}
+
+#visibleTravel.ocultVisible {
+    background-color: var(--cinza_default);
+    border-color: var(--cinza_escuro);
+    color: var(--cinza_escuro);
 }
 
 .containerLocationNewLog {
@@ -1166,7 +1241,7 @@ main {
     }
 
     #listTravel {
-        width: 70%;
+        width: 69%;
     }
 
     #listTravel li {
@@ -1232,6 +1307,41 @@ main {
     .containerFollowerSearch {
         height: 250px;
     }
+
+    #logFull {
+        width: 40%;
+        height: 97%;
+        margin-top: -25px;
+    }
+
+    .profileLogFull {
+        width: 25px;
+        height: 25px;
+    }
+
+    .likesLogFull {
+        padding-top: 5px;
+    }
+
+    .likesLogFull img {
+        height: 15px;
+    }
+
+    .numberLikesFull {
+        font-size: 10px;
+    }
+
+    .favLogFull {
+        padding-top: 5px;
+    }
+
+    .favLogFull img {
+        height: 15px;
+    }
+
+    .numberFavFull {
+        font-size: 10px;
+    }
 }
 
 @media (min-width: 1280px) {
@@ -1296,8 +1406,8 @@ main {
     }
 
     #logFull {
-        width: 60%;
-        height: 95%;
+        width: 50%;
+        height: 90%;
         top: 0px;
     }
 
@@ -1351,6 +1461,10 @@ main {
 
     #newLog {
         width: 70%;
+    }
+
+    #listTravel {
+        width: 69.6%;
     }
 
     #navMob {
@@ -1428,7 +1542,12 @@ main {
         border-style: solid;
         border-width: 1px;
         border-color: var(--cinza_escuro);
+        transition: 0.2s ease-in-out;
         overflow: hidden;
+    }
+
+    .expandFilterDate {
+        width: 95%;
     }
 
     .containerFilterDate span {
@@ -1452,6 +1571,11 @@ main {
         border-color: var(--cinza_escuro);
         font-size: 14px;
         z-index: -10;
+        transition: 0.2s ease-in-out;
+    }
+
+    .showFilterDate {
+        z-index: 10;
     }
 
     #filterDateBegin {
@@ -1477,22 +1601,33 @@ main {
         border-width: 1px;
         border-color: var(--cinza_escuro);
         font-size: 14px;
+        transition: 0.2s ease-in-out;
+    }
+
+    #filterLocation.expandFilterLocation {
+        width: 95%;
     }
 
     .containerListTypeLog {
         position: relative;
         display: flex;
-        justify-content: end;
         align-items: center;
         width: 80%;
         height: 40px;
-        gap: 33%;
         padding: 0px 10px 0px 10px;
         background-color: var(--branco);
         border-radius: 20px;
         border-style: solid;
         border-width: 1px;
         border-color: var(--cinza_escuro);
+    }
+
+    .containerListTypeLog span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding-left: 15px;
     }
 
     #listTypeLog {
@@ -1510,7 +1645,7 @@ main {
         transition: 0.5s ease-in-out;
     }
 
-    #listTypeLog.expandirDesk {
+    #listTypeLog.expandirListDesk {
         height: 200px;
     }
 
@@ -1542,6 +1677,10 @@ main {
 
     #arrowType:hover {
         transform: scale(1.15);
+    }
+
+    #arrowType.arrowSelect {
+        transform: rotate(180deg);
     }
 
     .containerSettingsNav {
