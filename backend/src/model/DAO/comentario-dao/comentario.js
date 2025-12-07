@@ -1,9 +1,17 @@
 /**********************************************************************
  * Objetivo: Arquivo da camada de modelagem, responsável pelo CRUD de
  * comentario.
+ * 
  * Data: 05/11/2025
  * Developer: Gabriel Lacerda Correia
  * Versão: 1.0.0
+ * Sobre: Versão inicial da camada de modelagem com as procedures
+ * 
+ * Data: 07/11/2025
+ * Developer: Gabriel Lacerda Correia
+ * Versão: 1.1.0
+ * Sobre: Lidando com os retornos do banco de dados em casos de erro
+ * 
  *********************************************************************/
 
 // Import da dependência do client do prisma para conexão com o BD.
@@ -18,26 +26,60 @@ const getSelectCommentsByLogId = async (log_id) => {
     try {
         
         sql = `CALL BuscarComentariosLog(${log_id})`
+        
+        result = await prisma.$queryRawUnsafe(sql);
+        
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
+            return result
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
+            
+            formattedResult = result.map(item => {
+
+                return {
+
+                    usuario_id: item.f0,
+                    apelido: item.f1,
+                    foto_perfil: item.f2,
+                    comentario_id: item.f3,
+                    conteudo: item.f4,
+                    data: item.f5
+
+                }
+
+            })
+
+            return formattedResult;
+
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+//Retorna um comentário pelo id
+const getSelectCommentById = async (id) => {
+
+    try {
+        
+        sql = `SELECT * FROM tbl_comentario WHERE id = ${id}`
 
         result = await prisma.$queryRawUnsafe(sql)
 
-        resultFormatted = result.map(item => {
-
-            return {
-
-                id_usuario: item.f0,
-                apelido: item.f1,
-                foto_perfil: item.f2,
-                id_comentario: item.f3,
-                conteudo: item.f4,
-                data: item.f5
-
-            }
-
-        })
-
         if(Array.isArray(result)) {
-            return resultFormatted
+            return result
         } else {
             return false
         }
@@ -61,7 +103,7 @@ const setInsertComment = async (comment) => {
 
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(Array.isArray(result)) {
+        if(result) {
             return result
         } else {
             return false
@@ -82,28 +124,7 @@ const setDeactiveComment = async (comentario_id) => {
 
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(Array.isArray(result)) {
-            return result
-        } else {
-            return false
-        }
-
-    } catch (error) {
-        return false
-    }
-
-}
-
-//Desativa todos os comentários de um usuário
-const setDeactiveComments = async (usuario_id) => {
-
-    try {
-        
-        sql = `CALL DesativarComentarios(${usuario_id})`
-
-        result = await prisma.$executeRawUnsafe(sql)
-
-        if(Array.isArray(result)) {
+        if(result) {
             return result
         } else {
             return false
@@ -117,7 +138,7 @@ const setDeactiveComments = async (usuario_id) => {
 
 module.exports = {
     getSelectCommentsByLogId,
+    getSelectCommentById,
     setDeactiveComment,
-    setDeactiveComments,
     setInsertComment
 }
