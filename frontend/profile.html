@@ -11,6 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
     <title>Document</title>
+    <script src="modulo/profile.js" defer></script>
 </head>
 
 <body>
@@ -49,15 +50,15 @@
 
         <div class="profileContent">
             <div class="profileNavBar">
-                <div class="navItem selected selectable">
+                <div class="navItem selected selectable" id="nav-button-log">
                     <img src="./img/navIcon_log.svg" alt="" class="navIcon">
                     <span class="navTitle">Logs</span>
                 </div>
-                <div class="navItem selectable">
+                <div class="navItem selectable" id="nav-button-viagem">
                     <img src="./img/navIcon_viagem.svg" alt="" class="navIcon">
                     <span class="navTitle">Viagens</span>
                 </div>
-                <div class="navItem selectable">
+                <div class="navItem selectable" id="nav-button-estatistica">
                     <img src="./img/navIcon_graph.svg" alt="" class="navIcon">
                     <span class="navTitle">Estatísticas</span>
                 </div>
@@ -66,86 +67,134 @@
 
 
         <!-- CONTAINERS -->
-        <div class="containerLogs hidden">
-            <div class="log logCreator">
-                <div class="logCreator-thumbnail">
-                    <img src="./img/newLog_Icon.svg" alt="">
-                    <span class="logCreatorTxt">Novo Log</span>
+        <div class="carrossel-conteudo carrossel-page_1" id="carrossel-de-conteudo">
+            <div class="containerLogs" id="container-de-logs">
+                <div class="log logCreator">
+                    <div class="logCreator-thumbnail">
+                        <img src="./img/newLog_Icon.svg" alt="">
+                        <span class="logCreatorTxt">Novo Log</span>
+                    </div>
+
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">?</span>
+                    </footer>
+
                 </div>
 
-                <footer class="logFooter">
-                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
-                    <span class="footerTxt">?</span>
-                </footer>
-
-            </div>
-
-            <div class="log">
-                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
-                <footer class="logFooter">
-                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
-                    <span class="footerTxt">Xique-Xique - BA</span>
-                </footer>
-            </div>
-            <div class="log">
-                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
-                <footer class="logFooter">
-                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
-                    <span class="footerTxt">Xique-Xique - BA</span>
-                </footer>
-            </div>
-            <div class="log">
-                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
-                <footer class="logFooter">
-                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
-                    <span class="footerTxt">Xique-Xique - BA</span>
-                </footer>
-            </div>
-            <div class="log">
-                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
-                <footer class="logFooter">
-                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
-                    <span class="footerTxt">Xique-Xique - BA</span>
-                </footer>
-            </div>
-            <div class="log">
-                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
-                <footer class="logFooter">
-                    <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
-                    <span class="footerTxt">Xique-Xique - BA</span>
-                </footer>
-            </div>
-        </div>
-
-        <div class="containerLogs">
-            <div class="viagem viagemCreator">
-                <div class="logCreator-thumbnail">
-                    <img src="./img/newViagem_Icon.svg" alt="">
+                <!-- Base -->
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
                 </div>
-                <footer class="viagemFooter">
-                    <span class="footerTxt">Nova Viagem</span>
-                </footer>
+                
+                <!-- Repetições -->
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+                <div class="log">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="logFooter">
+                        <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                        <span class="footerTxt">Xique-Xique - BA</span>
+                    </footer>
+                </div>
+
             </div>
 
-            <div class="viagem">
-                <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
-                <footer class="viagemFooter">
-                    <span class="footerTxt">Férias Bem Legais</span>
-                    <span class="viagemData">21/11/2025</span>
-                </footer>
+            <div class="containerLogs " id="container-de-viagens">
+                <div class="viagem viagemCreator">
+                    <div class="logCreator-thumbnail">
+                        <img src="./img/newViagem_Icon.svg" alt="">
+                    </div>
+                    <footer class="viagemFooter">
+                        <span class="footerTxt">Nova Viagem</span>
+                    </footer>
+                </div>
+
+                <div class="viagem">
+                    <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                    <footer class="viagemFooter">
+                        <span class="footerTxt">Férias Bem Legais</span>
+                        <span class="viagemData">21/11/2025</span>
+                    </footer>
+                </div>
+                <div class="viagem">
+                    <img src="https://wise.com/imaginary-v2/e57def54f829e2bad52465c9fbaffeed.jpg?width=1200" alt=""
+                        class="logThumbnail">
+                    <footer class="viagemFooter">
+                        <span class="footerTxt">Passeio Japão</span>
+                        <span class="viagemData">26/12/2025</span>
+                    </footer>
+                </div>
+                <div class="viagem">
+                    <img src="./img/fotos/bunny.png" alt="" class="logThumbnail">
+                    <footer class="viagemFooter">
+                        <span class="footerTxt">Viagem de negócios</span>
+                        <span class="viagemData">23/08/2025</span>
+                    </footer>
+                </div>
             </div>
+
         </div>
 
     </main>
 
     <footer class="navMob">
-        <span class="navItem">Home</span>
+        <span class="navItem"><a href="home.html">Home</a></span>
         <span class="navItem">Explorar</span>
-
         <img class="newLogButton" src="./img/newLogButton.svg" alt="">
         <span class="navItem">Favoritos</span>
         <span class="navItem">Filtro</span>
-
     </footer>
 
 

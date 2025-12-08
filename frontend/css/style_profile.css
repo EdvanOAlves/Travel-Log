@@ -5,6 +5,11 @@
     font-family: "Inter", sans-serif;
 }
 
+a{
+    text-decoration: none;
+    color: black;
+}
+
 :root {
     --branco: white;
     --cor_web: #F8F9FA;
@@ -20,6 +25,9 @@
     --preto_fosco: #000000bb;
     --preto_font: black;
     --default_shadow: 6px 6px 10px #0000006b;
+
+    /* Para controlar o timing do carrossel */
+    --carrossel-transition: ease-in-out 500ms;
 }
 
 .selectable:hover{
@@ -29,11 +37,16 @@
 
 }
 
+html{
+    overflow: hidden;
+}
 
 
 body{
     position: relative;
     height: 100dvh;
+    width: 100vw;
+    overflow-x: hidden;
 }
 
 
@@ -41,6 +54,10 @@ body{
 /* Header */
 header {
     display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     width: 100%;
     height: 70px;
     padding: 10px;
@@ -86,7 +103,7 @@ header {
 /* MAIN */
 
 main{
-
+    padding-top:72px;
     padding-bottom: 72px;
 }
 
@@ -149,20 +166,26 @@ main{
     color: var(--cinza_escuro);
     padding:4px;
 }
-.navIcon{
+.navItem{
     opacity: 50%;
 }
 
 .navItem.selected{
-    color: black;
+    opacity: 100%;
 }
 
 .navItem.selected .navIcon{
     opacity: 100%;
 }
 
-
 /* CONTAINER DE LOGS */
+
+.carrossel-conteudo{
+    display: flex;
+    flex: 0 0 auto;
+    width: 200vw;
+    overflow-x: hidden;
+}
 
 .containerLogs{
     display: flex;
@@ -171,6 +194,7 @@ main{
     align-content: flex-start;
     padding: 25px;
     gap: 2.5%;
+    width: 100%;
 }
 
 
@@ -178,10 +202,12 @@ main{
     width: 48%;
     margin-top: 3%;
     box-shadow: 5px 5px 15px #0004;
+    object-fit: contain;
 }
 
 .logThumbnail{
     width: 100%;
+    max-height: 102px;
 }
 
 .logFooter{
@@ -268,8 +294,29 @@ main{
 }
 
 
-/*Classes designáveis*/
+/*Classes do carrosel*/
+/* 
+    Para funcionamento do Script:
+    - O carrossel vai estar com uma dessas classes, isso vai
+    ser alterado quando o usuário clicar num dos navItems
+    (É só mandar o classlist.remove das duas que você não
+    quer e o classlist.add daquela que você quer
+*/
 
-.hidden{
-    display: none;
+/* Quando em foco nos logs */
+.carrossel-page_1{
+    transform: translateX(0); /* Posição */
+    transition: var(--carrossel-transition); /* Timing de transição */
+}
+
+/* Quando em foco nas viagens */
+.carrossel-page_2{
+    transform: translateX(-100vw); /* Posição */
+    transition: var(--carrossel-transition);
+}
+
+/* Quando em foco nas estatisticas (Que ainda não tem o html) */
+.carrossel-page_3{
+    transform: translateX(-200vw); /* Posição */
+    transition: var(--carrossel-transition); /* Timing de transição */
 }
