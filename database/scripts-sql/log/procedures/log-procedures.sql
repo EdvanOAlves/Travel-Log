@@ -163,15 +163,6 @@ DELIMITER ;
 
 -- ATUALIZA LOG
 DELIMITER $$
-
-DROP PROCEDURE AtualizaLog$$
-SELECT * FROM tbl_log$$
-SELECT * FROM tbl_viagem$$
-SELECT * FROM tbl_pais$$
-SELECT *$$
-DELETE FROM tbl_pais WHERE id = 193$$
-CALL AtualizaLog(11, "Viajando por lugar nenhum", 6, "Brasil", "São Paulo", "São Paulo", "Tribunal da Justiça", FALSE)$$
-
 	CREATE PROCEDURE AtualizaLog(
 		IN l_id INT,
         IN var_descricao VARCHAR(1500),
