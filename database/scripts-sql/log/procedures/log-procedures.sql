@@ -268,21 +268,15 @@ DELIMITER $$
                 INTO var_local_id;
         
 				DELETE FROM tbl_log WHERE id = l_id;
-				CALL DeletaLocal(var_local_id);
-                
         ELSE
-			
             SELECT CONCAT("ERRO_404: O log ", l_id," não foi encontrado na base de dados.");
-        
         END IF;
-    
 	END $$
 
 DELIMITER ;
 
 -- ALTERA O STATUS DE VISÍVEL PARA FALSE 
 DELIMITER $$
-	
     CREATE PROCEDURE AlternarStatusLogFalse(IN l_id INT)
     BEGIN
     
