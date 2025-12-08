@@ -1,6 +1,6 @@
 DELIMITER $$
 
-	CREATE TRIGGER trg_desativa_viagens_usuario
+CREATE TRIGGER trg_desativa_viagens_usuario
     BEFORE UPDATE ON tbl_usuario
     FOR EACH ROW
     BEGIN
@@ -18,18 +18,23 @@ DELIMITER $$
         END IF;
     
     END $$
-
-DELIMITER ;
-
-DELIMITER $$
-
-	CREATE TRIGGER trg_deleta_viagens_usuario
+    
+CREATE TRIGGER trg_deleta_relacoes_seguidor_usuario
     BEFORE DELETE ON tbl_usuario
     FOR EACH ROW
     BEGIN
-    
 		DELETE FROM tbl_viagem WHERE usuario_id = OLD.id;
-            
     END $$
+
+CREATE TRIGGER trg_desativa_comentarios_usuario
+	BEFORE DELETE ON tbl_usuario
+    FOR EACH ROW
+    BEGIN
+		UPDATE tbl_comentario 
+        SET visivel = 0
+        WHERE usuario_id = OLD.id;
+	END $$
+
+CREATE TRIGGER trg_remover_
 
 DELIMITER ;

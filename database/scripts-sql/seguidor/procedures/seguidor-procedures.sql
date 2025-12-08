@@ -70,17 +70,6 @@ BEGIN
     END IF;
 END$$
 
--- Para remover todas as relações (tanto de seguidor como sendo seguido)
--- que o usuário está registrado, quando ele for desativado
-CREATE PROCEDURE RemoverRelacoesSeguidores(
-    IN input_usuario_id INT
-)
-BEGIN
-    DELETE FROM tbl_seguidor
-    WHERE usuario_id = input_usuario_id
-    OR seguidor_id = input_usuario_id;
-END$$
-
 -- Para obter a linha de tempo (Logs cujos autores são seguidos pelo nosso usuario)
 CREATE PROCEDURE BuscarFeedSeguindo(
     IN input_usuario_id INT
@@ -145,14 +134,13 @@ BEGIN
 	END IF;
 END$$
 
--- Para consultar os seguidores de um usuario
+-- Para consultar quem um usuário segue de um usuario
 CREATE PROCEDURE BuscarSeguidores(IN input_usuario_id INT)
 BEGIN
     DECLARE usuario_existe INT;
 
     -- Verificando existencia de inputs no db
     SELECT COUNT(id) FROM tbl_usuario WHERE id = input_usuario_id INTO usuario_existe;
-
     -- Caso de erro
     IF usuario_existe = 0
 	THEN
@@ -163,10 +151,14 @@ BEGIN
         */
     ELSE
 		SELECT tbl_seguidor.id, 
-        tbl_usuario.id AS usuario_seguidor_id, tbl_usuario.nome, tbl_usuario.apelido, tbl_usuario.foto_perfil
+        tbl_usuario.id AS usuario_seguidor_id, 
+        tbl_usuario.nome, tbl_usuario.apelido, tbl_usuario.foto_perfil
         FROM tbl_seguidor
         JOIN tbl_usuario ON tbl_seguidor.seguidor_id = tbl_usuario.id
         WHERE tbl_seguidor.usuario_id = input_usuario_id;
 	END IF;
 END$$
+CALL BuscarSeguindo(1)$$
+SELECT * FROM tbl_seguidor$$
+DROP PROCEDURE BuscarSeguidores$$
 DELIMITER ;
