@@ -2,7 +2,7 @@
 -- PROCEDURES LOG
 -- --------------------------------------------------------
 DELIMITER $$
-SELECT * FROM TBL_log$$
+
 -- Para publicar um log
 -- Não vai precisar passar a data
 CREATE PROCEDURE PublicarLog(
@@ -159,91 +159,108 @@ DELIMITER $$
     
     END $$
 
-DELIMITER ;
+
+-- PARA OBTER CONTEÚDO DO HOME (Logs cujos autores são seguidos pelo usuário em questão)
+CREATE PROCEDURE BuscarFeedSeguindo(
+    IN input_usuario_id INT
+)
+BEGIN
+SELECT 
+    tbl_usuario.id AS autor_id, 
+    tbl_usuario.apelido AS autor_apelido, 
+    tbl_usuario.foto_perfil AS autor_foto, 
+    
+    tbl_log.id AS log_id, 
+    tbl_log.descricao AS log_descricao, 
+    tbl_log.data_publicacao AS data_postagem, 
+    tbl_log.contagem_curtidas AS qtde_curtidas,
+    tbl_log.contagem_favoritos AS qtde_favoritos,
+    tbl_log.viagem_id,
+    tbl_viagem.titulo AS titulo_viagem,
+    tbl_local.nome AS ponto_interesse,
+    tbl_local.cidade AS cidade,
+    tbl_local.estado AS estado,
+    
+    tbl_pais.nome AS pais,
+    
+    -- Incluindo se o usuario interagiu, seja por curtida ou favorito
+    (SELECT COUNT(id) FROM tbl_curtida WHERE tbl_curtida.usuario_id = input_usuario_id AND tbl_curtida.log_id = tbl_log.id) AS curtido,
+    (SELECT COUNT(id) FROM tbl_favorito WHERE tbl_favorito.usuario_id = input_usuario_id AND tbl_favorito.log_id = tbl_log.id) AS favoritado
+    
+    -- Fontes
+    FROM tbl_log
+    JOIN tbl_viagem ON tbl_log.viagem_id = tbl_viagem.id
+    JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
+    JOIN tbl_seguidor ON tbl_usuario.id = tbl_seguidor.usuario_id
+    JOIN tbl_local ON tbl_log.local_id = tbl_local.id
+    JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
+    WHERE tbl_log.visivel = 1 
+    AND tbl_seguidor.usuario_id = tbl_usuario.id AND tbl_seguidor.seguidor_id = input_usuario_id
+    ORDER BY tbl_log.data_publicacao DESC;
+END$$   
 
 -- ATUALIZA LOG
 DELIMITER $$
-
 	CREATE PROCEDURE AtualizaLog(
-    
 		IN l_id INT,
-        IN descricao VARCHAR(1500),
+        IN var_descricao VARCHAR(1500),
         IN v_id INT,
-        IN lo_id INT,
-        IN var_nome VARCHAR(255),
-		IN var_estado VARCHAR(75),
-		IN var_cidade VARCHAR(75),
-		IN p_id INT
-        
+		IN var_pais VARCHAR(75), --
+		IN var_estado VARCHAR(75), --
+		IN var_cidade VARCHAR(75), --
+        IN var_nome VARCHAR(255), --
+        IN bool_visivel BOOLEAN --
     )
     
     BEGIN
-    
 		DECLARE log_existe INT;
 		DECLARE viagem_existe INT;
         DECLARE local_existe INT;
         DECLARE status_viagem BOOLEAN;
-        DECLARE pais_existe INT;
-        DECLARE id_local_novo INT;
+        DECLARE pais_existe INT DEFAULT 0; --
+        DECLARE id_local_antigo INT; --
+        DECLARE id_local_novo INT; --
         
         SELECT COUNT(id) FROM tbl_log WHERE id = l_id INTO log_existe;
         SELECT COUNT(id) FROM tbl_viagem WHERE id = v_id INTO viagem_existe;
-        SELECT COUNT(id) FROM tbl_local WHERE id = lo_id INTO local_existe;
-        SELECT COUNT(id) FROM tbl_pais WHERE id = p_id INTO pais_existe;
-        
+        SELECT local_id FROM tbl_log WHERE id = l_id INTO id_local_antigo; --
+        SELECT COUNT(id) FROM tbl_pais WHERE nome = var_pais INTO pais_existe; --
         
         IF log_existe > 0 THEN
-        
 			UPDATE tbl_log SET
-				descricao = descricao
+				descricao = var_descricao --
 			WHERE id = l_id;
-        
+            
 			IF viagem_existe > 0 THEN
-                
 				SELECT visivel FROM tbl_viagem WHERE id = v_id INTO status_viagem; 
-                
-                IF status_viagem = TRUE THEN
-				
-					UPDATE tbl_log SET
-						viagem_id = v_id
+					IF status_viagem = TRUE THEN
+						UPDATE tbl_log SET
+							viagem_id = v_id,
+                            visivel = bool_visivel -- Caso a viagem seja pública ele vai aderir a visibilidade escolhida pelo usuario
+						WHERE id = l_id;
+					ELSE
+						UPDATE tbl_log SET
+							viagem_id = v_id,
+							visivel = FALSE -- Caso a viagem não seja pública o log não pode ser
 					WHERE id = l_id;
-				
-                ELSE
-					
-                    UPDATE tbl_log SET
-						viagem_id = v_id,
-                        visivel = FALSE
-					WHERE id = l_id;
-                    
+
 				END IF;
                 
-				IF local_existe > 0 THEN
-					
-                    IF pais_existe > 0 THEN
-                    
-						CALL CriarLocal(var_nome, var_estado, var_cidade, p_id);
-                        SELECT id FROM tbl_local ORDER BY id DESC LIMIT 1 INTO id_local_novo;
-                        
+				IF pais_existe > 0 THEN
+					CALL CriarLocal(var_pais, var_estado, var_cidade, var_nome, id_local_novo); --
                     ELSE
-						SELECT CONCAT("ERRO_404: O país ", p_id, " não foi encontrado na base de dados");
+						SELECT CONCAT("ERRO_404: O país ", var_pais, " não foi encontrado na base de dados"); --
                     END IF;
-                    
+
                     UPDATE tbl_log SET
-						local_id = id_local_novo
+						local_id = id_local_novo --
 					WHERE id = l_id;
-                    
-					DELETE FROM tbl_local WHERE id = lo_id;
+					DELETE FROM tbl_local WHERE id = id_local_antigo; --
                 
-                END IF;
-            
-            END IF;
-            
+			END IF;
         ELSE
-        
 			SELECT CONCAT("ERRO_404: O log ", l_id, " não foi encontrado");
-        
         END IF;
-    
     END $$
 
 DELIMITER ;
