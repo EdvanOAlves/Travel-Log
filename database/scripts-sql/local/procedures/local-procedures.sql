@@ -1,6 +1,4 @@
 -- CRIA UM LOCAL
-
-DROP PROCEDURE CriarLocal;
 DELIMITER $$
 	CREATE PROCEDURE CriarLocal(
 		IN var_pais VARCHAR(75),
@@ -32,7 +30,7 @@ DELIMITER $$
 
 DELIMITER ;
 
---DELETA UM LOCAL
+-- DELETA UM LOCAL
 DELIMITER $$
 	CREATE PROCEDURE DeletaLocal(IN input_local_id INT)
     BEGIN
@@ -47,5 +45,4 @@ DELIMITER $$
 			SELECT CONCAT("ERRO_404: O local ", input_local_id, " não foi encontrado na base de dados");
         END IF;
     END $$
-
 DELIMITER ;

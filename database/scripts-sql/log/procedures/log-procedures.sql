@@ -159,7 +159,45 @@ DELIMITER $$
     
     END $$
 
-DELIMITER ;
+
+-- PARA OBTER CONTEÚDO DO HOME (Logs cujos autores são seguidos pelo usuário em questão)
+CREATE PROCEDURE BuscarFeedSeguindo(
+    IN input_usuario_id INT
+)
+BEGIN
+SELECT 
+    tbl_usuario.id AS autor_id, 
+    tbl_usuario.apelido AS autor_apelido, 
+    tbl_usuario.foto_perfil AS autor_foto, 
+    
+    tbl_log.id AS log_id, 
+    tbl_log.descricao AS log_descricao, 
+    tbl_log.data_publicacao AS data_postagem, 
+    tbl_log.contagem_curtidas AS qtde_curtidas,
+    tbl_log.contagem_favoritos AS qtde_favoritos,
+    tbl_log.viagem_id,
+    tbl_viagem.titulo AS titulo_viagem,
+    tbl_local.nome AS ponto_interesse,
+    tbl_local.cidade AS cidade,
+    tbl_local.estado AS estado,
+    
+    tbl_pais.nome AS pais,
+    
+    -- Incluindo se o usuario interagiu, seja por curtida ou favorito
+    (SELECT COUNT(id) FROM tbl_curtida WHERE tbl_curtida.usuario_id = input_usuario_id AND tbl_curtida.log_id = tbl_log.id) AS curtido,
+    (SELECT COUNT(id) FROM tbl_favorito WHERE tbl_favorito.usuario_id = input_usuario_id AND tbl_favorito.log_id = tbl_log.id) AS favoritado
+    
+    -- Fontes
+    FROM tbl_log
+    JOIN tbl_viagem ON tbl_log.viagem_id = tbl_viagem.id
+    JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
+    JOIN tbl_seguidor ON tbl_usuario.id = tbl_seguidor.usuario_id
+    JOIN tbl_local ON tbl_log.local_id = tbl_local.id
+    JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
+    WHERE tbl_log.visivel = 1 
+    AND tbl_seguidor.usuario_id = tbl_usuario.id AND tbl_seguidor.seguidor_id = input_usuario_id
+    ORDER BY tbl_log.data_publicacao DESC;
+END$$   
 
 -- ATUALIZA LOG
 DELIMITER $$
