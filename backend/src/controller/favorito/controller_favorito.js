@@ -75,13 +75,3 @@ const validarFavorito = (favorito) => {
 module.exports = {
     alternaFavorito
 }
-
-contentType = "APPLICATION/JSON"
-favorito = {
-
-    usuario_id:1,
-    log_id: 4
-
-}
-
-alternaFavorito(favorito, contentType)
