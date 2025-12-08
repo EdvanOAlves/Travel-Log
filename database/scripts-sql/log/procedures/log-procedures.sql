@@ -101,8 +101,7 @@ BEGIN
     SELECT COUNT(id) FROM tbl_usuario WHERE id = input_usuario_id INTO usuario_existe;
 
     -- Caso de erro
-    IF usuario_existe = 0
-    THEN
+    IF usuario_existe = 0 THEN
         SELECT "ERRO_404: O usuário inserido não foi encontrado na base de dados" message;
         /*
         SIGNAL SQLSTATE '45000' 
@@ -122,42 +121,29 @@ DELIMITER ;
 -- LISTAR LOGS PELO ID DO USUÁRIO
 DELIMITER $$
 	
-    CREATE PROCEDURE ListarLogsUsuario(IN u_id INT)
-    BEGIN
-		
-        DECLARE usuario_existe INT;
-        
-        SELECT COUNT(id) FROM tbl_usuario WHERE id = u_id INTO usuario_existe;
-        
-        IF usuario_existe > 0 THEN
-			
-			SELECT 
-					tbl_log.id,
-					tbl_log.descricao,
-					tbl_log.data_publicacao,
-					tbl_log.contagem_curtidas,
-					tbl_log.contagem_favoritos,
-					tbl_log.visivel,
-					tbl_log.viagem_id,
-					tbl_log.local_id
-					
-					FROM tbl_log
-					
-					JOIN tbl_viagem ON
-					tbl_viagem.id = tbl_log.viagem_id
-					
-					JOIN tbl_usuario ON
-					tbl_usuario.id = tbl_viagem.usuario_id
-					
-					WHERE tbl_usuario.id = u_id;
-        
-        ELSE
-        
-			SELECT CONCAT("ERRO_404: O usuário ", u_id, " não foi encontrado na base de dados");
-        
-        END IF;
+CREATE PROCEDURE ListarLogsUsuario(IN u_id INT)
+BEGIN
+	DECLARE usuario_existe INT;
+	SELECT COUNT(id) FROM tbl_usuario WHERE id = u_id INTO usuario_existe;
+	IF usuario_existe > 0 THEN
+		SELECT 
+			tbl_log.id,
+			tbl_log.descricao,
+			tbl_log.data_publicacao,
+			tbl_log.contagem_curtidas,
+			tbl_log.contagem_favoritos,
+			tbl_log.visivel,
+			tbl_log.viagem_id,
+			tbl_log.local_id
+		FROM tbl_log
+		JOIN tbl_viagem ON tbl_viagem.id = tbl_log.viagem_id
+		JOIN tbl_usuario ON tbl_usuario.id = tbl_viagem.usuario_id
+		WHERE tbl_usuario.id = u_id;
+	ELSE
+		SELECT CONCAT("ERRO_404: O usuário ", u_id, " não foi encontrado na base de dados");
+	END IF;
     
-    END $$
+END $$
 
 
 -- PARA OBTER CONTEÚDO DO HOME (Logs cujos autores são seguidos pelo usuário em questão)
@@ -199,76 +185,71 @@ SELECT
     ORDER BY tbl_log.data_publicacao DESC;
 END$$   
 
+SELECT * FROM tbl_log$$
+SELECT * FROM tbl_viagem$$
+SELECT * FROM tbl_local$$
+SELECT * FROM tbl_pais$$
+DROP PROCEDURE AtualizaLog$$
+CALL AtualizaLog(11, "Visitando a familia", "5", "Brasil", "Rio de Janeiro", "Copacabana", null, TRUE)$$
 -- ATUALIZA LOG
-DELIMITER $$
-	CREATE PROCEDURE AtualizaLog(
-		IN l_id INT,
-        IN var_descricao VARCHAR(1500),
-        IN v_id INT,
-		IN var_pais VARCHAR(75), --
-		IN var_estado VARCHAR(75), --
-		IN var_cidade VARCHAR(75), --
-        IN var_nome VARCHAR(255), --
-        IN bool_visivel BOOLEAN --
+CREATE PROCEDURE AtualizaLog(
+	IN l_id INT,
+	IN var_descricao VARCHAR(1500),
+	IN v_id INT,
+	IN var_pais VARCHAR(75), --
+	IN var_estado VARCHAR(75), --
+	IN var_cidade VARCHAR(75), --
+	IN var_nome VARCHAR(255), --
+	IN bool_visivel BOOLEAN --
     )
     
-    BEGIN
-		DECLARE log_existe INT;
-		DECLARE viagem_existe INT;
-        DECLARE local_existe INT;
-        DECLARE status_viagem BOOLEAN;
-        DECLARE pais_existe INT DEFAULT 0; --
-        DECLARE id_local_antigo INT; --
-        DECLARE id_local_novo INT; --
+BEGIN
+	DECLARE log_existe INT;
+	DECLARE viagem_existe INT;
+	DECLARE local_existe INT;
+	DECLARE status_viagem BOOLEAN;
+	DECLARE pais_existe INT DEFAULT 0; --
+	DECLARE id_local_antigo INT; --
+	DECLARE id_local_novo INT; --
         
-        SELECT COUNT(id) FROM tbl_log WHERE id = l_id INTO log_existe;
-        SELECT COUNT(id) FROM tbl_viagem WHERE id = v_id INTO viagem_existe;
-        SELECT local_id FROM tbl_log WHERE id = l_id INTO id_local_antigo; --
-        SELECT COUNT(id) FROM tbl_pais WHERE nome = var_pais INTO pais_existe; --
-        
-        IF log_existe > 0 THEN
-			UPDATE tbl_log SET
-				descricao = var_descricao --
-			WHERE id = l_id;
-            
-			IF viagem_existe > 0 THEN
-				SELECT visivel FROM tbl_viagem WHERE id = v_id INTO status_viagem; 
-					IF status_viagem = TRUE THEN
-						UPDATE tbl_log SET
-							viagem_id = v_id,
-                            visivel = bool_visivel -- Caso a viagem seja pública ele vai aderir a visibilidade escolhida pelo usuario
-						WHERE id = l_id;
-					ELSE
-						UPDATE tbl_log SET
-							viagem_id = v_id,
-							visivel = FALSE -- Caso a viagem não seja pública o log não pode ser
-					WHERE id = l_id;
-
-				END IF;
-                
-				IF pais_existe > 0 THEN
-					CALL CriarLocal(var_pais, var_estado, var_cidade, var_nome, id_local_novo); --
-                    ELSE
-						SELECT CONCAT("ERRO_404: O país ", var_pais, " não foi encontrado na base de dados"); --
-                    END IF;
-
-                    UPDATE tbl_log SET
-						local_id = id_local_novo --
-					WHERE id = l_id;
-					DELETE FROM tbl_local WHERE id = id_local_antigo; --
-                
-			END IF;
-        ELSE
-			SELECT CONCAT("ERRO_404: O log ", l_id, " não foi encontrado");
-        END IF;
-    END $$
-
-DELIMITER ;
-
-DELIMITER $$
-
-	CREATE PROCEDURE DeletaLog(IN l_id INT)
+	SELECT COUNT(id) FROM tbl_log WHERE id = l_id INTO log_existe;
+	SELECT COUNT(id) FROM tbl_viagem WHERE id = v_id INTO viagem_existe;
+	SELECT COUNT(id) FROM tbl_pais WHERE nome = var_pais INTO pais_existe; --
+	SELECT local_id FROM tbl_log WHERE id = l_id INTO id_local_antigo; --
     
+    IF log_existe = 0 THEN
+		SELECT CONCAT("ERRO_404: O log ", l_id, " não foi encontrado");
+	ELSEIF viagem_existe = 0 THEN
+		SELECT CONCAT("ERRO_404: A viagem ", v_id, " não foi encontrada");
+	ELSEIF pais_existe = 0 THEN
+		SELECT CONCAT("ERRO_404: O país ", var_pais, " não foi encontrado na base de dados"); --
+	ELSE -- Caso tudo esteja nos conformes:
+		UPDATE tbl_log 
+        -- Atualizando descrição e viagem
+        SET descricao = var_descricao,
+			viagem_id = v_id WHERE id = l_id;    
+		
+        -- Atualizando visibilidade
+		SELECT visivel FROM tbl_viagem WHERE id = v_id INTO status_viagem; 
+		IF status_viagem = TRUE THEN
+		-- Caso a viagem seja pública o log vai aderir a visibilidade escolhida pelo usuario
+			UPDATE tbl_log 
+				SET visivel = bool_visivel 
+				WHERE id = l_id;
+		ELSE
+			UPDATE tbl_log 
+            SET visivel = FALSE -- Caso a viagem não seja pública o log não pode ser
+			WHERE id = l_id;
+		END IF;
+        
+        -- Atualizando Local
+        CALL CriarLocal(var_pais, var_estado, var_cidade, var_nome, id_local_novo); 
+        UPDATE tbl_log SET local_id = id_local_novo WHERE id = l_id;
+		DELETE FROM tbl_local WHERE id = id_local_antigo; --
+	END IF;
+END $$
+
+CREATE PROCEDURE DeletaLog(IN l_id INT)
     BEGIN
 		
         DECLARE log_existe INT;
@@ -289,8 +270,6 @@ DELIMITER $$
             SELECT CONCAT("ERRO_404: O log ", l_id," não foi encontrado na base de dados.");
         END IF;
 	END $$
-
-DELIMITER ;
 
 -- ALTERA O STATUS DE VISÍVEL PARA FALSE 
 DELIMITER $$
