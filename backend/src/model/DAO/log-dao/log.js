@@ -1,57 +1,179 @@
 /**********************************************************************
  * Objetivo: Arquivo da camada de modelagem, responsável pelo CRUD de
  * logs.
+ * 
  * Data: 04/12/2025
  * Developer: Edvan Alves
  * Versão: 1.0.0
+ * Sobre: Inicio da construção da camada de modelagem de dados
+ * 
+ * Data: 07/12/2025
+ * Developer: Gabriel Lacerda
+ * Versão: 1.1.0
+ * Sobre: Atualizando funções existentes e implementando o restante
+ * das funções
  *********************************************************************/
 
 // Import da dependência do client do prisma para conexão com o BD.
 const { PrismaClient } = require("../../../generated/prisma");
 
 // Criando novo objeto baseado na classe PrismaClient
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-// Retorna os logs para o feed de explorar (os mais recentes)
-//Precisa do id de usuário para identificar se o log foi curtido
-const getExploreLogs = async (user_id) => {
+//Retorna os logs para o feed de explorar (os mais recentes)
+//Precisa do id de usuário para identificar se o log foi curtido funciona
+const getSelectExploreLogs = async (user_id) => {
+    
     try {
-        result = await prisma.$queryRawUnsafe(`CALL BuscarLogsRecentes(${user_id})`);
 
-        if (Array.isArray(result)) {
-            const output = [];
-            for (item of result) {
-                output.push(modelarDadosLog(item));
-            }
-            return output;
+        sql = `CALL BuscarLogsRecentes(${user_id})`
+
+        result = await prisma.$queryRawUnsafe(sql)
+
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
+            return result
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
+            
+            formattedResult = result.map(item => {
+
+                return {
+
+                    usuario_id: item.f0,
+                    apelido: item.f1,
+                    foto_perfil: item.f2,
+                    log: [
+                        {
+                            log_id: item.f3,
+                            descricao: item.f4,
+                            data_postagem: item.f5,
+                            curtidas: item.f6,
+                            favoritos: item.f7,
+                        }
+                    ]
+
+                }
+            })
+
+            return formattedResult;
+
         } else {
             return false;
         }
+
     } catch (error) {
         return false
     }
+    
 }
 
-// Retorna a viagem que um log pertence
-const getTravelByLogId = async (id) => {
+//Retorna todos os logs do usuário pelo id funciona
+const getSelectAllLogsUserId = async (user_id) => {
+
+    try {
+
+        sql = `CALL ListarLogsUsuario(${user_id})`
+        
+        result = await prisma.$queryRawUnsafe(sql)
+        
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
+            return result
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
+            
+            formattedResult = result.map(item => {
+
+                return {
+
+                    log_id: item.f0,
+                    descricao: item.f1,
+                    data_postagem: item.f2,
+                    curtidas: item.f3,
+                    favoritos: item.f4,
+                    visivel: item.f5,
+                    viagem_id: item.f6,
+                    local_id: item.f7
+
+                }
+            })
+
+            return formattedResult;
+
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        return false
+    }
 
 }
 
-
-// Registra um log
+//Registra um log novo funciona
 const setInsertLog = async (log) => {
+
     try {
-        sql = `CALL CriarViagem(
-                '${log.descricao}',
-                '${log.viagem_id}',
-                '${log.visivel}',
-                '${log.local.pais_nome}',
-                ${log.estado},
-                ${log.cidade},
-                ${log.nome_local}
-            );`
-        result = await prisma.$queryRawUnsafe(sql);
-        if (Array.isArray(result)) {
+
+        sql = `CALL PublicarLog(
+            '${log.descricao}',
+            ${log.viagem_id},
+            ${log.visivel},
+            '${log.nome_pais}',
+            '${log.estado}',
+            '${log.cidade}',
+            '${log.nome_local}'
+        )`
+
+        result = await prisma.$executeRawUnsafe(sql)        
+
+        if (result) {
+            return result;
+        }
+        else {
+            return false;
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+//Atualiza um log
+const setUpdateLog = async (log_id, log) => {
+
+    try {
+
+        sql = `CALL AtualizaLog(
+            ${log_id},
+            '${log.descricao}',
+            ${log.viagem_id},
+            '${log.nome_pais}',
+            '${log.estado}',
+            '${log.cidade}',
+            '${log.nome_local}',
+            ${log.visivel}
+        )`
+
+        result = await prisma.$executeRawUnsafe(sql)
+
+        if (result) {
             return result;
         }
         else {
@@ -60,94 +182,36 @@ const setInsertLog = async (log) => {
     } catch (error) {
         return false
     }
-}
-// Registra uma viagem
-const setUpdateTravelById = async (travel) => {
-    try {
-        sql = `CALL AtualizarViagem(
-                ${travel.id},
-                '${travel.titulo}',
-                '${travel.data_inicio}',
-                '${travel.data_fim}',
-                '${travel.thumbnail}',
-                ${travel.usuario_id},
-                ${travel.tipo_viagem_id},
-                ${travel.visivel}
-            );`
-        result = await prisma.$queryRawUnsafe(sql);
-        if (Array.isArray(result)) {
-            return result;
-        }
-        else {
-            return false;
-        }
-    } catch (error) {
-        return false
-    }
+
 }
 
-// Deletar uma viagem
-const setDeleteTravelById = async (id) => {
-    try {
-        sql = `CALL DeletaViagem(${id})`;
-        result = await prisma.$queryRawUnsafe(sql);
+//Deleta um log funciona
+const setDeleteLog = async (log_id) => {
 
-        if (Array.isArray(result)) {
+    try {
+        
+        sql = `CALL DeletaLog(${log_id})`
+        
+        result = await prisma.$executeRawUnsafe(sql)    
+
+        if (result) {
             return result
         } else {
             return false
         }
-
+        
     } catch (error) {
-
+        return false
     }
-}
 
-//TODO: deletar o script de testes depois
-async function main() {
-    result = await getExploreLogs(1);
-    console.log(result);
-
-}
-main();
-
-const modelarDadosLog = (item) => {
-    log = {
-        autor: {
-            autor_id: item.f0,
-            autor_apelido: item.f1,
-            autor_foto: item.f2
-        },
-        log_id: item.f3,
-        descricao: item.f4,
-        data_publicacao: item.f5,
-        qtde_curtidas: item.f6,
-        qtde_favoritos: item.f7,
-        viagem: {
-            viagem_id: item.f8,
-            titulo_viagem: item.f9,
-            tipo_viagem_id: item.f10,
-            tipo_viagem: item.f11,
-        },
-        local: {
-            local_id: item.f12,
-            ponto_interesse: item.f13,
-            cidade: item.f14,
-            estado: item.f15,
-            pais_id: item.f16,
-            pais: item.f17
-        },
-        interacao: {
-            curtido: item.f18,
-            favoritado: item.f19
-        }
-    }
-    return log;
 }
 
 module.exports = {
-    // getTravelByLogId,
-    // setInsertTravel,
-    // setUpdateTravelById,
-    // setDeleteTravelById
+    
+    getSelectExploreLogs,
+    getSelectAllLogsUserId,
+    setInsertLog,
+    setUpdateLog,
+    setDeleteLog
+
 }
