@@ -7,7 +7,6 @@
  *********************************************************************/
 
 // Importando funções de dependência de dados do usuário
-const log = require("../../../doc/components/log.js")
 const logDAO = require("../../model/DAO/log-dao/log.js")
 
 // Importa controller de midia para fazer inserção das imagens do log no banco de dados
@@ -149,7 +148,6 @@ const listarLogsUserId = async (log_id) => {
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
-                    
 
                     return MESSAGES.DEFAULT_HEADER //200
 
@@ -172,25 +170,39 @@ const listarLogsUserId = async (log_id) => {
 }
 
 //Retorna os logs das pessoas que o usuário segue
-const listarFeedSeguindo = async (log_id) => {
+const listarFeedSeguindo = async (usuario_id) => {
     
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
+        if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
             resultLog = await logDAO.getSelectLogsFollowing(usuario_id)
-
             if(resultLog) {
 
                 if(resultLog.length > 0) {
+
+                    for (item of resultLog) {
+
+                        log = item.log[0]
+                        logId = log.log_id
+                        
+                        resultMidia = await controllerMidia.listarMidiasLogId(logId)
+                        
+                        if(resultMidia.status_code == 200) {
+                            midias = resultMidia.items.midias
+                            log.midias = midias
+                        }
+
+                    }
+
+                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
 
-                    console.log(MESSAGES.DEFAULT_HEADER.items)
                     return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
@@ -388,7 +400,7 @@ const validarLog = (log) => {
 
 }
 
-listarLogsUserId(4)
+listarFeedSeguindo(1)
 
 module.exports = {
 
