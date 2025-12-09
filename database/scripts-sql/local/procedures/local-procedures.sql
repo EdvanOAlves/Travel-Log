@@ -1,5 +1,6 @@
 
 DELIMITER $$
+
 -- BUSCAR LOCAIS VISITADOS POR UM USUÁRIO
 CREATE PROCEDURE BuscarLocaisUsuario(
 	IN usuario_id INT
@@ -24,7 +25,6 @@ BEGIN
 	END IF;
 END$$
 
-CALL BuscarPaisesUsuario(1)$$
 -- BUSCAR PAÍSES VISITADOS POR UM USUÁRIO
 CREATE PROCEDURE BuscarPaisesUsuario(
 	IN usuario_id INT
@@ -75,10 +75,8 @@ END$$
 			SELECT concat("ERRO_404: O país ", var_pais, " não foi encontrado na base de dados.");
         END IF;
     END $$
-DELIMITER ;
 
 -- DELETA UM LOCAL
-DELIMITER $$
 	CREATE PROCEDURE DeletaLocal(IN input_local_id INT)
     BEGIN
 		

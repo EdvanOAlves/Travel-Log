@@ -94,6 +94,16 @@ const getSelectCountriesByUserId = async (user_id) => {
 
 }
 
+async function main(){
+    teste = await getSelectCountriesByUserId(1)
+    console.log(teste);
+}
+async function main2(){
+    teste = await getSelectLocationsByUserId(1)
+    console.log(teste);
+}
+
+main2();
 
 
 module.exports = {
