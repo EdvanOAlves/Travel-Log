@@ -15,9 +15,11 @@
 </head>
 
 <body>
+
     <div id="filterBlack">
         <img id="closeFilter" src="img/closeWhite.png" alt="">
     </div>
+
     <!-- NAVEGAÇÃO -->
     <header>
         <div class="containerLogo">
@@ -32,6 +34,7 @@
         </div>
     </header>
 
+    <!-- Aba lateral para Desktop -->
     <nav id="navDesk">
         <h1>Travelog</h1>
         <div class="containerNav">
@@ -85,9 +88,12 @@
             <div class="profileIdentifier">
                 <img id="imgProfile" src="./img/emptyProfilePic.svg" alt="" class="profilePic">
                 <div class="profileTitle">
-                    <h3 class="profileNickname">
-                        @jãozinhoMoraes
-                    </h3>
+                    <div class="containerFollowerUser">
+                        <h3 class="profileNickname">
+                            @jãozinhoMoraes
+                        </h3>
+                        <button id="followUser">Seguir <img src="./img/plus.png" alt=""></button>
+                    </div>
                     <span class="titleInfo">Logs 20</span>
                 </div>
             </div>
@@ -97,9 +103,6 @@
             </div>
             <p class="profileDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                 incididunt ut labore et dolore magna aliqua. </p>
-            <div class="containerFollowerUser">
-                <button id="followUser">Seguir +</button>
-            </div>
         </div>
 
         <div class="profileContent">
@@ -119,7 +122,6 @@
             </div>
         </div>
 
-
         <!-- CONTAINERS -->
         <div class="carrossel-conteudo carrossel-page_1" id="carrossel-de-conteudo">
             <div class="containerLogs" id="container-de-logs">
@@ -133,7 +135,6 @@
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">?</span>
                     </footer>
-
                 </div>
 
                 <!-- Base -->
@@ -206,6 +207,43 @@
             </div>
 
             <div class="containerLogs " id="container-de-viagens">
+                <div id="logsOfTravel">
+                    <div class="containerTittleTravel">
+                        <img id="returnToTravels" src="img/return.png" alt="">
+                        <span id="tittleTravelSelect">Férias bem Legais</span>
+                    </div>
+                    <div class="containerTravelLogs">
+                        <div id="2" class="log">
+                            <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                            <footer class="logFooter">
+                                <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                                <span class="footerTxt">Xique-Xique - BA</span>
+                            </footer>
+                        </div>
+                        <div id="3" class="log">
+                            <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                            <footer class="logFooter">
+                                <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                                <span class="footerTxt">Xique-Xique - BA</span>
+                            </footer>
+                        </div>
+                        <div id="4" class="log">
+                            <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                            <footer class="logFooter">
+                                <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                                <span class="footerTxt">Xique-Xique - BA</span>
+                            </footer>
+                        </div>
+                        <div id="5" class="log">
+                            <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
+                            <footer class="logFooter">
+                                <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
+                                <span class="footerTxt">Xique-Xique - BA</span>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="viagem viagemCreator">
                     <div class="logCreator-thumbnail">
                         <img src="./img/newViagem_Icon.svg" alt="">
@@ -239,10 +277,11 @@
                 </div>
             </div>
 
+            <!-- Estatísticas -->
             <div class="containerLogs"></div>
-
         </div>
 
+        <!-- Aba de exibição de Log em destaque -->
         <div id="logFull">
             <div class="headerLogFull">
                 <div class="profileLogFull">
@@ -310,6 +349,7 @@
             </div>
         </div>
 
+        <!-- Aba de criação de Logs -->
         <div id="newLog">
             <div class="imgNewLog">
                 <div class="containerArrowLeftNewLog">
@@ -354,6 +394,7 @@
             </div>
         </div>
 
+        <!-- Aba de criação e edição de viagens -->
         <div id="newTravel">
             <div class="imgNewTravel">
                 <div class="containerArrowLeftNewTravel">
@@ -376,6 +417,7 @@
             </div>
         </div>
 
+        <!-- Seção de configurações -->
         <section id="sectionSettings">
             <div id="filterBlackSettings">
                 <img id="closeFilterSettings" src="img/closeWhite.png" alt="">
@@ -385,10 +427,12 @@
                     <img class="profileImgSettings" src="./img/cristoRedentor.jpg" alt="">
                     <div class="containerNickName">
                         <span class="nickNameSettings">Nickname</span>
+                        <input id="updateNickname" type="text" placeholder="nickname">
                         <img id="editNickname" class="imgEditSettings" src="img/edit.png" alt="">
                     </div>
                     <div class="containerName">
                         <span class="nameSettings">João Victor</span>
+                        <input id="updateName" type="text"  placeholder="nome">
                         <img id="editName" class="imgEditSettings" src="img/edit.png" alt="">
                     </div>
                 </div>
@@ -406,6 +450,7 @@
                                 nostrum alias
                                 temporibus aspernatur, ea omnis, numquam facilis sequi molestias?
                             </p>
+                            <textarea id="updateDescriptionProfile" name="" placeholder="Nova Descrição"></textarea>
                             <img id="editDescription" class="imgEditSettings" src="img/edit.png" alt="">
                         </div>
                     </div>
@@ -428,7 +473,7 @@
                 <p>Esta ação é irreversível e todos os seus dados serão permanentemente apagados.</p>
                 <div class="containerButtonsModalSettings">
                     <button id="cancelDeleteAccount" class="buttonModalSettings">Cancelar</button>
-                    <button id="confirmDeleteAccount" class="buttonModalSettings" >Confirmar</button>
+                    <button id="confirmDeleteAccount" class="buttonModalSettings">Confirmar</button>
                 </div>
             </div>
         </section>
@@ -462,9 +507,6 @@
         <span class="navItemMob">Favoritos</span>
         <span id="mobFilter" class="navItemMob">Filtro</span>
     </footer>
-
-
-
 
 </body>
 

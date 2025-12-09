@@ -9,6 +9,7 @@ const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
 const liListTravelNewLog = document.querySelectorAll('#listTravel li')
 const iconProfileUser = document.getElementById('profileNav')
 const iconProfileMobile = document.querySelector('.containerSettings div')
+const sectionSettings = document.getElementById('sectionSettings')
 const iconSettingsDesk = document.getElementById('settingsNav')
 const iconSettingsMob = document.getElementById('settingsHeader')
 const buttonChangePass = document.getElementById('changePass')
@@ -35,8 +36,18 @@ const filterMobile = document.getElementById('mobFilter')
 const newLog = document.querySelector('.logCreator')
 const newTravel = document.querySelector('.viagemCreator')
 const logs = document.querySelectorAll('.log')
+const travels = document.querySelectorAll('.viagem')
+const returnTravels = document.getElementById('returnToTravels')
 const likeLogFull = document.querySelector('.likeLogFullImg')
 const favoriteLogFull = document.querySelector('.favLogFullImg')
+const buttonFollower = document.getElementById('followUser')
+const editNickname = document.getElementById('editNickname')
+const inputName = document.getElementById('updateName')
+const editName = document.getElementById('editName')
+const inputNickname = document.getElementById('updateNickname')
+const editDescription = document.getElementById('editDescription')
+const inputDescription = document.getElementById('updateDescriptionProfile')
+var elementUpdate = null
 var idCallMessage = null
 var elementHigh = null
 var elementHighSettings = null
@@ -48,72 +59,6 @@ const estatisticaNavButton = document.getElementById('nav-button-estatistica');
 const containerDeLogs = document.getElementById('container-de-logs');
 const containerDeViagens = document.getElementById('container-de-logs');
 const carrosselDeConteudo = document.getElementById('carrossel-de-conteudo');
-
-iconSettingsDesk.addEventListener('click', goSettings)
-
-buttonChangePass.addEventListener('click', () => {
-    showModalMessagePass(event.target.id)
-})
-buttonDeleteAccount.addEventListener('click', () => {
-    showModalMessagePass(event.target.id)
-})
-buttonCancelDeleteAccount.addEventListener('click', closeModalSettings)
-buttonConfirmDeleteAccount.addEventListener('click', closeModalSettings)
-buttonCancelPass.addEventListener('click', closeModalSettings)
-buttonConfirmPass.addEventListener('click', closeModalSettings)
-
-function closeModalSettings() {
-    if (idCallMessage == 'deleteAccount') {
-        const messagePass = document.getElementById('messagePass')
-        console.log(123)
-        messagePass.classList.toggle('showModal')
-        showModalDeleteAccount()
-
-    } else {
-        filterBlackSettings.classList.toggle('showFilterSettings')
-        const elementHide = document.getElementById(elementHighSettings)
-
-        elementHide.classList.toggle('showModal')
-    }
-}
-
-closeFilterSettings.addEventListener('click', closeModalSettings)
-
-function goSettings() {
-    const sectionSettings = document.getElementById('sectionSettings')
-
-    sectionSettings.classList.add('showSection')
-}
-
-function showModalMessagePass(button_id) {
-    const messagePass = document.getElementById('messagePass')
-
-    filterBlackSettings.classList.toggle('showFilterSettings')
-    messagePass.classList.toggle('showModal')
-
-    elementHighSettings = 'messagePass'
-
-    if (button_id == 'deleteAccount') {
-        idCallMessage = 'deleteAccount'
-    }
-}
-
-function showModalDeleteAccount() {
-    const messageDelete = document.getElementById('messageConfirmDelete')
-
-    filterBlackSettings.classList.toggle('showFilterSettings')
-    messageDelete.classList.toggle('showModal')
-
-    elementHighSettings = 'messageConfirmDelete'
-}
-
-newTravel.addEventListener('click', () => {
-    const newLog = document.getElementById('newTravel')
-    filterBlack.classList.toggle('showFilter')
-    newLog.classList.toggle('showModal')
-
-    elementHigh = 'newTravel'
-})
 
 logNavButton.addEventListener('click', () => {
     carrosselDeConteudo.classList.add('carrossel-page_1');
@@ -316,6 +261,14 @@ function setTypeTravel(li) {
     //Função chamar logs pelo filtro de tipo de viagem
 }
 
+//Exibe Logs relacionados com aquela viagem
+function showLogsTravel() {
+    const sectionLogs = document.getElementById('logsOfTravel')
+
+    sectionLogs.classList.toggle('showLogsTravel')
+    sectionLogs.style.animation = '1.5s showScaleLogs linear'
+}
+
 //Destaca o Log clicado
 function logFull(id) {
     const logClick = document.getElementById(id).querySelectorAll('*')
@@ -370,6 +323,111 @@ function valideDateValue() {
     } else {
         //Função chamar logs pelo filtro de data
     }
+}
+
+//Botão para seguir
+buttonFollower.addEventListener('click', () => {
+    let imgButton = document.querySelector('#followUser img')
+    imgButton.style.animation = '3s rotateFollow linear'
+
+    setTimeout(() => {
+        imgButton.src = 'img/confirm.png'
+    }, 1500);
+})
+
+iconProfileUser.addEventListener('click', () => {
+    sectionSettings.classList.remove('showSection')
+})
+
+//Exibe aba de configurações
+function goSettings() {
+    sectionSettings.classList.add('showSection')
+}
+
+//Função exibir inputs de atualização
+function showInputUpdate(input_id) {
+    let inputShow = document.getElementById(input_id)
+
+    inputShow.classList.toggle('showInput')
+}
+
+//Validar entrada de dados Input
+function valideDatasInputUpdate(input_id) {
+    if (input_id == 'updateNickname') {
+        let nickName = inputNickname.value
+
+        if (nickName.length > 25 || nickName == '' || nickName == null || nickName == undefined) {
+            alert('Nickname Inválido')
+
+        } else {
+            elementUpdate = 'nickname'
+            showModalMessagePass()
+
+        }
+
+    } else if (input_id == 'updateName') {
+        let name = inputName.value
+
+        if (name.length > 100 || name == '' || name == null || name == undefined) {
+            alert('Nome Inválido')
+
+        } else {
+            elementUpdate = 'name'
+            showModalMessagePass()
+
+        }
+
+    } else if (input_id == 'updateDescriptionProfile') {
+        let description = inputDescription.value
+
+        if (description.length > 250 || description == '' || description == null || description == undefined) {
+            alert('Descrição Inválida')
+
+        } else {
+            elementUpdate = 'description'
+            showModalMessagePass()
+
+        }
+
+    }
+}
+
+//Função padrão para fechar modais
+function closeModalSettings() {
+    filterBlackSettings.classList.remove('showFilterSettings')
+    const elementHide = document.getElementById(elementHighSettings)
+
+    elementHide.classList.remove('showModal')
+}
+
+//Exibe mensagem de confirmação de senha
+function showModalMessagePass(button_id) {
+    const messagePass = document.getElementById('messagePass')
+
+    filterBlackSettings.classList.toggle('showFilterSettings')
+    messagePass.classList.toggle('showModal')
+
+    elementHighSettings = 'messagePass'
+
+    if (button_id == 'deleteAccount') {
+        idCallMessage = 'deleteAccount'
+
+    } else {
+        idCallMessage = 'changePass'
+
+    }
+}
+
+//Exibe mensagem de deletar a conta
+function showModalDeleteAccount() {
+    const messageDelete = document.getElementById('messageConfirmDelete')
+    const messagePass = document.getElementById('messagePass')
+
+    messagePass.classList.remove('showModal')
+    filterBlackSettings.classList.add('showFilterSettings')
+    messageDelete.classList.toggle('showModal')
+
+    elementHighSettings = 'messageConfirmDelete'
 }
 
 //Fecha a aba destacada e o filtro escuro
@@ -496,14 +554,18 @@ newPostMobile.addEventListener('click', showNewLog)
 //Destaca a aba de criação de log para Desktop
 newLog.addEventListener('click', showNewLog)
 
-//Icone do perfil do usuário e direcionamento para ele para desktop
-iconProfileUser.addEventListener('click', () => {
-    goProfileUser()
+//Exibe aba de criação de viagens
+newTravel.addEventListener('click', () => {
+    const newLog = document.getElementById('newTravel')
+    filterBlack.classList.toggle('showFilter')
+    newLog.classList.toggle('showModal')
+
+    elementHigh = 'newTravel'
 })
 
 //Icone do perfil do usuário e direcionamento para ele para mobile
 iconProfileMobile.addEventListener('click', () => {
-    goProfileUser()
+    sectionSettings.classList.remove('showSection')
 })
 
 //Mostra lista de viagens do usuário
@@ -578,6 +640,111 @@ favoriteLogFull.addEventListener('click', () => {
     }
 })
 
+//Adiciona event a travel
+travels.forEach(travel => {
+    travel.addEventListener('click', showLogsTravel)
+})
+
+//Função de retorno as travels
+returnTravels.addEventListener('click', () => {
+    const sectionLogs = document.getElementById('logsOfTravel')
+
+    sectionLogs.style.animation = '1.5s hiddeScaleLogs linear'
+    setTimeout(() => {
+        sectionLogs.classList.toggle('showLogsTravel')
+    }, 1400);
+})
+
+//Ícone para exibir aba de configurações
+iconSettingsDesk.addEventListener('click', goSettings)
+
+//Ícone para exibit aba de configurações para Mobile
+iconSettingsMob.addEventListener('click', goSettings)
+
+//Editar nickname
+editNickname.addEventListener('click', () => {
+    showInputUpdate('updateNickname')
+})
+
+//Event para atualizar nickname
+inputNickname.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDatasInputUpdate(inputNickname.id)
+
+    }
+})
+
+//Editar nome
+editName.addEventListener('click', () => {
+    showInputUpdate('updateName')
+})
+
+//Event para atualizar nome
+inputName.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDatasInputUpdate(inputName.id)
+
+    }
+})
+
+//Editar descrição
+editDescription.addEventListener('click', () => {
+    showInputUpdate('updateDescriptionProfile')
+})
+
+//Event para atualizar descrição
+inputDescription.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDatasInputUpdate(inputDescription.id)
+
+    }
+})
+
+//Ícone de fechar modais
+closeFilterSettings.addEventListener('click', closeModalSettings)
+
+//Botão para direcionar a confirmação da senha para trocá-la
+buttonChangePass.addEventListener('click', () => {
+    showModalMessagePass(event.target.id)
+})
+
+//Botão para direcionar a confirmação da senha para deletar a conta
+buttonDeleteAccount.addEventListener('click', () => {
+    showModalMessagePass(event.target.id)
+})
+
+//Botão para cancelar o delete da conta
+buttonCancelDeleteAccount.addEventListener('click', closeModalSettings)
+
+//Botão de confirmar delete da conta
+buttonConfirmDeleteAccount.addEventListener('click', closeModalSettings)
+
+//Botão de cancelar senha
+buttonCancelPass.addEventListener('click', closeModalSettings)
+
+//Botão para confirmar a senha, e lógica para tratar direcionamento de modais
+buttonConfirmPass.addEventListener('click', () => {
+    if (idCallMessage == 'deleteAccount') {
+        showModalDeleteAccount()
+    } else {
+        if (elementUpdate == 'nickname') {
+            alert('update nickname')
+
+        } else if (elementUpdate == 'name') {
+            alert('update name')
+
+        } else if (elementUpdate == 'description') {
+            alert('update description')
+
+        }
+
+        const inputPass = document.getElementById('passChangeInput')
+        inputPass.value = ''
+
+        closeModalSettings()
+    }
+})
+
 //Adiciona event para os LI de tipo de viagem para mobile
 liListTravelMob.forEach(li => {
     li.addEventListener('click', () => {
@@ -599,6 +766,24 @@ liListTravelNewLog.forEach(li => {
     li.addEventListener('click', () => {
         setTravel(li)
     })
+})
+
+//Fecha ícones quando a aba de configurações for clicada
+sectionSettings.addEventListener('click', () => {
+    if (!editNickname.contains(event.target) && !inputNickname.contains(event.target)) {
+        inputNickname.classList.remove('showInput')
+
+    }
+
+    if (!editName.contains(event.target) && !inputName.contains(event.target)) {
+        inputName.classList.remove('showInput')
+
+    }
+
+    if (!editDescription.contains(event.target) && !inputDescription.contains(event.target)) {
+        inputDescription.classList.remove('showInput')
+
+    }
 })
 
 //Fecha alguns icones clicando no corpo do web-site
