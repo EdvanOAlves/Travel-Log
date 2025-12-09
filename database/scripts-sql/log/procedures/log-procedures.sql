@@ -47,9 +47,18 @@ BEGIN
     END IF;
 END $$
 
-
 -- Procedure de Logs mais recentes, para a aba de explorar
-CREATE PROCEDURE BuscarLogsRecentes(IN input_usuario_id INT)
+CREATE PROCEDURE BuscarLogsRecentes(
+	IN input_usuario_id INT,
+	-- Filtros
+    IN filtro_data_inicio DATE,
+    IN filtro_data_fim DATE,
+    IN filtro_local_pais VARCHAR(75),
+    IN filtro_local_estado VARCHAR(75),
+    IN filtro_local_cidade VARCHAR(75),
+    IN filtro_ponto_interesse VARCHAR(255),
+    IN filtro_tipo_viagem_id INT
+)
 BEGIN
     SELECT 
     tbl_usuario.id AS autor_id, 
@@ -86,6 +95,16 @@ BEGIN
     JOIN tbl_local ON tbl_log.local_id = tbl_local.id
     JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
     WHERE tbl_log.visivel = 1 AND tbl_viagem.visivel = 1 -- Solução nova
+    
+    -- FILTROS
+    AND (filtro_data_inicio IS NULL OR tbl_log.data_publicacao >= filtro_data_inicio)
+    AND (filtro_data_fim IS NULL OR tbl_log.data_publicacao <= filtro_data_fim)
+    AND (filtro_local_pais IS NULL OR tbl_pais.nome = filtro_local_pais)
+    AND (filtro_local_estado IS NULL OR tbl_local.estado = filtro_local_estado)
+    AND (filtro_local_cidade IS NULL OR tbl_local.cidade = filtro_local_cidade)
+    AND (filtro_ponto_interesse IS NULL OR tbl_local.nome = filtro_ponto_interesse)
+    AND (filtro_tipo_viagem_id IS NULL OR tbl_viagem.tipo_viagem_id = filtro_tipo_viagem_id)
+    
     ORDER BY tbl_log.data_publicacao DESC;
 END $$
 
