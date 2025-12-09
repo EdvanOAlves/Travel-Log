@@ -1,5 +1,53 @@
--- CRIA UM LOCAL
+
 DELIMITER $$
+
+-- BUSCAR LOCAIS VISITADOS POR UM USUÁRIO
+CREATE PROCEDURE BuscarLocaisUsuario(
+	IN usuario_id INT
+)
+BEGIN
+	DECLARE usuario_existe INT;
+    SELECT COUNT(id) FROM tbl_usuario WHERE id = usuario_id INTO usuario_existe;
+    
+    IF usuario_existe>0 THEN
+		SELECT 
+        tbl_local.id, tbl_local.nome AS ponto_interesse, 
+		tbl_local.cidade, tbl_local.estado, 
+        tbl_local.pais_id, tbl_pais.nome AS nome_pais
+        FROM tbl_local
+        JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
+        JOIN tbl_log ON tbl_local.id = tbl_log.local_id
+        JOIN tbl_viagem ON tbl_log.viagem_id = tbl_viagem.id
+        JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
+        WHERE tbl_usuario.id = usuario_id;
+    ELSE
+		SELECT CONCAT("ERRO_404: O usuário ", usuario_id, " não foi encontrado na base de dados");
+	END IF;
+END$$
+
+-- BUSCAR PAÍSES VISITADOS POR UM USUÁRIO
+CREATE PROCEDURE BuscarPaisesUsuario(
+	IN usuario_id INT
+)
+BEGIN
+	DECLARE usuario_existe INT;
+    SELECT COUNT(id) FROM tbl_usuario WHERE id = usuario_id INTO usuario_existe;
+    
+    IF usuario_existe> 0 THEN
+		SELECT DISTINCT
+        tbl_pais.id, tbl_pais.nome
+        FROM tbl_local
+        JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
+        JOIN tbl_log ON tbl_local.id = tbl_log.local_id
+        JOIN tbl_viagem ON tbl_log.viagem_id = tbl_viagem.id
+        JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
+        WHERE tbl_usuario.id = usuario_id;
+    ELSE
+		SELECT CONCAT("ERRO_404: O usuário ", usuario_id, " não foi encontrado na base de dados");
+	END IF;
+END$$
+
+-- CRIA UM LOCAL
 	CREATE PROCEDURE CriarLocal(
 		IN var_pais VARCHAR(75),
 		IN var_estado VARCHAR(75),
@@ -28,10 +76,7 @@ DELIMITER $$
         END IF;
     END $$
 
-DELIMITER ;
-
 -- DELETA UM LOCAL
-DELIMITER $$
 	CREATE PROCEDURE DeletaLocal(IN input_local_id INT)
     BEGIN
 		
