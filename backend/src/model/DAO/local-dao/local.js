@@ -42,9 +42,7 @@ const getSelectLocationsByUserId = async (user_id) => {
                     nome_local: item.f1,
                     cidade: item.f2,
                     estado: item.f3,
-                    nome_pais: item.f5,
-                    visivel: item.f5,
-                    tipo_viagem: item.f6
+                    nome_pais: item.f5
                 }
 
             })
