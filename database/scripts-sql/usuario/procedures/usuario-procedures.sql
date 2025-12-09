@@ -6,7 +6,7 @@ DELIMITER $$
         IN var_apelido VARCHAR(25),
         IN var_email VARCHAR(255),
         IN var_telefone VARCHAR(20),
-        IN var_senha VARCHAR(60),
+        IN var_senha VARCHAR(75),
         IN var_foto_perfil VARCHAR(255),
         IN var_descricao VARCHAR(250)
     )

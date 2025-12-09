@@ -185,12 +185,6 @@ SELECT
     ORDER BY tbl_log.data_publicacao DESC;
 END$$   
 
-SELECT * FROM tbl_log$$
-SELECT * FROM tbl_viagem$$
-SELECT * FROM tbl_local$$
-SELECT * FROM tbl_pais$$
-DROP PROCEDURE AtualizaLog$$
-CALL AtualizaLog(11, "Visitando a familia", "5", "Brasil", "Rio de Janeiro", "Copacabana", null, TRUE)$$
 -- ATUALIZA LOG
 CREATE PROCEDURE AtualizaLog(
 	IN l_id INT,
