@@ -83,7 +83,3 @@ DELIMITER $$
     END $$
 
 DELIMITER ;
-
-CALL DeletarMidia(2);
-CALL CriarMidia("http://azurestorage/log_photo.png", 2, 4);
-CALL ListarMidiasLog(4);

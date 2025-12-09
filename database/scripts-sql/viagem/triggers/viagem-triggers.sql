@@ -1,7 +1,6 @@
 #DESATIVA LOGS DA VIAGEM
 
 DELIMITER $$
-/* Manter como backup, mas existe uma alternativa melhor para isso
 	CREATE TRIGGER trg_alterna_status_posts_viagem
     AFTER UPDATE ON tbl_viagem
     FOR EACH ROW
@@ -21,10 +20,8 @@ DELIMITER $$
 			WHERE viagem_id = NEW.id;
         
         END IF;
-    
     END $$
-    
-*/
+
 DELIMITER ;
 
 #DELETA LOGS DE UMA VIAGEM QUE ACABOU DE SER DELETADA
