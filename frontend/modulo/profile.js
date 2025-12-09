@@ -2,11 +2,21 @@
 
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
+const filterBlackSettings = document.getElementById('filterBlackSettings')
+const closeFilterSettings = document.getElementById('closeFilterSettings')
 const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
 const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
 const liListTravelNewLog = document.querySelectorAll('#listTravel li')
 const iconProfileUser = document.getElementById('profileNav')
 const iconProfileMobile = document.querySelector('.containerSettings div')
+const iconSettingsDesk = document.getElementById('settingsNav')
+const iconSettingsMob = document.getElementById('settingsHeader')
+const buttonChangePass = document.getElementById('changePass')
+const buttonConfirmPass = document.getElementById('confirmPass')
+const buttonCancelPass = document.getElementById('cancelPass')
+const buttonDeleteAccount = document.getElementById('deleteAccount')
+const buttonConfirmDeleteAccount = document.getElementById('confirmDeleteAccount')
+const buttonCancelDeleteAccount = document.getElementById('cancelDeleteAccount')
 const inputDateContainer = document.querySelector('.containerFilterDate')
 const inputDateBegin = document.getElementById('filterDateBegin')
 const inputDateEnd = document.getElementById('filterDateEnd')
@@ -27,7 +37,9 @@ const newTravel = document.querySelector('.viagemCreator')
 const logs = document.querySelectorAll('.log')
 const likeLogFull = document.querySelector('.likeLogFullImg')
 const favoriteLogFull = document.querySelector('.favLogFullImg')
+var idCallMessage = null
 var elementHigh = null
+var elementHighSettings = null
 
 const logNavButton = document.getElementById("nav-button-log");
 const viagemNavButton = document.getElementById('nav-button-viagem');
@@ -36,6 +48,64 @@ const estatisticaNavButton = document.getElementById('nav-button-estatistica');
 const containerDeLogs = document.getElementById('container-de-logs');
 const containerDeViagens = document.getElementById('container-de-logs');
 const carrosselDeConteudo = document.getElementById('carrossel-de-conteudo');
+
+iconSettingsDesk.addEventListener('click', goSettings)
+
+buttonChangePass.addEventListener('click', () => {
+    showModalMessagePass(event.target.id)
+})
+buttonDeleteAccount.addEventListener('click', () => {
+    showModalMessagePass(event.target.id)
+})
+buttonCancelDeleteAccount.addEventListener('click', closeModalSettings)
+buttonConfirmDeleteAccount.addEventListener('click', closeModalSettings)
+buttonCancelPass.addEventListener('click', closeModalSettings)
+buttonConfirmPass.addEventListener('click', closeModalSettings)
+
+function closeModalSettings() {
+    if (idCallMessage == 'deleteAccount') {
+        const messagePass = document.getElementById('messagePass')
+        console.log(123)
+        messagePass.classList.toggle('showModal')
+        showModalDeleteAccount()
+
+    } else {
+        filterBlackSettings.classList.toggle('showFilterSettings')
+        const elementHide = document.getElementById(elementHighSettings)
+
+        elementHide.classList.toggle('showModal')
+    }
+}
+
+closeFilterSettings.addEventListener('click', closeModalSettings)
+
+function goSettings() {
+    const sectionSettings = document.getElementById('sectionSettings')
+
+    sectionSettings.classList.add('showSection')
+}
+
+function showModalMessagePass(button_id) {
+    const messagePass = document.getElementById('messagePass')
+
+    filterBlackSettings.classList.toggle('showFilterSettings')
+    messagePass.classList.toggle('showModal')
+
+    elementHighSettings = 'messagePass'
+
+    if (button_id == 'deleteAccount') {
+        idCallMessage = 'deleteAccount'
+    }
+}
+
+function showModalDeleteAccount() {
+    const messageDelete = document.getElementById('messageConfirmDelete')
+
+    filterBlackSettings.classList.toggle('showFilterSettings')
+    messageDelete.classList.toggle('showModal')
+
+    elementHighSettings = 'messageConfirmDelete'
+}
 
 newTravel.addEventListener('click', () => {
     const newLog = document.getElementById('newTravel')

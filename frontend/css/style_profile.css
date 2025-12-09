@@ -63,7 +63,8 @@ html {
 body {
     position: relative;
     height: 100dvh;
-    width: 100vw;
+    width: 100dvw;
+    background-color: var(--cor_web);
     overflow-x: hidden;
 }
 
@@ -79,7 +80,7 @@ body {
     width: 100%;
     height: 100%;
     background-color: var(--preto_fosco);
-    z-index: 30;
+    z-index: 40;
 }
 
 #filterBlack.showFilter {
@@ -109,7 +110,7 @@ header {
     padding: 10px;
     background-color: var(--azul_default);
     box-shadow: var(--default_shadow);
-    z-index: 30;
+    z-index: 40;
 }
 
 .containerLogo {
@@ -158,7 +159,7 @@ main {
 .userProfileHeader {
     display: flex;
     flex-direction: column;
-    padding-top: 20px;
+    padding-top: 10px;
     padding-inline: 15px;
 }
 
@@ -193,6 +194,29 @@ main {
 
 .profileDescription {
     padding-block: 16px;
+}
+
+.containerFollowerUser {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+}
+
+#followUser {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 40px;
+    background-color: var(--azul_default);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    color: var(--azul_escuro);
+    border-width: 1.5px;
 }
 
 .profileNavBar {
@@ -868,7 +892,7 @@ main {
     height: 50%;
     opacity: 0;
     background-color: var(--cor_web_post);
-    z-index: 50;
+    z-index: 60;
     transition: 0.2s ease-in-out;
     pointer-events: none;
 }
@@ -951,7 +975,7 @@ main {
     align-items: center;
     width: 100%;
     height: 15%;
-    padding-left: 5px;
+    padding-left: 20px;
 }
 
 #visibleNewTravel {
@@ -1015,7 +1039,7 @@ main {
     border-color: var(--cinza_default);
     border-width: 1px;
     box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.205);
-    z-index: 90;
+    z-index: 40;
 }
 
 .navItem {
@@ -1137,6 +1161,292 @@ main {
     font-size: 12px;
 }
 
+#filterBlackSettings {
+    position: absolute;
+    display: none;
+    justify-content: end;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--preto_fosco);
+    z-index: 40;
+}
+
+#filterBlackSettings.showFilterSettings {
+    display: flex;
+}
+
+#closeFilterSettings {
+    width: 15px;
+    height: 15px;
+    margin: 20px 10px 0px 0px;
+}
+
+#closeFilterSettings.hiddeCloseFilter {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#sectionSettings {
+    position: fixed;
+    display: none;
+    justify-content: center;
+    margin: auto;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100dvw;
+    height: calc(100dvh - 140px);
+    padding-top: 20px;
+    z-index: 20;
+    background-color: var(--cor_web);
+    pointer-events: none;
+}
+
+#sectionSettings.showSection {
+    display: flex;
+    pointer-events: all;
+}
+
+.containerSettingsMain {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    height: 90%;
+    background-color: var(--cor_web_post);
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.253);
+}
+
+.containerInfoSettings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    height: 40%;
+    padding-top: 30px;
+    border-bottom-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.profileImgSettings {
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.imgEditSettings {
+    width: auto;
+    height: 20px;
+    transition: 0.2s ease-in-out;
+}
+
+.containerNickName {
+    display: flex;
+    width: 60%;
+}
+
+.nickNameSettings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 94%;
+    padding-left: 15px;
+}
+
+.containerName {
+    display: flex;
+    width: 60%;
+}
+
+.nameSettings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 94%;
+    padding-left: 15px;
+}
+
+.containerDescriptionSettings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 60%;
+    padding-top: 15px;
+    gap: 20px;
+}
+
+.containerFollowerSettings {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    font-weight: 600;
+}
+
+.containerDescription {
+    display: flex;
+    gap: 10px;
+    padding: 0px 15px 0px 15px;
+}
+
+.descriptionSettings {
+    display: flex;
+    text-align: center;
+    font-size: 14px
+}
+
+.containerButtonsSettings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    height: 130px;
+    margin-bottom: 20px;
+}
+
+.containerButtonsSettings button {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+}
+
+#changePass {
+    width: 180px;
+    background-color: var(--azul_escuro);
+}
+
+#deleteAccount {
+    width: 230px;
+    background-color: var(--cinza_default);
+}
+
+#messagePass {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    height: 17%;
+    border-radius: 20px;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: var(--cor_web_post);
+    z-index: 40;
+    opacity: 0;
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+#messagePass.showModal {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#messagePass span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    font-size: 14px;
+}
+
+#passChangeInput {
+    all: unset;
+    display: flex;
+    width: 90%;
+    height: 35px;
+    padding-left: 10px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    box-shadow: var(--default_shadow);
+}
+
+.containerButtonsModalSettings {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    width: 85%;
+    height: 40px;
+}
+
+.buttonModalSettings {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 30px;
+    border-radius: 20px;
+}
+
+#cancelPass {
+    background-color: var(--cinza_default);
+}
+
+#confirmPass {
+    background-color: var(--azul_escuro);
+}
+
+#messageConfirmDelete {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+    height: 17%;
+    border-radius: 20px;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: var(--cor_web_post);
+    z-index: 40;
+    opacity: 0;
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+#messageConfirmDelete.showModal {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#messageConfirmDelete p {
+    font-size: 14px;
+    text-align: center;
+}
+
+#cancelDeleteAccount {
+    background-color: var(--cinza_default);
+}
+
+#confirmDeleteAccount {
+    background-color: var(--azul_escuro);
+}
+
 /*Classes do carrosel*/
 /* 
     Para funcionamento do Script:
@@ -1196,6 +1506,10 @@ main {
         margin-left: 185px;
     }
 
+    .containerFollowerUser {
+        margin-left: 200px;
+    }
+
     .log {
         width: 31.5%;
         height: 25%;
@@ -1240,6 +1554,64 @@ main {
         height: 40px;
         font-size: 14px;
     }
+
+    #sectionSettings {
+        align-items: center;
+    }
+
+    .containerSettingsMain {
+        margin-bottom: 60px;
+        width: 85%;
+        height: 85%;
+    }
+
+    .containerInfoSettings {
+        justify-content: space-around;
+        align-items: center;
+        height: 35%;
+        padding-top: 20px;
+    }
+
+    .profileImgSettings {
+        width: 150px;
+        height: 150px;
+    }
+
+    #editNickname {
+        height: 15px;
+    }
+
+    #editName {
+        height: 15px;
+    }
+
+    .containerDescriptionSettings {
+        gap: 30px;
+        height: 65%;
+    }
+
+    .containerFollowerSettings {
+        width: 35%;
+    }
+
+    .containerDescription {
+        margin-left: 40px;
+        width: 65%;
+        gap: 15px;
+    }
+
+    #editDescription {
+        width: 15px;
+        height: 15px;
+    }
+
+    #messageConfirmDelete {
+        width: 60%;
+    }
+
+    #messagePass {
+        width: 55%;
+    }
 }
 
 @media (min-width: 1280px) {
@@ -1269,8 +1641,9 @@ main {
     }
 
     .userProfileHeader {
-        height: 30%;
         position: relative;
+        height: 30%;
+        padding-top: 0px;
     }
 
     #imgProfile {
@@ -1293,7 +1666,14 @@ main {
 
     .profileIdentifier {
         margin-top: 20px;
-        margin-left: 185px;
+    }
+
+    .profileTitle {
+
+        padding-top: 0px;
+        padding-left: 16px;
+        gap: 10px;
+        height: 60px;
     }
 
     .profileContent {
@@ -1341,7 +1721,7 @@ main {
     }
 
     #newTravel {
-        width: 50%;
+        width: 40%;
         height: 65%;
         left: calc(0px + 280px);
     }
@@ -1614,4 +1994,51 @@ main {
         height: 80%;
     }
 
+    #sectionSettings {
+        width: calc(100% - 260px);
+        height: 100%;
+        margin-right: 0px;
+    }
+
+    .containerSettingsMain {
+        box-shadow: none;
+        height: 90%;
+    }
+
+    .containerInfoSettings {
+        height: 40%;
+    }
+
+    .profileImgSettings {
+        width: 180px;
+        height: 180px;
+    }
+
+    .containerFollowerSettings {
+        width: 270px;
+    }
+
+    .containerButtonsSettings {
+        margin-bottom: 100px;
+        gap: 30px;
+    }
+
+    .containerButtonsSettings button:hover {
+        transform: scale(1.02);
+        box-shadow: var(--default_shadow);
+    }
+
+    .imgEditSettings:hover {
+        transform: scale(1.1);
+    }
+
+    #messageConfirmDelete {
+        left: calc(0px + 280px);
+        width: 40%;
+    }
+
+    #messagePass {
+        left: calc(0px + 280px);
+        width: 35%;
+    }
 }

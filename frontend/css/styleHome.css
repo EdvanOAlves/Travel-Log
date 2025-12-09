@@ -117,8 +117,10 @@ header {
 
 #profileHeader {
     border-radius: 100%;
-    width: auto;
-    height: 70%;
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .containerSettings div {
@@ -240,9 +242,11 @@ main {
 }
 
 .profileFollower img {
-    width: 70%;
-    height: 70%;
+    width: 90%;
+    height: 90%;
     border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .containerButtonLogFollower {
