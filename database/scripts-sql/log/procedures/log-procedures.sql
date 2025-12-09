@@ -315,3 +315,57 @@ DELIMITER $$
     END $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+	CREATE PROCEDURE BuscarLogsViagemId(IN var_viagem_id INT)
+    BEGIN
+		
+        DECLARE viagem_existe INT;
+        
+        SELECT COUNT(id) FROM tbl_viagem WHERE id = var_viagem_id INTO viagem_existe;
+        
+        IF viagem_existe > 0 THEN
+        
+			SELECT 
+				tbl_log.id as id_log,
+				tbl_log.descricao,
+                tbl_log.data_publicacao,
+                tbl_log.contagem_curtidas,
+                tbl_log.contagem_favoritos,
+                tbl_log.visivel,
+                tbl_local.nome as nome_local,
+				tbl_local.cidade,
+                tbl_local.estado,
+                tbl_pais.nome
+                
+                
+                FROM tbl_log
+                JOIN tbl_viagem ON
+                tbl_viagem.id = tbl_log.viagem_id
+                
+                JOIN tbl_local ON
+                tbl_local.id = tbl_log.local_id
+                
+				JOIN tbl_pais ON
+                tbl_local.pais_id = tbl_pais.id
+                
+                WHERE tbl_viagem.id = var_viagem_id;
+                
+        
+        ELSE
+        
+			SELECT CONCAT("ERRO_404: A viagem ", var_viagem_id ," não foi encontrada na base de dados");
+        
+        END IF;
+    
+    END $$
+
+DELIMITER ;
+
+drop procedure BuscarLogsViagemId;
+select * from tbl_viagem;
+CALL BuscarLogsViagemId(1);
+select * from tbl_log;
+
+CALL ListarLogsUsuario(1);
