@@ -55,6 +55,26 @@ const getSelectMediasByLogId = async (id_log) => {
 
 }
 
+const getSelectMediaById = async (id_media) => {
+
+    try {
+        
+        sql = `SELECT * FROM tbl_log_midia WHERE id = ${id_media}`
+
+        result = await prisma.$executeRawUnsafe(sql)
+
+        if(Array.isArray(result)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 // Registra o caminho de uma midia no banco
 const setInsertMedia = async (media) => {
 
@@ -103,6 +123,7 @@ const setDeleteMedia = async (id_media) => {
 
 module.exports = {
     getSelectMediasByLogId,
+    getSelectMediaById,
     setInsertMedia,
     setDeleteMedia
 }
