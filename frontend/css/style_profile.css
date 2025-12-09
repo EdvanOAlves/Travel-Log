@@ -5,9 +5,13 @@
     font-family: "Inter", sans-serif;
 }
 
-a{
+a {
     text-decoration: none;
     color: black;
+}
+
+ul {
+    list-style: none;
 }
 
 :root {
@@ -30,26 +34,68 @@ a{
     --carrossel-transition: ease-in-out 500ms;
 }
 
-.selectable:hover{
+.selectable:hover {
     background-color: var(--azul_default_opacity);
-    cursor:pointer;
+    cursor: pointer;
     border-radius: 8px;
 
 }
 
-html{
+html {
     overflow: hidden;
 }
 
+/* Estilização para barra de rolagem */
+::-webkit-scrollbar {
+    width: 5px;
+}
 
-body{
+::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.205);
+}
+
+body {
     position: relative;
     height: 100dvh;
     width: 100vw;
     overflow-x: hidden;
 }
 
+#navDesk {
+    display: none;
+}
 
+#filterBlack {
+    position: absolute;
+    display: none;
+    justify-content: end;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--preto_fosco);
+    z-index: 30;
+}
+
+#filterBlack.showFilter {
+    display: flex;
+}
+
+#closeFilter {
+    width: 15px;
+    height: 15px;
+    margin: 80px 10px 0px 0px;
+}
+
+#closeFilter.hiddeCloseFilter {
+    opacity: 0;
+    pointer-events: none;
+}
 
 /* Header */
 header {
@@ -63,6 +109,7 @@ header {
     padding: 10px;
     background-color: var(--azul_default);
     box-shadow: var(--default_shadow);
+    z-index: 30;
 }
 
 .containerLogo {
@@ -101,26 +148,26 @@ header {
 }
 
 /* MAIN */
-
-main{
-    padding-top:72px;
+main {
+    width: 100%;
+    padding-top: 72px;
     padding-bottom: 72px;
 }
 
 /* Itens do usuário */
-.userProfileHeader{
+.userProfileHeader {
     display: flex;
     flex-direction: column;
-    padding-top:20px;
+    padding-top: 20px;
     padding-inline: 15px;
-
 }
-.profileIdentifier{
+
+.profileIdentifier {
     display: flex;
 
 }
 
-.profileTitle{
+.profileTitle {
     display: flex;
     flex-direction: column;
     padding-inline: 18px;
@@ -128,171 +175,967 @@ main{
     gap: 16px;
 }
 
-.profileNickname{
+.profileNickname {
     font-size: 20px;
     font-weight: 500;
 }
 
-.titleInfo{
+.titleInfo {
     font-weight: 500;
     font-size: 16px;
 }
 
-.followerInfo{
+.followerInfo {
     display: flex;
     padding-block: 8px;
     gap: 16px;
 }
 
-.profileDescription{
+.profileDescription {
     padding-block: 16px;
 }
 
-.profileNavBar{
+.profileNavBar {
     padding-inline: 40px;
     display: flex;
+    width: 95%;
+    margin-left: 2%;
     justify-content: space-between;
-
     border-top: solid 2px var(--cinza_escuro);
-    padding-block: 12px;
+    padding: 12px 5px 12px 5px;
 }
 
 
 /*Perfil Abas*/
-.navItem{
+.navItem {
     display: flex;
     place-content: center;
     gap: 2px;
     color: var(--cinza_escuro);
-    padding:4px;
+    padding: 4px;
 }
-.navItem{
+
+.navItem {
     opacity: 50%;
 }
 
-.navItem.selected{
+.navItem.selected {
     opacity: 100%;
 }
 
-.navItem.selected .navIcon{
+.navItem.selected .navIcon {
     opacity: 100%;
 }
 
 /* CONTAINER DE LOGS */
 
-.carrossel-conteudo{
+.carrossel-conteudo {
     display: flex;
     flex: 0 0 auto;
-    width: 200vw;
+    width: 300vw;
     overflow-x: hidden;
 }
 
-.containerLogs{
+.containerLogs {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
     align-content: flex-start;
-    padding: 25px;
-    gap: 2.5%;
+    padding: 0px 5px 2% 10px;
     width: 100%;
 }
 
-
-.log{
-    width: 48%;
-    margin-top: 3%;
-    box-shadow: 5px 5px 15px #0004;
+.log {
+    width: 46%;
+    height: 20%;
+    margin-top: 2%;
+    margin-left: 2%;
+    box-shadow: var(--default_shadow);
     object-fit: contain;
+    background-color: var(--cor_web_post);
 }
 
-.logThumbnail{
+.logThumbnail {
     width: 100%;
-    max-height: 102px;
+    height: 80%;
+    object-fit: cover;
+    object-position: center;
 }
 
-.logFooter{
+.logFooter {
     display: flex;
     align-items: center;
     place-content: end;
     gap: 4px;
     width: 100%;
+    height: 20%;
     padding: 4px;
+
 }
 
-.logFooter span{
+.logFooter span {
     font-size: 12px;
 }
 
 /* Log Creator */
-.logCreator-thumbnail{
+.logCreator-thumbnail {
     display: flex;
     flex-direction: column;
     align-items: center;
     place-content: center;
     background-color: var(--cinza_default);
-    height: 83%;
+    height: 80%;
+}
+
+.viagemCreator .viagemFooter {
+    align-items: center;
+    justify-content: center;
 }
 
 /* Viagem */
-.viagem{
-    width: 48%;
-    margin-top: 3%;
+.viagem {
+    width: 46%;
+    height: 20%;
+    margin-top: 2%;
+    margin-left: 10px;
     box-shadow: 5px 5px 15px #0004;
 }
 
-.viagemFooter{
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
+.viagem .logThumbnail {
     width: 100%;
+    height: 80%;
+}
+
+.viagemFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 20%;
     padding: 4px;
 }
 
-.viagemFooter footerTxt{
-    font-size: 16px;
+.viagemFooter .footerTxt {
+    font-size: 12px;
 }
 
-.viagemData{
-    font-size: 14px;
+.viagemData {
+    font-size: 10px;
 }
 
-/* Log Creator */
-.logCreator-thumbnail{
+/* Aba de criação de Log */
+#newLog {
+    position: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
-    place-content: center;
+    top: 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 95%;
+    height: 80%;
+    padding: 10px;
+    z-index: 60;
+    opacity: 0;
+    background-color: var(--cor_web_post);
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+#newLog.showModal {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.imgNewLog {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    padding: 0px 5px 0px 5px;
     background-color: var(--cinza_default);
-    height: 83%;
+}
+
+#newLogIcon {
+    width: auto;
+    height: 50px;
+}
+
+#selectImgInput {
+    display: none;
+}
+
+.imgNewLog div {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: var(--cinza_default);
+    border-radius: 100%;
+}
+
+.containerArrowRightNewLog {
+    right: 5px;
+}
+
+.containerArrowLeftNewLog {
+    left: 5px;
+}
+
+.arrowImgLogLeftFull {
+    width: auto;
+    height: 20px;
+}
+
+.arrowImgLogRightFull {
+    width: auto;
+    height: 20px;
+}
+
+.containerTravel {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 15%;
+    padding: 10px 0px 15px 0px;
+}
+
+.containerSelectTravel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100%;
+    gap: 10px;
+}
+
+.selectTravel {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    z-index: 20;
+}
+
+.selectTravel span {
+    width: 90%;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+#arrowSelectTravel {
+    width: auto;
+    height: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#arrowSelectTravel.changeArrowNewLog {
+    transform: rotate(180deg);
+}
+
+#listTravel {
+    position: absolute;
+    top: 40px;
+    left: 1px;
+    width: 89%;
+    height: 20px;
+    background-color: var(--branco);
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    z-index: 10;
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    opacity: 0;
+    transition: 0.5s ease-in-out;
+}
+
+#listTravel.expandListTravelNewLog {
+    height: 150px;
+    opacity: 1;
+}
+
+#listTravel ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-top: 20px;
+    overflow: auto;
+}
+
+#listTravel li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 25px;
+    border-bottom-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 1px;
+    font-size: 14px;
+}
+
+#visibleTravel {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 30px;
+    background-color: var(--azul_default);
+    color: var(--azul_escuro);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 2px;
+    transition: 0.2s ease-in-out;
+}
+
+#visibleTravel.ocultVisible {
+    background-color: var(--cinza_default);
+    border-color: var(--cinza_escuro);
+    color: var(--cinza_escuro);
+}
+
+.containerLocationNewLog {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 10%;
+    gap: 10px;
+}
+
+.locationNewLog {
+    display: flex;
+    align-items: center;
+    width: 1005;
+    height: 100%;
+    gap: 5px;
+    padding-left: 10px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.locationNewLog img {
+    width: auto;
+    height: 20px;
+}
+
+#locationNewLogInput {
+    all: unset;
+    width: 100%;
+    height: 100%;
+    background-color: var(--branco);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#descriptionNewLog {
+    all: unset;
+    width: 97%;
+    height: 20%;
+    padding: 5px;
+    margin-top: 5px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.contianerButtonNewLog {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    padding-top: 5px;
+}
+
+#saveLog {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    color: var(--azul_escuro);
+    background-color: var(--azul_default);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 1px;
+}
+
+/* Log em destaque */
+#logFull {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 80%;
+    left: 0;
+    right: 0;
+    top: 30px;
+    bottom: 0;
+    margin: auto;
+    opacity: 0;
+    z-index: 60;
+    background-color: var(--cor_web_post);
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+#logFull.showModal {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.headerLogFull {
+    background-color: var(--azul_default);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 7%;
+    gap: 5px;
+    padding-left: 10px;
+}
+
+.profileLogFull {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background-color: var(--cinza_escuro);
+}
+
+.profileLogFull img {
+    width: auto;
+    height: 75%;
+    border-radius: 100%;
+}
+
+.nameProfileLogFull {
+    font-size: 16px;
+}
+
+.containerLocationTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+    height: 8%;
+    padding: 0px 10px 0px 10px;
+}
+
+.nameTravel {
+    font-size: 20px;
+}
+
+.containerLocationLogFull img {
+    width: auto;
+    height: 15px;
+}
+
+.locationLogFull {
+    font-size: 14px;
+}
+
+.backgroundImgLogFull {
+    position: relative;
+    width: 100%;
+    height: 45%;
+}
+
+.imgLog {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.backgroundImgLogFull div {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    top: calc(50% - 8px);
+    margin: 0px 5px 0px 5px;
+    border-radius: 100%;
+    background-color: var(--cinza_escuro_hover);
+    transition: 0.4s ease-in-out;
+    pointer-events: all;
+}
+
+.backgroundImgLogFull div img {
+    width: auto;
+    height: 17px;
+}
+
+.backgroundImgLogFull div:nth-child(3) {
+    right: 0;
+}
+
+.arrowImgLogLeftFull {
+    transform: rotate(180deg);
+}
+
+.footerLogFull {
+    display: flex;
+    width: 100%;
+    height: 7%;
+}
+
+.likesLogFull {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    width: 10%;
+}
+
+.likesLogFull img {
+    width: auto;
+    height: 20px;
+}
+
+.numberLikesFull {
+    font-size: 12px;
+}
+
+.favLogFull {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    gap: 3px;
+    margin-left: 10px;
+}
+
+.favLogFull img {
+    width: auto;
+    height: 20px;
+}
+
+.numberFavFull {
+    font-size: 12px;
+}
+
+.containerDateLog {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 10px;
+    width: 80%;
+}
+
+.containerScrollLogFull {
+    width: 100%;
+    height: 33%;
+    overflow: auto;
+}
+
+.descriptionLog {
+    width: 100%;
+    font-size: 14px;
+    padding: 0px 10px 15px 10px;
+}
+
+.commentsLog {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+    width: 100%;
+    height: 1fr;
+    gap: 10px;
+    padding: 0px 10px 10px 10px;
+}
+
+.containerInputComment {
+    display: flex;
+    width: 100%;
+}
+
+#addComment {
+    all: unset;
+    width: calc(100% - 90px);
+    height: 100%;
+    font-size: 14px;
+    border-bottom-style: solid;
+    border-color: var(--cinza_escuro);
+    border-width: 2px;
+}
+
+.containerInputComment div {
+    display: flex;
+    justify-content: end;
+    width: 90px;
+    gap: 5px;
+}
+
+.commentsLog img {
+    width: auto;
+    height: 20px;
+}
+
+.numberComments {
+    font-size: 14px;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.233);
+}
+
+.headerComments {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    padding-left: 5px;
+    gap: 5px;
+    background-color: var(--cinza_default);
+}
+
+.profileComment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    background-color: var(--cinza_escuro);
+    border-radius: 100%;
+}
+
+.profileComment img {
+    width: auto;
+    height: 75%;
+    border-radius: 100%;
+}
+
+.nameCommentLog {
+    font-size: 14px;
+}
+
+.commentText {
+    font-size: 14px;
+    padding: 5px 10px 5px 10px;
+}
+
+.dateComment {
+    display: flex;
+    justify-content: end;
+    font-size: 12px;
+}
+
+#newTravel {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px 10px 5px 10px;
+    width: 95%;
+    height: 50%;
+    opacity: 0;
+    background-color: var(--cor_web_post);
+    z-index: 50;
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+#newTravel.showModal {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.imgNewTravel {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    height: 55%;
+    background-color: var(--cinza_default);
+}
+
+#newTravelIcon {
+    width: 50px;
+    height: 50px;
+}
+
+#selectImgInputTravel {
+    display: none;
+}
+
+.imgNewTravel div {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 25px;
+    height: 25px;
+    background-color: var(--cinza_escuro);
+    border-radius: 100%;
+}
+
+.containerArrowRightNewTravel {
+    right: 5px;
+}
+
+.containerArrowLeftNewTravel {
+    left: 5px;
+}
+
+.arrowImgTravelLeftFull {
+    width: auto;
+    height: 20px;
+    transform: rotate(180deg);
+}
+
+.arrowImgTravelRightFull {
+    width: auto;
+    height: 20px;
+}
+
+#inputNameTravel {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    height: 45px;
+    margin-top: 30px;
+    padding-left: 5px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.containerButtonVisible {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 15%;
+    padding-left: 5px;
+}
+
+#visibleNewTravel {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 30px;
+    background-color: var(--azul_default);
+    color: var(--azul_escuro);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 2px;
+    transition: 0.2s ease-in-out;
+}
+
+#visibleNewTravel.ocultVisible {
+    background-color: var(--cinza_default);
+    border-color: var(--cinza_escuro);
+    color: var(--cinza_escuro);
+}
+
+.containerButtonSaveNewTravel {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+    height: 50px;
+}
+
+#saveNewTravel {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 40px;
+    background-color: var(--azul_default);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 2px;
 }
 
 /* Footer */
-
-.navMob{
+.navMob {
     display: flex;
     justify-content: space-around;
-
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 72px;
-
     align-items: center;
-    
-    background-color: var(--azul_default) ;
+    background-color: var(--azul_default);
     font-size: 16px;
-
+    border-top-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 1px;
+    box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.205);
+    z-index: 90;
 }
 
-.navItem{
+.navItem {
     color: black;
 }
 
-.newLogButton{
+.newLogButton {
     height: 80%;
 }
 
+#containerFilterMob {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    right: 0px;
+    bottom: 70px;
+    width: 220px;
+    height: 150px;
+    padding: 10px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: var(--preto_fosco);
+    z-index: 20;
+    opacity: 0;
+    transition: 0.4s ease-in-out;
+    pointer-events: none;
+}
+
+#containerFilterMob.showFilterMob {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#containerFilterMob input {
+    all: unset;
+    display: flex;
+    text-align: center;
+    width: 90%;
+    height: 35px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--cinza_escuro);
+    font-size: 12px;
+    z-index: -15;
+}
+
+.containerListTypeLogMob {
+    position: relative;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    padding-right: 10px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--cinza_escuro);
+}
+
+.containerListTypeLogMob span {
+    display: flex;
+    justify-content: center;
+    padding-left: 18%;
+    width: 100%;
+    font-size: 12px;
+}
+
+#arrowTypeMob {
+    width: auto;
+    height: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#arrowTypeMob.arrowSelect {
+    transform: rotate(180deg);
+}
+
+#listTypeLogMob {
+    position: absolute;
+    width: 177px;
+    height: 30px;
+    bottom: 0px;
+    right: 0px;
+    padding: 5px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    z-index: -10;
+    transition: 0.5s ease-in-out;
+}
+
+#listTypeLogMob.expandirListMob {
+    height: 200px;
+}
+
+#listTypeLogMob ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+#listTypeLogMob li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 30px;
+    width: 80%;
+    border-bottom-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 1px;
+    font-size: 12px;
+}
 
 /*Classes do carrosel*/
 /* 
@@ -304,19 +1147,471 @@ main{
 */
 
 /* Quando em foco nos logs */
-.carrossel-page_1{
-    transform: translateX(0); /* Posição */
-    transition: var(--carrossel-transition); /* Timing de transição */
+.carrossel-page_1 {
+    transform: translateX(0);
+    /* Posição */
+    transition: var(--carrossel-transition);
+    /* Timing de transição */
 }
 
 /* Quando em foco nas viagens */
-.carrossel-page_2{
-    transform: translateX(-100vw); /* Posição */
+.carrossel-page_2 {
+    transform: translateX(-33.3%);
+    /* Posição */
     transition: var(--carrossel-transition);
 }
 
 /* Quando em foco nas estatisticas (Que ainda não tem o html) */
-.carrossel-page_3{
-    transform: translateX(-200vw); /* Posição */
-    transition: var(--carrossel-transition); /* Timing de transição */
+.carrossel-page_3 {
+    transform: translateX(-67%);
+    /* Posição */
+    transition: var(--carrossel-transition);
+    /* Timing de transição */
+}
+
+@media (min-width: 768px) {
+    .userProfileHeader {
+        position: relative;
+    }
+
+    #imgProfile {
+        position: absolute;
+        width: auto;
+        height: 130px;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 50px;
+    }
+
+    .followerInfo {
+        margin-left: 200px;
+    }
+
+    .profileDescription {
+        margin-left: 200px;
+    }
+
+    .profileIdentifier {
+        margin-left: 185px;
+    }
+
+    .log {
+        width: 31.5%;
+        height: 25%;
+        margin-left: 1%;
+    }
+
+    .logFooter span {
+        font-size: 14px;
+    }
+
+    .profileNavBar {
+        justify-content: space-around;
+    }
+
+    .viagem {
+        width: 31.5%;
+        height: 25%;
+    }
+
+    #logFull {
+        width: 85%;
+        height: 80%;
+    }
+
+    #newLog {
+        width: 80%;
+    }
+
+    #newTravel {
+        width: 60%;
+    }
+
+    #containerFilterMob {
+        width: 260px;
+        height: 190px;
+        opacity: 0;
+        transition: 1s ease-in-out;
+        pointer-events: none;
+    }
+
+    #containerFilterMob input {
+        height: 40px;
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 1280px) {
+    body {
+        display: flex;
+    }
+
+    #closeFilter {
+        width: 15px;
+        height: 15px;
+        margin: 20px 20px 0px 0px;
+    }
+
+    header {
+        display: none;
+    }
+
+    .navMob {
+        display: none;
+    }
+
+    main {
+        width: calc(100% - 280px);
+        height: 100%;
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+
+    .userProfileHeader {
+        height: 30%;
+        position: relative;
+    }
+
+    #imgProfile {
+        position: absolute;
+        width: auto;
+        height: 130px;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 50px;
+    }
+
+    .followerInfo {
+        margin-left: 200px;
+    }
+
+    .profileDescription {
+        margin-left: 200px;
+    }
+
+    .profileIdentifier {
+        margin-top: 20px;
+        margin-left: 185px;
+    }
+
+    .profileContent {
+        height: 6%;
+    }
+
+    .containerLogs {
+        width: 35%;
+        overflow: auto;
+    }
+
+    .log {
+        width: 23.8%;
+        height: 60%;
+    }
+
+    .viagem {
+        width: 23.8%;
+        height: 60%;
+    }
+
+    .viagemFooter .footerTxt {
+        font-size: 14px;
+    }
+
+    .viagemData {
+        font-size: 12px;
+    }
+
+    .carrossel-conteudo {
+        height: 64%;
+        width: calc(300%);
+    }
+
+    #logFull {
+        width: 50%;
+        height: 90%;
+        top: 0px;
+        left: calc(0px + 280px);
+    }
+
+    #newLog {
+        width: 50%;
+        left: calc(0px + 280px);
+    }
+
+    #newTravel {
+        width: 50%;
+        height: 65%;
+        left: calc(0px + 280px);
+    }
+
+    #navDesk {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 280px;
+        height: 100%;
+        padding: 15px;
+        background-color: var(--azul_default);
+        box-shadow: var(--default_shadow);
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        z-index: 40;
+    }
+
+    #navDesk h1 {
+        font-size: 2rem;
+        width: 100%;
+        height: 5%;
+    }
+
+    .containerNav {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 40%;
+    }
+
+    .containerNav span {
+        display: flex;
+        align-items: center;
+        height: 30px;
+        border-radius: 15px;
+        padding-left: 10px;
+        transition: 0.2s ease-in-out;
+    }
+
+    .containerNav span:hover {
+        background-color: var(--preto_hover);
+    }
+
+    .containerFilter {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: end;
+        width: 100%;
+        height: 60%;
+    }
+
+    .containerFilter span {
+        pointer-events: none;
+    }
+
+    .titleFilter {
+        display: flex;
+        justify-content: start;
+        width: 100%;
+    }
+
+    .containerFilterDate {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80%;
+        height: 35px;
+        border-radius: 20px;
+        background-color: var(--branco);
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--cinza_escuro);
+        transition: 0.2s ease-in-out;
+        overflow: hidden;
+    }
+
+    .expandFilterDate {
+        width: 95%;
+    }
+
+    .containerFilterDate span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        padding: 0;
+        width: 10%;
+        height: 100%;
+        color: var(--cinza_escuro);
+    }
+
+    .filterDate {
+        all: unset;
+        display: flex;
+        text-align: center;
+        width: 45%;
+        height: 100%;
+        background-color: var(--branco);
+        border-color: var(--cinza_escuro);
+        font-size: 14px;
+        z-index: -10;
+        transition: 0.2s ease-in-out;
+    }
+
+    .showFilterDate {
+        z-index: 10;
+    }
+
+    #filterDateBegin {
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+    }
+
+    #filterDateEnd {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding-right: 0px;
+    }
+
+    #filterLocation {
+        all: unset;
+        display: flex;
+        text-align: center;
+        width: 80%;
+        height: 35px;
+        background-color: var(--branco);
+        border-radius: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--cinza_escuro);
+        font-size: 14px;
+        transition: 0.2s ease-in-out;
+    }
+
+    #filterLocation.expandFilterLocation {
+        width: 95%;
+    }
+
+    .containerListTypeLog {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 80%;
+        height: 40px;
+        padding: 0px 10px 0px 10px;
+        background-color: var(--branco);
+        border-radius: 20px;
+        border-style: solid;
+        border-width: 1px;
+        border-color: var(--cinza_escuro);
+    }
+
+    .containerListTypeLog span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding-left: 15px;
+    }
+
+    #listTypeLog {
+        position: absolute;
+        display: flex;
+        width: 100%;
+        height: 30px;
+        top: 0;
+        left: 0;
+        padding-top: 33px;
+        z-index: -10;
+        background-color: var(--branco);
+        border-style: none;
+        border-radius: 20px;
+        transition: 0.5s ease-in-out;
+    }
+
+    #listTypeLog.expandirListDesk {
+        height: 200px;
+    }
+
+    #listTypeLog ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    #listTypeLog li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 30px;
+        width: 80%;
+        border-bottom-style: solid;
+        border-color: var(--cinza_default);
+        border-width: 1px;
+    }
+
+    #arrowType {
+        width: auto;
+        height: 8px;
+        transition: 0.3s ease-in-out;
+    }
+
+    #arrowType:hover {
+        transform: scale(1.15);
+    }
+
+    #arrowType.arrowSelect {
+        transform: rotate(180deg);
+    }
+
+    .containerSettingsNav {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        width: 100%;
+        height: 15%;
+        gap: 10px;
+    }
+
+    .containerSettingsNav div:hover {
+        background-color: var(--preto_hover);
+    }
+
+    #settingsNav {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 15px;
+        transition: 0.2s ease-in-out;
+    }
+
+    #settingsNav img {
+        width: auto;
+        height: 25px;
+    }
+
+    #profileNav {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        gap: 10px;
+        padding: 5px;
+        border-radius: 15px;
+        transition: 0.2s ease-in-out;
+    }
+
+    #profileNav div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        background-color: var(--cinza_escuro);
+        border-radius: 100%;
+    }
+
+    #profileNav div img {
+        border-radius: 100%;
+        width: auto;
+        height: 80%;
+    }
+
 }

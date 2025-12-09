@@ -15,6 +15,9 @@
 </head>
 
 <body>
+    <div id="filterBlack">
+        <img id="closeFilter" src="img/closeWhite.png" alt="">
+    </div>
     <!-- NAVEGAÇÃO -->
     <header>
         <div class="containerLogo">
@@ -28,11 +31,59 @@
             </div>
         </div>
     </header>
+
+    <nav id="navDesk">
+        <h1>Travelog</h1>
+        <div class="containerNav">
+            <span id="deskHome">Home</span>
+            <span id="deskLikes">Explorar</span>
+            <span id="deskFav">Favoritos</span>
+            <div class="containerFilter">
+                <span class="titleFilter">Filtro:</span>
+                <div class="containerFilterDate">
+                    <input id="filterDateBegin" class="filterDate" type="date">
+                    <span>Data</span>
+                    <input id="filterDateEnd" class="filterDate" type="date">
+                </div>
+                <input id="filterLocation" type="text" placeholder="Localização">
+                <div class="containerListTypeLog">
+                    <span>Tipo</span>
+                    <img id="arrowType" src="img/arrowBlackDown.png" alt="">
+                    <div id="listTypeLog">
+                        <ul>
+                            <li>Gastronômica</li>
+                            <li>Trabalho</li>
+                            <li>Lazer</li>
+                            <li>Gastronômica</li>
+                            <li>Trabalho</li>
+                            <li>Lazer</li>
+                            <li>Gastronômica</li>
+                            <li>Trabalho</li>
+                            <li>Lazer</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="containerSettingsNav">
+            <div id="settingsNav">
+                <img src="img/settings.png" alt="">
+                <span>Configurações</span>
+            </div>
+            <div id="profileNav">
+                <div>
+                    <img src="img/profile.png" alt="">
+                </div>
+                <span>@jãozinhoMoraes</span>
+            </div>
+        </div>
+    </nav>
+
     <!-- MAIN -->
     <main>
         <div class="userProfileHeader">
             <div class="profileIdentifier">
-                <img src="./img/emptyProfilePic.svg" alt="" class="profilePic">
+                <img id="imgProfile" src="./img/emptyProfilePic.svg" alt="" class="profilePic">
                 <div class="profileTitle">
                     <h3 class="profileNickname">
                         @jãozinhoMoraes
@@ -55,11 +106,11 @@
                     <span class="navTitle">Logs</span>
                 </div>
                 <div class="navItem selectable" id="nav-button-viagem">
-                    <img src="./img/navIcon_viagem.svg" alt="" class="navIcon">
+                    <img src="./img/collectionBlack.png" alt="" class="navIcon">
                     <span class="navTitle">Viagens</span>
                 </div>
                 <div class="navItem selectable" id="nav-button-estatistica">
-                    <img src="./img/navIcon_graph.svg" alt="" class="navIcon">
+                    <img src="./img/statitcsBlack.png" alt="" class="navIcon">
                     <span class="navTitle">Estatísticas</span>
                 </div>
             </div>
@@ -83,65 +134,65 @@
                 </div>
 
                 <!-- Base -->
-                <div class="log">
+                <div id="0" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                
+
                 <!-- Repetições -->
-                <div class="log">
+                <div id="1" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                <div class="log">
+                <div id="2" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                <div class="log">
+                <div id="3" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                <div class="log">
+                <div id="4" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                <div class="log">
+                <div id="5" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                <div class="log">
+                <div id="6" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                <div class="log">
+                <div id="7" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
                         <span class="footerTxt">Xique-Xique - BA</span>
                     </footer>
                 </div>
-                <div class="log">
+                <div id="8" class="log">
                     <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                     <footer class="logFooter">
                         <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
@@ -177,7 +228,7 @@
                     </footer>
                 </div>
                 <div class="viagem">
-                    <img src="./img/fotos/bunny.png" alt="" class="logThumbnail">
+                    <img src="./img/cristoRedentor.jpg" alt="" class="logThumbnail">
                     <footer class="viagemFooter">
                         <span class="footerTxt">Viagem de negócios</span>
                         <span class="viagemData">23/08/2025</span>
@@ -185,16 +236,171 @@
                 </div>
             </div>
 
+            <div class="containerLogs"></div>
+
         </div>
 
+        <div id="logFull">
+            <div class="headerLogFull">
+                <div class="profileLogFull">
+                    <img src="img/profile.png" alt="">
+                </div>
+                <span class="nameProfileLogFull"></span>
+            </div>
+            <div class="containerLocationTitle">
+                <span class="nameTravel">Férias Bem Legais</span>
+                <div class="containerLocationLogFull">
+                    <img src="img/location.png" alt="">
+                    <span class="locationLogFull"></span>
+                </div>
+            </div>
+            <div class="backgroundImgLogFull">
+                <div class="containerArrowImgLogLeftFull">
+                    <img class="arrowImgLogLeftFull" src="img/arrowWhite.png" alt="">
+                </div>
+                <img data-position=0 class="imgLog" src="" alt="">
+                <div class="containerArrowImgLogRightFull">
+                    <img class="arrowImgLogRightFull" src="img/arrowWhite.png" alt="">
+                </div>
+            </div>
+            <div class="footerLogFull">
+                <div class="likesLogFull">
+                    <img class="likeLogFullImg" src="img/likeDisable.png" alt="">
+                    <span class="numberLikesFull"></span>
+                </div>
+                <div class="favLogFull">
+                    <img class="favLogFullImg" src="img/favDisable.png" alt="">
+                    <span class="numberFavFull"></span>
+                </div>
+                <div class="containerDateLog">
+                    <span class="dateLog">22/09/2025</span>
+                </div>
+            </div>
+            <div class="containerScrollLogFull">
+                <p class="descriptionLog">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam minus neque
+                    non
+                    expedita iste beatae, pariatur quas doloremque debitis dolorem repellat, quos fugiat magnam nesciunt
+                    facere reiciendis porro facilis maiores.
+                </p>
+                <div class="commentsLog">
+                    <div class="containerInputComment">
+                        <input id="addComment" type="text" placeholder="Adicione um comentário...">
+                        <div>
+                            <img src="img/comments.png" alt="">
+                            <span class="numberComments">182</span>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="headerComments">
+                            <div class="profileComment">
+                                <img src="img/profile.png" alt="">
+                            </div>
+                            <span class="nameCommentLog">@edvanOalves</span>
+                        </div>
+                        <p class="commentText">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
+                            repudiandae aut nostrum vel. Maxime consequatur saepe explicabo sequi, numquam fugit iure
+                            tempora corrupti ducimus hic enim doloribus in labore exercitationem.
+                        </p>
+                        <span class="dateComment">28/08/2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="newLog">
+            <div class="imgNewLog">
+                <div class="containerArrowLeftNewLog">
+                    <img class="arrowImgLogLeftFull" src="img/arrowWhite.png" alt="">
+                </div>
+                <label for="selectImgInput">
+                    <img id="newLogIcon" src="./img/newLogIcon.png" alt="">
+                </label>
+                <input id="selectImgInput" type="file" accept=".jpg,.png,.jpeg,.webp" multiple>
+                <div class="containerArrowRightNewLog">
+                    <img class="arrowImgLogRightFull" src="img/arrowWhite.png" alt="">
+                </div>
+            </div>
+            <div class="containerTravel">
+                <div class="containerSelectTravel">
+                    <span>Viagem</span>
+                    <div class="selectTravel">
+                        <span>Selecione a Viagem</span>
+                        <img id="arrowSelectTravel" src="img/arrowBlackDown.png" alt="">
+                    </div>
+                    <div id="listTravel">
+                        <ul>
+                            <li>Férias Bem Legais</li>
+                            <li>Férias Muito Legais</li>
+                            <li>Férias Hyper Legais</li>
+                            <li>Férias Supimpas de Legais</li>
+                        </ul>
+                    </div>
+                </div>
+                <button id="visibleTravel">Público</button>
+            </div>
+            <div class="containerLocationNewLog">
+                <span>Localização</span>
+                <div class="locationNewLog">
+                    <img src="img/location.png" alt="">
+                    <input id="locationNewLogInput" type="text" placeholder="Digite a localização do Log">
+                </div>
+            </div>
+            <textarea id="descriptionNewLog" name="" autocomplete="off" placeholder="Descrição..."></textarea>
+            <div class="contianerButtonNewLog">
+                <button id="saveLog">Salvar</button>
+            </div>
+        </div>
+
+        <div id="newTravel">
+            <div class="imgNewTravel">
+                <div class="containerArrowLeftNewTravel">
+                    <img class="arrowImgTravelLeftFull" src="img/arrowWhite.png" alt="">
+                </div>
+                <label for="selectImgInputTravel">
+                    <img id="newTravelIcon" src="./img/newLogIcon.png" alt="">
+                </label>
+                <input id="selectImgInputTravel" type="file" accept=".jpg,.png,.jpeg,.webp" multiple>
+                <div class="containerArrowRightNewTravel">
+                    <img class="arrowImgTravelRightFull" src="img/arrowWhite.png" alt="">
+                </div>
+            </div>
+            <input id="inputNameTravel" type="text" autocomplete="off" placeholder="Viagem...">
+            <div class="containerButtonVisible">
+                <button id="visibleNewTravel">Público</button>
+            </div>
+            <div class="containerButtonSaveNewTravel">
+                <button id="saveNewTravel">Nova Viagem</button>
+            </div>
+        </div>
     </main>
 
     <footer class="navMob">
-        <span class="navItem"><a href="home.html">Home</a></span>
-        <span class="navItem">Explorar</span>
-        <img class="newLogButton" src="./img/newLogButton.svg" alt="">
-        <span class="navItem">Favoritos</span>
-        <span class="navItem">Filtro</span>
+        <div id="containerFilterMob">
+            <input id="filterDateMob" type="text" placeholder="Data">
+            <input id="filterLocationMob" type="text" placeholder="Localização">
+            <div class="containerListTypeLogMob">
+                <span>Tipo</span>
+                <img id="arrowTypeMob" src="img/arrowBlackDown.png" alt="">
+                <div id="listTypeLogMob">
+                    <ul>
+                        <li>Gastronômica</li>
+                        <li>Trabalho</li>
+                        <li>Lazer</li>
+                        <li>Gastronômica</li>
+                        <li>Trabalho</li>
+                        <li>Lazer</li>
+                        <li>Gastronômica</li>
+                        <li>Trabalho</li>
+                        <li>Lazer</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <span class="navItemMob"><a href="home.html">Home</a></span>
+        <span class="navItemMob">Explorar</span>
+        <img id="newPost" class="newLogButton" src="./img/newLogButton.svg" alt="">
+        <span class="navItemMob">Favoritos</span>
+        <span id="mobFilter" class="navItemMob">Filtro</span>
     </footer>
 
 
