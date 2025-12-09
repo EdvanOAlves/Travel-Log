@@ -105,10 +105,12 @@ const insereMidia = async (midia, contentType) => {
 
                 if(resultMidia) {
 
+                    midiaRegistrada = await midiaDAO.getSelectLastMedia()
+
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_CREATED_ITEM.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.message             = MESSAGES.SUCCESS_CREATED_ITEM.message
-                    delete MESSAGES.DEFAULT_HEADER
+                    MESSAGES.DEFAULT_HEADER.items.midia         = midiaRegistrada
 
                     return MESSAGES.DEFAULT_HEADER //200
     

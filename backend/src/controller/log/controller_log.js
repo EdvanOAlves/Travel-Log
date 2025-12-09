@@ -233,17 +233,41 @@ const insereLog = async (log, contentType) => {
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
             validar = validarLog(log)
-
+            
             if(!validar) {
     
                 resultLog = await logDAO.setInsertLog(log)
-
+                
                 if(resultLog) {
     
-                    logRegistrado = await logDAO.getLastLog()
+                    logRegistrado = await logDAO.getSelectLastLog()
+
+                    midias = log.midias
+
+                    for (midia of midias) {
+
+                        log = logRegistrado[0]
+
+                        midiaObject = { link: midia.link, indice: midia.indice, log_id: log.id }
+                        
+                        resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
+
+                        if (resultMidia.status_code != 201) {
+                            
+                            MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
+                            return MESSAGES.ERROR_RELATINAL_INSERTION
+
+                        }
+
+                    }
+
+                    midiasCriadas = await controllerMidia.listarMidiasLogId(logRegistrado[0].id)
+
+                    delete MESSAGES.DEFAULT_HEADER.items.midia
+                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.items.log           = logRegistrado
     
                     return MESSAGES.DEFAULT_HEADER //200
@@ -260,9 +284,9 @@ const insereLog = async (log, contentType) => {
             return MESSAGES.ERROR_CONTENT_TYPE //415
         }
     
-        } catch (error) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
-        }
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
 
 }
 
@@ -400,7 +424,43 @@ const validarLog = (log) => {
 
 }
 
-listarFeedSeguindo(1)
+log = {
+
+    descricao: "Minhas férias",
+    viagem_id: 6,
+    nome_pais: "China",
+    estado: "Xangai",
+    cidade: "Xangai",
+    nome_local: "Monte Fuji",
+    visivel: true,
+    midias: [
+        
+        {
+
+            link: "http://azurestorage/photo.png",
+            indice: 1
+
+        },
+        {
+
+            link: "http://azurestorage/photo.png",
+            indice: 2
+
+        },
+        {
+
+            link: "http://azurestorage/photo.png",
+            indice: 3
+
+        }
+
+    ]
+
+}
+
+contentType = 'application/json'
+
+insereLog(log ,contentType)
 
 module.exports = {
 
