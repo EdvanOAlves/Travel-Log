@@ -20,13 +20,10 @@ const prisma = new PrismaClient();
 const getSelectLocationsByUserId = async (user_id) => {
     try {
         sql = `CALL BuscarLocaisUsuario(${user_id})`
-
         result = await prisma.$queryRawUnsafe(sql);
 
-        //Verifica se o array está vazio, pois precisa retornar
-        //um 404 se não houver viagens cadastradas
         if (result.length == 0) {
-            return result
+            return "ERRO_404"
         }
 
         //Se converte o resultado de verifica para String para passar na verificação
@@ -35,24 +32,22 @@ const getSelectLocationsByUserId = async (user_id) => {
         verifica = result[0].f0.toString()
 
         if (!verifica.includes('ERRO_404')) {
-
             formattedResult = result.map(item => {
                 return {
                     id_local: item.f0,
                     nome_local: item.f1,
                     cidade: item.f2,
                     estado: item.f3,
+                    id_pais: item.f4,
                     nome_pais: item.f5
                 }
-
             })
-
             return formattedResult;
-
         } else {
             return result;
         }
     } catch (error) {
+        console.log(error);
         return false
     }
 }
@@ -65,7 +60,7 @@ const getSelectCountriesByUserId = async (user_id) => {
         result = await prisma.$queryRawUnsafe(sql)
 
         if (result.length == 0) {
-            return false
+            return "ERRO_404"
         }
 
         //Se converte o resultado de verifica para String para passar na verificação
@@ -91,17 +86,6 @@ const getSelectCountriesByUserId = async (user_id) => {
     }
 
 }
-
-async function main(){
-    teste = await getSelectCountriesByUserId(1)
-    console.log(teste);
-}
-async function main2(){
-    teste = await getSelectLocationsByUserId(1)
-    console.log(teste);
-}
-
-main2();
 
 
 module.exports = {
