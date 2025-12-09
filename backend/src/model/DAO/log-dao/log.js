@@ -141,6 +141,62 @@ const getSelectAllLogsUserId = async (user_id) => {
 
 }
 
+//Retorna todos os logs pelo id da viagem
+const getSelectAllLogsByTravelId = async (travel_id) => {
+
+    try {
+
+        sql = `CALL BuscarLogsViagemId(${user_id})`
+        
+        result = await prisma.$queryRawUnsafe(sql)
+        
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
+            return result
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
+            
+            formattedResult = result.map(item => {
+
+                return {
+
+                    log_id: item.f0,
+                    descricao: item.f1,
+                    data_publicacao: item.f2,
+                    curtidas: item.f3,
+                    favoritos: item.f4,
+                    visivel: item.f5,
+                    local: [
+                        {
+                            nome_local: item.f6,
+                            cidade: item.f7,
+                            estado: item.f8,
+                            pais: item.f9
+                        }
+                    ]
+
+                }
+            })
+
+            return formattedResult;
+
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 //Retorna o último log registrado
 const getSelectLastLog = async () => {
 
@@ -338,6 +394,7 @@ module.exports = {
     getSelectExploreLogs,
     getSelectAllLogsUserId,
     getSelectLogsFollowing,
+    getSelectAllLogsByTravelId,
     getSelectLastLog,
     getSelectLogById,
     setInsertLog,

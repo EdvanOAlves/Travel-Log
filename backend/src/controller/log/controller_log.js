@@ -91,15 +91,54 @@ const buscarLogId = async (log_id) => {
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const listarLogsUserId = async (log_id) => {
+const listarLogsUserId = async (usuario_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
+        if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
             resultLog = await logDAO.getSelectAllLogsUserId(usuario_id)
+
+            if(resultLog) {
+
+                if(resultLog.length > 0) {
+
+                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
+                    
+                    return MESSAGES.DEFAULT_HEADER //200
+
+                } else {
+                    return MESSAGES.ERROR_NOT_FOUND //404
+                }
+
+            } else {
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+            }
+
+        } else {
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+
+}
+
+//Retorna todos os logs pelo id da viagem
+const listarLogsViagemId = async (viagem_id) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+        
+    try {
+        
+        if(!isNaN(viagem_id) && viagem_id != '' && viagem_id != null && viagem_id != undefined && viagem_id > 0) {
+
+            resultLog = await logDAO.getSelectAllLogsByTravelId(viagem_id)
 
             if(resultLog) {
 
@@ -352,6 +391,7 @@ module.exports = {
     buscarLogId,
     listarLogsUserId,
     listarFeedSeguindo,
+    listarLogsViagemId,
     insereLog,
     atualizaLog,
     deletaLog
