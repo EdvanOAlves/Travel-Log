@@ -57,16 +57,20 @@ const getSelectExploreLogs = async (user_id) => {
                             data_postagem: item.f5,
                             curtidas: item.f6,
                             favoritos: item.f7,
+                            local: [
+                                {
+                                    nome_local: item.f10,
+                                    cidade: item.f11,
+                                    estado: item.f12,
+                                    pais: item.f13
+                                }
+                            ]
                         }
                     ],
                     viagem: [
                         {
                             viagem_id: item.f8,
                             titulo: item.f9,
-                            nome_local: item.f10,
-                            cidade: item.f11,
-                            estado: item.f12,
-                            pais: item.f13,
                         }
                     ],
                     curtido: item.f14,
@@ -214,20 +218,25 @@ const getSelectLogsFollowing = async (user_id) => {
                             descricao: item.f4,
                             data_postagem: item.f5,
                             curtidas: item.f6,
-                            favoritos: item.f7
+                            favoritos: item.f7,
+                            local: [
+                                {
+                                    nome_local: item.f10,
+                                    cidade: item.f11,
+                                    estado: item.f12,
+                                    pais: item.f13
+                                }
+                            ]
                         }
                     ],
                     viagem: [
                         {
                             viagem_id: item.f8,
-                            titulo: item.f9,
-                            nome_local: item.f10,
-                            cidade: item.f11,
-                            estado: item.f12
+                            titulo: item.f9
                         }
                     ],
-                    curtido: item.f13,
-                    favoritado: item.f14
+                    curtido: item.f14,
+                    favoritado: item.f15
 
                 }
             })
