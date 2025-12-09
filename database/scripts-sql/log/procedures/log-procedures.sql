@@ -1,6 +1,9 @@
 -- --------------------------------------------------------
 -- PROCEDURES LOG
 -- --------------------------------------------------------
+
+CALL PublicarLog("adsdasd", 6, true, "China", "shangai", "shangai", "monte fuji");
+
 DELIMITER $$
 
 -- Para publicar um log
@@ -73,20 +76,32 @@ BEGIN
     tbl_pais.id AS pais_id,
     tbl_pais.nome AS pais,
     
-    -- Incluindo se o usuario interagiu, seja por curtida ou favorito
-    (SELECT COUNT(id) FROM tbl_curtida WHERE tbl_curtida.usuario_id = input_usuario_id AND tbl_curtida.log_id = tbl_log.id) AS curtido,
-    (SELECT COUNT(id) FROM tbl_favorito WHERE tbl_favorito.usuario_id = input_usuario_id AND tbl_favorito.log_id = tbl_log.id) AS favoritado
+    -- CAST => Converte o resultado da lógica (1 ou 0) para o padrão JSON do JavaScript, estou utilizando isso pois essa função estava retornando um
+    -- BigInt e atrapalhando o consumo de dados no JSON
+    CAST(IF((SELECT COUNT(id) FROM tbl_curtida WHERE usuario_id = input_usuario_id AND log_id = tbl_log.id) > 0, true, false) AS JSON) AS curtido,
+    CAST(IF((SELECT COUNT(id) FROM tbl_favorito WHERE usuario_id = input_usuario_id AND log_id = tbl_log.id) > 0, true, false) AS JSON) AS favoritado
     
     -- Fontes
     FROM tbl_log
-    JOIN tbl_viagem ON tbl_log.viagem_id = tbl_viagem.id
-    JOIN tbl_tipo_viagem ON tbl_viagem.tipo_viagem_id = tbl_tipo_viagem.id
-    JOIN tbl_usuario ON tbl_viagem.usuario_id = tbl_usuario.id
-    -- JOIN tbl_curtida ON tbl_curtida.usuario_id = input_usuario_id
-    JOIN tbl_local ON tbl_log.local_id = tbl_local.id
-    JOIN tbl_pais ON tbl_local.pais_id = tbl_pais.id
+    
+    JOIN tbl_viagem ON 
+    tbl_log.viagem_id = tbl_viagem.id
+    
+    JOIN tbl_tipo_viagem ON 
+    tbl_viagem.tipo_viagem_id = tbl_tipo_viagem.id
+    
+    JOIN tbl_usuario ON 
+    tbl_viagem.usuario_id = tbl_usuario.id
+    
+    JOIN tbl_local ON 
+    tbl_log.local_id = tbl_local.id
+    
+    JOIN tbl_pais 
+    ON tbl_local.pais_id = tbl_pais.id
+    
     WHERE tbl_log.visivel = 1 AND tbl_viagem.visivel = 1 -- Solução nova
     ORDER BY tbl_log.data_publicacao DESC;
+    
 END $$
 
 DELIMITER ;
@@ -145,6 +160,9 @@ BEGIN
     
 END $$
 
+DELIMITER ;
+
+DELIMITER $$
 
 -- PARA OBTER CONTEÚDO DO HOME (Logs cujos autores são seguidos pelo usuário em questão)
 CREATE PROCEDURE BuscarFeedSeguindo(
@@ -170,8 +188,9 @@ SELECT
     tbl_pais.nome AS pais,
     
     -- Incluindo se o usuario interagiu, seja por curtida ou favorito
-    (SELECT COUNT(id) FROM tbl_curtida WHERE tbl_curtida.usuario_id = input_usuario_id AND tbl_curtida.log_id = tbl_log.id) AS curtido,
-    (SELECT COUNT(id) FROM tbl_favorito WHERE tbl_favorito.usuario_id = input_usuario_id AND tbl_favorito.log_id = tbl_log.id) AS favoritado
+    
+    CAST(IF((SELECT COUNT(id) FROM tbl_curtida WHERE tbl_curtida.usuario_id = input_usuario_id AND tbl_curtida.log_id = tbl_log.id) > 0, true, false) AS JSON) AS curtido,
+	CAST(IF((SELECT COUNT(id) FROM tbl_favorito WHERE tbl_favorito.usuario_id = input_usuario_id AND tbl_favorito.log_id = tbl_log.id) > 0, true, false) AS JSON) AS favoritado
     
     -- Fontes
     FROM tbl_log
@@ -183,7 +202,13 @@ SELECT
     WHERE tbl_log.visivel = 1 
     AND tbl_seguidor.usuario_id = tbl_usuario.id AND tbl_seguidor.seguidor_id = input_usuario_id
     ORDER BY tbl_log.data_publicacao DESC;
-END$$   
+END$$
+
+DELIMITER ;
+
+call BuscarFeedSeguindo(1);
+
+DELIMITER $$
 
 -- ATUALIZA LOG
 CREATE PROCEDURE AtualizaLog(
@@ -243,6 +268,10 @@ BEGIN
 	END IF;
 END $$
 
+DELIMITER ;
+
+DELIMITER $$
+
 CREATE PROCEDURE DeletaLog(IN l_id INT)
     BEGIN
 		
@@ -265,51 +294,49 @@ CREATE PROCEDURE DeletaLog(IN l_id INT)
         END IF;
 	END $$
 
--- ALTERA O STATUS DE VISÍVEL PARA FALSE 
-DELIMITER $$
-    CREATE PROCEDURE AlternarStatusLogFalse(IN l_id INT)
-    BEGIN
-    
-		DECLARE log_existe INT;
-        
-        SELECT COUNT(id) FROM tbl_log WHERE id = l_id INTO log_existe;
-        
-        IF log_existe > 0 THEN
-			
-            UPDATE tbl_log SET
-				visivel = FALSE
-			WHERE tbl_log.id = l_id;
-            
-        ELSE
-			
-            SELECT CONCAT("ERRO_404: O log ", l_id, " não foi encontrada na base de dados.");
-            
-        END IF;
-    
-    END $$
-
 DELIMITER ;
 
--- ALTERA O STATUS DE VISÍVEL PARA FALSE 
 DELIMITER $$
-	
-    CREATE PROCEDURE AlternarStatusLogTrue(IN l_id INT)
+
+	CREATE PROCEDURE BuscarLogsViagemId(IN var_viagem_id INT)
     BEGIN
-    
-		DECLARE log_existe INT;
+		
+        DECLARE viagem_existe INT;
         
-        SELECT COUNT(id) FROM tbl_log WHERE id = l_id INTO log_existe;
+        SELECT COUNT(id) FROM tbl_viagem WHERE id = var_viagem_id INTO viagem_existe;
         
-        IF log_existe > 0 THEN
-			
-            UPDATE tbl_log SET
-				visivel = TRUE
-			WHERE tbl_log.id = l_id;
-            
+        IF viagem_existe > 0 THEN
+        
+			SELECT 
+				tbl_log.id as id_log,
+				tbl_log.descricao,
+                tbl_log.data_publicacao,
+                tbl_log.contagem_curtidas,
+                tbl_log.contagem_favoritos,
+                tbl_log.visivel,
+                tbl_local.nome as nome_local,
+				tbl_local.cidade,
+                tbl_local.estado,
+                tbl_pais.nome
+                
+                
+                FROM tbl_log
+                JOIN tbl_viagem ON
+                tbl_viagem.id = tbl_log.viagem_id
+                
+                JOIN tbl_local ON
+                tbl_local.id = tbl_log.local_id
+                
+				JOIN tbl_pais ON
+                tbl_local.pais_id = tbl_pais.id
+                
+                WHERE tbl_viagem.id = var_viagem_id;
+                
+        
         ELSE
-			
-            SELECT CONCAT("ERRO_404: O log ", l_id, " não foi encontrada na base de dados.");
-            
+        
+			SELECT CONCAT("ERRO_404: A viagem ", var_viagem_id ," não foi encontrada na base de dados");
+        
         END IF;
     
     END $$
