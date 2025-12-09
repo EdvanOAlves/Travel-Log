@@ -19,7 +19,7 @@ const buscarComentariosLogId = async (log_id) => {
         
     try {
         
-        if(!isNaN(log_id) || log_id <= 0 || log_id == undefined || log_id == null || log_id == "") {
+        if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
 
             resultComentario = await comentarioDAO.getSelectCommentsByLogId(log_id)
 
@@ -57,7 +57,7 @@ const buscarComentarioId = async (id) => {
     
         try {
             
-            if (!isNaN(id) || id <= 0 || id == undefined || id == null || id == "") {
+            if (!isNaN(id) && id != '' && id != null && id != undefined && id > 0) {
     
                 resultComentario = await comentarioDAO.getSelectCommentById(id)
     

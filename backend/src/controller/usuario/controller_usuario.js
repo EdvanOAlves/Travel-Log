@@ -89,15 +89,15 @@ const listarUsuarios = async () => {
 }
 
 //Buscar um usuário pelo id
-const buscarUsuarioId = async (id) => {
+const buscarUsuarioId = async (usuario_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
         
-        if (!isNaN(id) || id <= 0 || id == undefined || id == null || id == "") {
+        if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
-            resultUsuario = await usuarioDAO.getSelectUserById(id)
+            resultUsuario = await usuarioDAO.getSelectUserById(usuario_id)
 
             if (resultUsuario) {
 
@@ -114,9 +114,9 @@ const buscarUsuarioId = async (id) => {
 
                         for(seguidor of arraySeguidores) {
                             
-                            id = seguidor.id_seguidor
+                            usuario_id = seguidor.id_seguidor
 
-                            resultSeguidor = await usuarioDAO.getSelectUserById(id)
+                            resultSeguidor = await usuarioDAO.getSelectUserById(usuario_id)
 
                             usuarioObject = resultSeguidor[0]
 

@@ -19,7 +19,7 @@ const buscarLogsFeed = async (usuario_id) => {
         
     try {
         
-        if(!isNaN(usuario_id) || usuario_id <= 0 || usuario_id == undefined || usuario_id == null || usuario_id == "") {
+        if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
             resultLog = await logDAO.getSelectExploreLogs(usuario_id)
 
@@ -58,7 +58,7 @@ const buscarLogId = async (log_id) => {
         
     try {
         
-        if (!isNaN(log_id) || log_id <= 0 || log_id == undefined || log_id == null || log_id == "") {
+        if (!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
 
             resultLog = await logDAO.getSelectLogById(log_id)
 
@@ -91,13 +91,13 @@ const buscarLogId = async (log_id) => {
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const listarLogsUserId = async (usuario_id) => {
+const listarLogsUserId = async (log_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(usuario_id) || usuario_id <= 0 || usuario_id == undefined || usuario_id == null || usuario_id == "") {
+        if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
 
             resultLog = await logDAO.getSelectAllLogsUserId(usuario_id)
 
@@ -130,13 +130,13 @@ const listarLogsUserId = async (usuario_id) => {
 }
 
 //Retorna os logs das pessoas que o usuário segue
-const listarFeedSeguindo = async (usuario_id) => {
+const listarFeedSeguindo = async (log_id) => {
     
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(usuario_id) || usuario_id <= 0 || usuario_id == undefined || usuario_id == null || usuario_id == "") {
+        if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
 
             resultLog = await logDAO.getSelectLogsFollowing(usuario_id)
 

@@ -13,13 +13,13 @@ const viagemDAO = require("../../model/DAO/viagem-dao/viagem.js")
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
 //Buscar viagens pelo id de usuário
-const buscarViagemUsuarioId = async (user_id) => {
+const buscarViagemUsuarioId = async (usuario_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     
         try {
             
-            if(!isNaN(user_id) || user_id <= 0 || user_id == undefined || user_id == null || user_id == "") {
+            if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
     
                 resultViagem = await viagemDAO.getSelectTravelsByUserId(user_id)
 
@@ -58,7 +58,7 @@ const buscarViagemLogId = async (log_id) => {
 
     try {
             
-            if(!isNaN(log_id) || log_id <= 0 || log_id == undefined || log_id == null || log_id == "") {
+            if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
     
                 resultViagem = await viagemDAO.getSelectTravelByLogId(log_id)
     
@@ -91,15 +91,15 @@ const buscarViagemLogId = async (log_id) => {
 }
 
 //Busca uma viagem pelo id
-const buscarViagemId = async (id) => {
+const buscarViagemId = async (viagem_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
         
-        if (!isNaN(id) || id <= 0 || id == undefined || id == null || id == "") {
+        if (!isNaN(viagem_id) && viagem_id != '' && viagem_id != null && viagem_id != undefined && viagem_id > 0) {
         
-            resultViagem = await viagemDAO.getSelectTravelById(id)
+            resultViagem = await viagemDAO.getSelectTravelById(viagem_id)
 
             if (resultViagem) {
 
