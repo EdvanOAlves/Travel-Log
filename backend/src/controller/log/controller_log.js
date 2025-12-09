@@ -9,6 +9,9 @@
 // Importando funções de dependência de dados do usuário
 const logDAO = require("../../model/DAO/log-dao/log.js")
 
+// Importa controller de midia para fazer inserção das imagens do log no banco de dados
+const controllerMidia = require("../midia/controller_midia.js")
+
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
@@ -26,6 +29,7 @@ const buscarLogsFeed = async (usuario_id) => {
             if(resultLog) {
 
                 if(resultLog.length > 0) {
+
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
@@ -65,6 +69,18 @@ const buscarLogId = async (log_id) => {
             if (resultLog) {
 
                 if (resultLog.length > 0) {
+
+                    for (log of resultLog) {
+
+                        resultMidia = await controllerMidia.listarMidiasLogId(log_id)
+                        
+                        midias = resultMidia.items.midias
+
+                        log.midias = midias
+
+                    }
+
+                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
@@ -345,6 +361,8 @@ const validarLog = (log) => {
         }
 
 }
+
+buscarLogId(4)
 
 module.exports = {
 
