@@ -20,21 +20,33 @@ const getSelectMediasByLogId = async (id_log) => {
         sql = `CALL ListarMidiasLog(${id_log})`
 
         result = await prisma.$queryRawUnsafe(sql)
-        
-        formattedResult = result.map(item => {
+
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
+            return result
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
             
-            return {
-                id_midia: item.f0,
-                link: item.f1,
-                indice: item.f2
-            }
+            formattedResult = result.map(item => {
 
-        })
+                return {
 
-        if(Array.isArray(result)) {
+                    midia_id: item.f0,
+                    link: item.f1,
+                    indice: item.f2
+
+                }
+
+            })
+
             return formattedResult
-        } else {
-            return false
         }
 
     } catch (error) {
