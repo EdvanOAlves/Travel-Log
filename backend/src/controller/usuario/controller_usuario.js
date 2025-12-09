@@ -14,8 +14,7 @@ const usuarioDAO = require("../../model/DAO/usuario-dao/usuario.js")
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
-// Importando arquivo de relação entre usuário e seguidor
-const usuarioSeguidorController = require("./controller_usuario_seguidor.js")
+
 
 //Listar todos os usuários
 const listarUsuarios = async () => {
