@@ -7,6 +7,7 @@
  *********************************************************************/
 
 // Importando funções de dependência de dados do usuário
+const log = require("../../../doc/components/log.js")
 const logDAO = require("../../model/DAO/log-dao/log.js")
 
 // Importa controller de midia para fazer inserção das imagens do log no banco de dados
@@ -27,14 +28,27 @@ const buscarLogsFeed = async (usuario_id) => {
             resultLog = await logDAO.getSelectExploreLogs(usuario_id)
 
             if(resultLog) {
-
+                
                 if(resultLog.length > 0) {
+                    
+                    for(item of resultLog) {
+                        
+                        idLog = item.log[0].log_id
 
+                        resultMidia = await controllerMidia.listarMidiasLogId(idLog)
+
+                        if(resultMidia.status_code == 200) {
+                            item.log[0].midias = resultMidia.items.midias
+                        }
+
+                    }
+
+                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
-                    
+
                     return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
@@ -362,7 +376,7 @@ const validarLog = (log) => {
 
 }
 
-buscarLogId(4)
+buscarLogsFeed(4)
 
 module.exports = {
 
