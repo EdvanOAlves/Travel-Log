@@ -29,7 +29,6 @@ const getSelectExploreLogs = async (user_id) => {
         sql = `CALL BuscarLogsRecentes(${user_id})`
 
         result = await prisma.$queryRawUnsafe(sql)
-
         //Verifica se o array está vazio, pois precisa retornar
         //um 404 se não houver viagens cadastradas
         if (result.length == 0) {
@@ -59,10 +58,14 @@ const getSelectExploreLogs = async (user_id) => {
                             favoritos: item.f7,
                             local: [
                                 {
-                                    nome_local: item.f10,
-                                    cidade: item.f11,
-                                    estado: item.f12,
-                                    pais: item.f13
+                                    local_id: item.f12,
+                                    nome_local: item.f13,
+                                    cidade: item.f14,
+                                    estado: item.f15,
+                                    pais: {
+                                        pais_id: item.f16,
+                                        pais: item.f17
+                                    }
                                 }
                             ]
                         }
@@ -71,13 +74,16 @@ const getSelectExploreLogs = async (user_id) => {
                         {
                             viagem_id: item.f8,
                             titulo: item.f9,
+                            tipo_viagem_id: item.f10, 
+                            tipo_viagem: item.f11
                         }
                     ],
-                    curtido: item.f14,
-                    favoritado: item.f15
+                    curtido: item.f18,
+                    favoritado: item.f19
                     
                 }
             })
+            console.log(formattedResult)
 
             return formattedResult;
 
@@ -346,4 +352,5 @@ module.exports = {
 
 }
 
-getSelectLogsFollowing(1)
+// getSelectLogsFollowing(1)
+getSelectExploreLogs(1)
