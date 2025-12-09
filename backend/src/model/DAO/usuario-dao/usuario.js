@@ -76,6 +76,41 @@ const getSelectLastUser = async () => {
 
 }
 
+//Valida login
+const getSelectUserLogin = async (login) => {
+
+    try {
+        
+        let sql
+
+        if (login.apelido == null) {
+
+            sql = `SELECT id
+                FROM tbl_usuario
+                WHERE email = '${login.email}' AND senha = '${login.senha}'`
+
+        } else {
+
+            sql = `SELECT id
+                FROM tbl_usuario
+                WHERE email = '${login.apelido}' AND senha = '${login.senha}'`
+
+        }
+
+        result = await prisma.$queryRawUnsafe(sql)
+        
+        if(Array.isArray(sql)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 //Registra um usuário na tabela de usuários
 const setInsertUser = async (user) => {
 
@@ -139,6 +174,7 @@ module.exports = {
     getSelectAllUsers,
     getSelectUserById,
     getSelectLastUser,
+    getSelectUserLogin,
     setInsertUser,
     setUpdateUser,
     setToggleUser
