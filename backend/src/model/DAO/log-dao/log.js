@@ -58,8 +58,20 @@ const getSelectExploreLogs = async (user_id) => {
                             curtidas: item.f6,
                             favoritos: item.f7,
                         }
-                    ]
-
+                    ],
+                    viagem: [
+                        {
+                            viagem_id: item.f8,
+                            titulo: item.f9,
+                            nome_local: item.f10,
+                            cidade: item.f11,
+                            estado: item.f12,
+                            pais: item.f13,
+                        }
+                    ],
+                    curtido: item.f14,
+                    favoritado: item.f15
+                    
                 }
             })
 
@@ -125,6 +137,112 @@ const getSelectAllLogsUserId = async (user_id) => {
 
 }
 
+//Retorna o último log registrado
+const getSelectLastLog = async () => {
+
+    try {
+
+        sql = `SELECT * FROM tbl_log ORDER BY id DESC LIMIT 1`
+        
+        result = await prisma.$queryRawUnsafe(sql)
+        
+        if (Array.isArray(result)) {
+            return result
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+//Retorna o log pelo id
+const getSelectLogById = async (log_id) => {
+
+    try {
+
+        sql = `SELECT * FROM tbl_log WHERE id = ${log_id}`
+        
+        result = await prisma.$queryRawUnsafe(sql)
+        
+        if (Array.isArray(result)) {
+            return result
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+//Retorna os logs das pessoas que o usuário segue
+const getSelectLogsFollowing = async (user_id) => {
+
+    try {
+
+        sql = `CALL BuscarFeedSeguindo(${user_id})`
+        
+        result = await prisma.$queryRawUnsafe(sql)
+        
+        //Verifica se o array está vazio, pois precisa retornar
+        //um 404 se não houver viagens cadastradas
+        if (result.length == 0) {
+            return result
+        }
+
+        //Se converte o resultado de verifica para String para passar na verificação
+        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
+        //a verificação
+        verifica = result[0].f0.toString()
+
+        if (!verifica.includes('ERRO_404')) {
+            
+            formattedResult = result.map(item => {
+
+                return {
+
+                    usuario_id: item.f0,
+                    apelido: item.f1,
+                    foto_perfil: item.f2,
+                    log: [
+                        {
+                            log_id: item.f3,
+                            descricao: item.f4,
+                            data_postagem: item.f5,
+                            curtidas: item.f6,
+                            favoritos: item.f7
+                        }
+                    ],
+                    viagem: [
+                        {
+                            viagem_id: item.f8,
+                            titulo: item.f9,
+                            nome_local: item.f10,
+                            cidade: item.f11,
+                            estado: item.f12
+                        }
+                    ],
+                    curtido: item.f13,
+                    favoritado: item.f14
+
+                }
+            })
+
+            return formattedResult;
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 //Registra um log novo funciona
 const setInsertLog = async (log) => {
 
@@ -174,10 +292,10 @@ const setUpdateLog = async (log_id, log) => {
         result = await prisma.$executeRawUnsafe(sql)
 
         if (result) {
-            return result;
+            return resultw
         }
         else {
-            return false;
+            return false
         }
     } catch (error) {
         return false
@@ -210,8 +328,13 @@ module.exports = {
     
     getSelectExploreLogs,
     getSelectAllLogsUserId,
+    getSelectLogsFollowing,
+    getSelectLastLog,
+    getSelectLogById,
     setInsertLog,
     setUpdateLog,
     setDeleteLog
 
 }
+
+getSelectLogsFollowing(1)
