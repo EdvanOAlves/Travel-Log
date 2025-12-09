@@ -21,13 +21,13 @@ const seguidorDAO = require("../../model/DAO/seguidor-dao/seguidor.js")
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
 //Retorna todos os usuários que o usuário segue pelo id
-const buscarSeguindo = async (user_id) => {
+const buscarSeguindo = async (usuario_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(user_id) || user_id <= 0 || user_id == undefined || user_id == null || user_id == "") {
+        if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
             resultSeguidor = await seguidorDAO.getSelectFollowing(user_id)
 
@@ -61,13 +61,13 @@ const buscarSeguindo = async (user_id) => {
 }
 
 //Retorna todos os seguidores do usuário pelo id
-const buscarSeguidores = async (user_id) => {
+const buscarSeguidores = async (usuario_id) => {
 
      MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(user_id) || user_id <= 0 || user_id == undefined || user_id == null || user_id == "") {
+        if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
             resultSeguidor = await seguidorDAO.getSelectFollowers(user_id)
 
