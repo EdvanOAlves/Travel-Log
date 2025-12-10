@@ -47,6 +47,8 @@ const getSelectMediasByLogId = async (id_log) => {
             })
 
             return formattedResult
+        } else {
+            return []
         }
 
     } catch (error) {

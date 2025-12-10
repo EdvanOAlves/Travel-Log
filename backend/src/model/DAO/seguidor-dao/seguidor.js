@@ -50,6 +50,8 @@ const getSelectFollowing = async (user_id) => {
 
             return formattedResult
 
+        } else {
+            return []
         }
 
     } catch (error) {
@@ -93,6 +95,8 @@ const getSelectFollowers = async (user_id) => {
 
             return formattedResult
 
+        } else {
+            return []
         }
 
     } catch(error) {
