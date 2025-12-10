@@ -39,7 +39,6 @@ const buscarSeguindo = async (usuario_id) => {
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.seguidores    = resultSeguidor
 
-                    console.log(MESSAGES.DEFAULT_HEADER.items)
                     return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
@@ -69,7 +68,7 @@ const buscarSeguidores = async (usuario_id) => {
         
         if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
-            resultSeguidor = await seguidorDAO.getSelectFollowers(user_id)
+            resultSeguidor = await seguidorDAO.getSelectFollowers(usuario_id)
 
             if(resultSeguidor) {
 
@@ -79,7 +78,6 @@ const buscarSeguidores = async (usuario_id) => {
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.seguidores    = resultSeguidor
 
-                    console.log(MESSAGES.DEFAULT_HEADER.items)
                     return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
@@ -95,10 +93,12 @@ const buscarSeguidores = async (usuario_id) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
 }
+
 
 //Registra uma relacao entre usuario e seguidor
 const insereSeguidor = async (follow, contentType) => {
