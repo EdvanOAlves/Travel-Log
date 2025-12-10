@@ -19,7 +19,7 @@ const listarTipos = async () => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     try {
 
-        resultTipos = tipoViagemDAO.getTravelTypes()
+        resultTipos = await tipoViagemDAO.getTravelTypes()
 
         if (resultTipos) {
 

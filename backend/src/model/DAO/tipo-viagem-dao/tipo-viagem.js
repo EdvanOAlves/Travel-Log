@@ -2,7 +2,7 @@
  * Objetivo: Arquivo da camada de modelagem, responsável pelo CRUD de
  * tipos de viagens.
  * Data: 10/12/2025
- * Developer: Edvan Alve
+ * Developer: Edvan Alves
  * Versão: 1.0.0
  *********************************************************************/
 

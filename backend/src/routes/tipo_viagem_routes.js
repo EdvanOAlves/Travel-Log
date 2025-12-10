@@ -17,10 +17,10 @@ const bodyParserJSON = bodyParser.json()
 
 router.get('/traveltype/', cors(), async (req, res) => {
 
-    const tipo_viagem = await controllerTipoViagem.listarTipos()
+    const tipoViagem = await controllerTipoViagem.listarTipos()
 
-    res.status(tipo_viagem.status_code)
-    res.json(tipo_viagem)
+    res.status(tipoViagem.status_code)
+    res.json(tipoViagem)
 
 })
 
