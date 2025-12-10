@@ -34,9 +34,10 @@ app.use((req, res, next) => {
 
 //Import da rota
 const comentarioRoutes  = require("./src/routes/comentario_routes.js")
+const logsRoutes        = require("./src/routes/logs_routes")
 const usuarioRoutes     = require("./src/routes/usuario_routes.js")
 const seguidorRoutes    = require("./src/routes/seguidor_routes.js")
-const logsRoutes        = require("./src/routes/logs_routes")
+const tipoViagemRoutes  = require("./src/routes/tipo")
 const viagemRoutes      = require("./src/routes/viagem_routes")
 
 //EndPoints
