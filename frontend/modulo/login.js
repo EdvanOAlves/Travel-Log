@@ -125,12 +125,17 @@ buttonLogin.addEventListener('click', async () => {
         let circleProgress = document.querySelector('.circle')
         animationVerify.style.opacity = 1
 
-        let url = ``
+        let url = `http://localhost:8080/v1/travellog/login/?email=${email}&senha=${pass}`
         let response = await fetch(url)
-
+        
         let responseLogin = await response.json()
 
         if (responseLogin.status_code == 200) {
+
+            let userId = responseLogin.items.id_usuario
+            
+            localStorage.setItem('userId', userId)
+
             circleProgress.classList.add('disableCircle')
             setTimeout(() => {
                 let circleImg = document.querySelector('.circle img')
@@ -139,7 +144,7 @@ buttonLogin.addEventListener('click', async () => {
                 circleProgress.classList.add('enableCircle')
             }, 760);
 
-            window.open(`home.html?user=${responseLogin.id}`, "_self")
+            window.open(`home.html`, "_self")
         }
     }
 
@@ -167,7 +172,7 @@ buttonRegister.addEventListener('click', () => {
     cardRegister.style.display = 'flex'
 })
 
-buttonRegisterGo.addEventListener('click', () => {
+buttonRegisterGo.addEventListener('click', async () => {
     let name = document.getElementById('name')
     let e_mail = document.getElementById('e_mail')
     let nickname = document.getElementById('nickname')
@@ -216,13 +221,39 @@ buttonRegisterGo.addEventListener('click', () => {
         spans[5].innerHTML = 'Senha incorreta, tente novamente'
 
     } else if (!checkBox.checked) {
+        
         let terms = document.querySelector('.containerCheckbox label')
         terms.style.animation = 'notChecked 2s linear'
+        
         setTimeout(() => {
             terms.style.animation = 'none'
         }, 2000);
 
     } else {
+
+        let usuario = {
+            nome: name.value,
+            apelido: nickname.value,
+            email: e_mail.value,
+            senha: password.value,
+            telefone: phone.value,
+            foto_perfil: null,
+            descricao: null
+        }
+
+        let url = `http://localhost:8080/v1/travellog/user/`
+        
+        const options = {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify(usuario)
+        }
+
+        let response = await fetch(url, options)
+        let responseLogin = await response.json()
+
         storageEmail(e_mail.value)
 
         cardRegister.style.display = 'none'

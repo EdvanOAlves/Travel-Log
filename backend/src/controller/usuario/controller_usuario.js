@@ -397,12 +397,12 @@ const validarUsuario = (usuario) => {
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.apelido == null || usuario.apelido == undefined || usuario.apelido == "" || typeof usuario.telefone !== "string" || usuario.apelido.length > 25) {
+    } else if (usuario.apelido == null || usuario.apelido == undefined || usuario.apelido == "" || typeof usuario.apelido !== "string" || usuario.apelido.length > 25) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [APELIDO INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.email == null || usuario.email == undefined || usuario.email == "" || typeof usuario.telefone !== "string" || usuario.email.length > 255) {
+    } else if (usuario.email == null || usuario.email == undefined || usuario.email == "" || typeof usuario.email !== "string" || usuario.email.length > 255) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [EMAIL INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
@@ -412,19 +412,9 @@ const validarUsuario = (usuario) => {
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [TELEFONE INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.senha == null || usuario.senha == undefined || usuario.senha == "" || typeof usuario.telefone !== "string" || usuario.senha.length > 25) {
+    } else if (usuario.senha == null || usuario.senha == undefined || usuario.senha == "" || typeof usuario.senha !== "string" || usuario.senha.length > 25) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [SENHA INCORRETO]'
-        return MESSAGES.ERROR_REQUIRED_FIELDS
-
-    } else if (usuario.foto_perfil == undefined || typeof usuario.telefone !== "string" || usuario.foto_perfil.length > 255) {
-
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [FOTO DE PERFIL INCORRETA]'
-        return MESSAGES.ERROR_REQUIRED_FIELDS
-
-    } else if (usuario.descricao == undefined || typeof usuario.telefone !== "string" || usuario.descricao.length > 250) {
-
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [DESCRICAO INCORRETA]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     } else {

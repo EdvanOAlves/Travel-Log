@@ -106,12 +106,13 @@ const setInsertUser = async (user) => {
     try {
         
         sql = `CALL CriarUsuario(
-            ${user.nome},
-            ${user.apelido},
-            ${user.email},
-            ${user.senha},
-            ${user.foto_perfil},
-            ${user.descricao}
+            '${user.nome}',
+            '${user.apelido}',
+            '${user.email}',
+            '${user.telefone}',
+            '${user.senha}',
+            '${user.foto_perfil}',
+            '${user.descricao}'
         )`
         
         result = await prisma.$executeRawUnsafe(sql)
