@@ -127,7 +127,7 @@ const buscarLogId = async (log_id) => {
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const listarLogsUserId = async (usuario_id) => {
+const listarLogsUserId = async (usuario_id, input_filtros) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
@@ -524,23 +524,14 @@ const normalizar = (campo) => {
     return (campo === '' || campo === undefined) ? null : campo;
 }
 
-contentType = 'application/json'
-
-
-
 module.exports = {
 
     buscarLogsFeed,
     buscarLogId,
     listarLogsUserId,
+    listarLogsViagemId,
     listarFeedSeguindo,
     insereLog,
     atualizaLog,
     deletaLog
 }
-
-async function main() {
-    teste = await listarFeedSeguindo(2, tmp_filtros, "APPLICATION/JSON")
-    console.log(teste)
-}
-main()
