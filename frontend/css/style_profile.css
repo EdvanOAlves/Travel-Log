@@ -386,15 +386,33 @@ main {
 .containewStatistics {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 80%;
-    height: 80%;
-    padding: 10px;
+    align-items: start;
+    width: 100%;
+    height: 100%;
+    padding: 45px 10px 0px 10px;
     gap: 10px;
 }
 
 .containewStatistics div {
-    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 40px;
+}
+
+.containewStatistics div:nth-child(5) {
+    position: relative;
+    width: 100%;
+}
+
+.logPopular {
+    flex-direction: column;
+    position: absolute;
+    max-width: 220px;
+    min-height: 130px;
+    bottom: 0;
+    top: 0;
+    right: 0;
 }
 
 /* Aba de criação de Log */
