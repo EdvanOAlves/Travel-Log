@@ -170,7 +170,7 @@ const setInsertTravel = async (travel) => {
 
         let sql
 
-        if (travel.data_fim == 'null') {
+        if (travel.data_fim == null) {
 
             sql = `CALL CriarViagem(
                 '${travel.titulo}',
@@ -178,7 +178,8 @@ const setInsertTravel = async (travel) => {
                 NULL,
                 '${travel.thumbnail}',
                 ${travel.usuario_id},
-                ${travel.tipo_viagem_id}
+                ${travel.tipo_viagem_id},
+                ${travel.visivel}
             )`
 
         } else {
@@ -189,13 +190,15 @@ const setInsertTravel = async (travel) => {
                 '${travel.data_fim}',
                 '${travel.thumbnail}',
                 ${travel.usuario_id},
-                ${travel.tipo_viagem_id}
+                ${travel.tipo_viagem_id},
+                ${travel.visivel}
+
             )`
 
         }
 
         result = await prisma.$executeRawUnsafe(sql)
-
+        
         if (result) {
             return result;
         }
@@ -215,7 +218,7 @@ const setUpdateTravelById = async (id_travel, travel) => {
 
         let sql
 
-        if (travel.data_fim == 'null') {
+        if (travel.data_fim == null) {
 
             sql = `CALL AtualizarViagem(
                 ${id_travel},
@@ -224,7 +227,8 @@ const setUpdateTravelById = async (id_travel, travel) => {
                 NULL,
                 '${travel.thumbnail}',
                 ${travel.usuario_id},
-                ${travel.tipo_viagem_id}
+                ${travel.tipo_viagem_id},
+                ${travel.visivel}
             )`
 
         } else {
@@ -236,7 +240,8 @@ const setUpdateTravelById = async (id_travel, travel) => {
                 '${travel.data_fim}',
                 '${travel.thumbnail}',
                 ${travel.usuario_id},
-                ${travel.tipo_viagem_id}
+                ${travel.tipo_viagem_id},
+                ${travel.visivel}
             )`
 
         }

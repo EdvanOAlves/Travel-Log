@@ -144,15 +144,16 @@ const insereViagem = async (viagem, contentType) => {
             if(!validar) {
     
                 resultViagem = await viagemDAO.setInsertTravel(viagem)
-
+                
                 if(resultViagem) {
     
-                    viagemRegistrada = await viagemDAO.getLastTravel()
+                    viagemRegistrada = await viagemDAO.getSelectLastTravel()
 
-                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.viagens       = viagemRegistrada
-    
+                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_CREATED_ITEM.status
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.message             = MESSAGES.SUCCESS_CREATED_ITEM.message
+                    MESSAGES.DEFAULT_HEADER.items.viagem        = viagemRegistrada
+                    
                     return MESSAGES.DEFAULT_HEADER //200
     
                 } else {
@@ -168,6 +169,7 @@ const insereViagem = async (viagem, contentType) => {
         }
     
         } catch (error) {
+            console.log(error)
             return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
         }
 
