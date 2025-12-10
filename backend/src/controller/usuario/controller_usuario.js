@@ -134,7 +134,49 @@ const buscarUsuarioId = async (usuario_id) => {
         }
 
     } catch (error) {
-        console.log(error)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+
+}
+
+//Busca o login dentro do BD
+const buscarLogin = async (email, senha) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+     
+        if(email.length > 0 && email != null && email != undefined && email != "" && email.length < 255) {
+
+            if(senha.length > 0 && senha != null && senha != undefined && senha != "" && senha.length < 75) {
+
+                resultLogin = await usuarioDAO.getSelectUserLogin(email, senha)
+                
+                if (resultLogin) {
+
+                    idUsuario = resultLogin[0].id
+
+                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.items.id_usuario    = idUsuario
+
+                    return MESSAGES.DEFAULT_HEADER //200
+
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+
+            } else {
+                MESSAGES.ERROR_REQUIRED_FIELDS += " [SENHA]"
+                return MESSAGES.ERROR_REQUIRED_FIELDS //400
+            }
+
+        } else {
+            MESSAGES.ERROR_REQUIRED_FIELDS += " [EMAIL]"
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
+    } catch (error) {
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -202,7 +244,6 @@ const buscarUsuarioPerfilId = async (user_id, dadosBody, contentType) => {
 
         return MESSAGES.DEFAULT_HEADER //200
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -248,7 +289,6 @@ const inserirUsuario = async (usuario, contentType) => {
         }
 
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -299,7 +339,6 @@ const atualizarUsuario = async (id, usuario, contentType) => {
         }
 
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -344,7 +383,6 @@ const altenarStatusUsuario = async (status, contentType) => {
         }
 
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -400,6 +438,7 @@ module.exports = {
     listarUsuarios,
     buscarUsuarioId,
     buscarUsuarioPerfilId,
+    buscarLogin,
     inserirUsuario,
     atualizarUsuario,
     altenarStatusUsuario

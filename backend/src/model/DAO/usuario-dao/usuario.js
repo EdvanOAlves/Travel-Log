@@ -77,29 +77,18 @@ const getSelectLastUser = async () => {
 }
 
 //Valida login
-const getSelectUserLogin = async (login) => {
+const getSelectUserLogin = async (email, senha) => {
 
     try {
         
-        let sql
+        sql = `SELECT id
+            FROM tbl_usuario
+            WHERE email = '${email}' AND senha = '${senha}'`
 
-        if (login.apelido == null) {
-
-            sql = `SELECT id
-                FROM tbl_usuario
-                WHERE email = '${login.email}' AND senha = '${login.senha}'`
-
-        } else {
-
-            sql = `SELECT id
-                FROM tbl_usuario
-                WHERE email = '${login.apelido}' AND senha = '${login.senha}'`
-
-        }
 
         result = await prisma.$queryRawUnsafe(sql)
-        
-        if(Array.isArray(sql)) {
+
+        if(Array.isArray(result)) {
             return result
         } else {
             return false
@@ -176,7 +165,6 @@ module.exports = {
     getSelectLastUser,
     getSelectUserLogin,
     setInsertUser,
-    setUpdateUser,
-    // setToggleUser
+    setUpdateUser
 }
 

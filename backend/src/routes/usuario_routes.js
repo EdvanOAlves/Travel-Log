@@ -46,6 +46,7 @@ router.get('/user/:id', cors(), async (req, res) => {
     const id = req.params.id
 
     const usuario = await controllerUsuario.buscarUsuarioId(id)
+    console.log(usuario)
 
     res.status(usuario.status_code)
     res.json(usuario)
@@ -83,6 +84,18 @@ router.put('/user/', cors(), bodyParserJSON, async (req, res) => {
     const contentType = req.headers['content-type']
 
     const usuario = await controllerUsuario.altenarStatusUsuario(dadosBody, contentType)
+
+    res.status(usuario.status_code)
+    res.json(usuario)
+
+})
+
+router.get('/login/', cors(), async (req, res) => {
+
+    const email = req.query.email
+    const senha = req.query.senha
+
+    const usuario = await controllerUsuario.buscarLogin(email, senha)
 
     res.status(usuario.status_code)
     res.json(usuario)
