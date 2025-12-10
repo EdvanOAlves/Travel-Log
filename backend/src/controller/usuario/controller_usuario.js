@@ -104,16 +104,20 @@ const buscarUsuarioId = async (usuario_id) => {
             resultUsuario = await usuarioDAO.getSelectUserById(usuario_id)
 
             if (resultUsuario) {
-
+                
                 if (resultUsuario.length > 0) {
-
+                    
                     resultSeguidores = await usuarioSeguidorController.buscarSeguidores(usuario_id)
-
-                    arraySeguidores = resultSeguidores.items.seguidores
+                    // Caso o usuário não tenha seguidores
+                    if (resultSeguidores.status_code == 404){
+                        arraySeguidores = []
+                    }
+                    else{
+                        arraySeguidores = resultSeguidores.items.seguidores
+                    }
 
                     resultUsuario.qtd_seguidores = arraySeguidores.length
                     resultUsuario.seguidores = arraySeguidores
-
 
                     MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
@@ -142,14 +146,9 @@ const buscarUsuarioId = async (usuario_id) => {
 
 // Buscar o todo o conteúdo de perfil de um usuário pelo id
 // perfil_id é o dono do perfil, user_id é o id da sessão atual, usado conferir se está seguindo o dono do perfil
-const buscarUsuarioPerfilId = async (user_id, dadosBody, contentType) => {
+const buscarUsuarioPerfilId = async (user_id, perfil_id, filtros) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     try {
-        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
-            return MESSAGES.ERROR_CONTENT_TYPE                                 //415
-        perfil_id = dadosBody.perfil_id
-        filtros = dadosBody.filtros
-
         if (isNaN(perfil_id) || perfil_id == '' || perfil_id == null || perfil_id == undefined || perfil_id <= 0) {
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
@@ -159,6 +158,7 @@ const buscarUsuarioPerfilId = async (user_id, dadosBody, contentType) => {
         }
 
         // DADOS DE USUARIO
+        console.log(perfil_id)
         resultUsuario = await buscarUsuarioId(perfil_id)
 
         if (resultUsuario.status_code != 200) {
@@ -395,6 +395,12 @@ const validarUsuario = (usuario) => {
     }
 
 }
+
+async function main(){
+    teste = await buscarUsuarioPerfilId(1, 2, {})
+    console.log(teste)
+}
+main()
 
 module.exports = {
     listarUsuarios,
