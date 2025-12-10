@@ -23,7 +23,7 @@ const prisma = new PrismaClient()
 //Retorna os logs para o feed de explorar (os mais recentes)
 //Precisa do id de usuário para identificar se o log foi curtido funciona
 const getSelectExploreLogs = async (user_id) => {
-    
+
     try {
 
         sql = `CALL BuscarLogsRecentes(${user_id})`
@@ -41,7 +41,7 @@ const getSelectExploreLogs = async (user_id) => {
         verifica = result[0].f0.toString()
 
         if (!verifica.includes('ERRO_404')) {
-            
+
             formattedResult = result.map(item => {
 
                 return {
@@ -74,13 +74,13 @@ const getSelectExploreLogs = async (user_id) => {
                         {
                             viagem_id: item.f8,
                             titulo: item.f9,
-                            tipo_viagem_id: item.f10, 
+                            tipo_viagem_id: item.f10,
                             tipo_viagem: item.f11
                         }
                     ],
                     curtido: item.f18,
                     favoritado: item.f19
-                    
+
                 }
             })
             console.log(formattedResult)
@@ -94,15 +94,20 @@ const getSelectExploreLogs = async (user_id) => {
     } catch (error) {
         return false
     }
-    
+
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const getSelectAllLogsUserId = async (user_id) => {
-
+const getSelectAllLogsUserId = async (user_id, filtros) => {
     try {
 
-        sql = `CALL ListarLogsUsuario(${user_id})`
+
+
+        sql = `CALL ListarLogsUsuario( 
+        ${user_id}, 
+        ${filtros.data_inicio},${filtros.data_fim},
+        ${filtros.local_pais}, ${filtros.local_estado}, ${filtros.local_cidade}, ${filtros.nome_local},
+        ${filtros.tipo_viagem_id})`
         
         result = await prisma.$queryRawUnsafe(sql)
         
@@ -116,13 +121,13 @@ const getSelectAllLogsUserId = async (user_id) => {
         //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
         //a verificação
         verifica = result[0].f0.toString()
-
+        
         if (!verifica.includes('ERRO_404')) {
             
             formattedResult = result.map(item => {
-
+                
                 return {
-
+                    
                     log_id: item.f0,
                     descricao: item.f1,
                     data_postagem: item.f2,
@@ -131,17 +136,19 @@ const getSelectAllLogsUserId = async (user_id) => {
                     visivel: item.f5,
                     viagem_id: item.f6,
                     local_id: item.f7
-
+                    
                 }
             })
-
+            
             return formattedResult;
-
+            
         } else {
+            console.log('Deu 404')
             return false;
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 
@@ -152,7 +159,7 @@ const getSelectAllLogsByTravelId = async (travel_id) => {
 
     try {
 
-        sql = `CALL BuscarLogsViagemId(${user_id})`
+        sql = `CALL BuscarLogsViagemId(${ user_id })`
         
         result = await prisma.$queryRawUnsafe(sql)
         
@@ -229,7 +236,7 @@ const getSelectLogById = async (log_id) => {
 
     try {
 
-        sql = `SELECT * FROM tbl_log WHERE id = ${log_id}`
+        sql = `SELECT * FROM tbl_log WHERE id = ${ log_id } `
         
         result = await prisma.$queryRawUnsafe(sql)
         
@@ -250,7 +257,7 @@ const getSelectLogsFollowing = async (user_id) => {
 
     try {
 
-        sql = `CALL BuscarFeedSeguindo(${user_id})`
+        sql = `CALL BuscarFeedSeguindo(${ user_id })`
         
         result = await prisma.$queryRawUnsafe(sql)
         
@@ -320,14 +327,14 @@ const setInsertLog = async (log) => {
     try {
 
         sql = `CALL PublicarLog(
-            '${log.descricao}',
-            ${log.viagem_id},
-            ${log.visivel},
-            '${log.nome_pais}',
-            '${log.estado}',
-            '${log.cidade}',
-            '${log.nome_local}'
-        )`
+        '${log.descricao}',
+        ${ log.viagem_id },
+        ${ log.visivel },
+        '${log.nome_pais}',
+        '${log.estado}',
+        '${log.cidade}',
+        '${log.nome_local}'
+    )`
 
         result = await prisma.$executeRawUnsafe(sql)        
 
@@ -350,15 +357,15 @@ const setUpdateLog = async (log_id, log) => {
     try {
 
         sql = `CALL AtualizaLog(
-            ${log_id},
-            '${log.descricao}',
-            ${log.viagem_id},
-            '${log.nome_pais}',
-            '${log.estado}',
-            '${log.cidade}',
-            '${log.nome_local}',
-            ${log.visivel}
-        )`
+        ${ log_id },
+        '${log.descricao}',
+        ${ log.viagem_id },
+        '${log.nome_pais}',
+        '${log.estado}',
+        '${log.cidade}',
+        '${log.nome_local}',
+        ${ log.visivel }
+    )`
 
         result = await prisma.$executeRawUnsafe(sql)
 
@@ -379,7 +386,7 @@ const setDeleteLog = async (log_id) => {
 
     try {
         
-        sql = `CALL DeletaLog(${log_id})`
+        sql = `CALL DeletaLog(${ log_id })`
         
         result = await prisma.$executeRawUnsafe(sql)    
 
