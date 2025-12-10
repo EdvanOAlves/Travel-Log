@@ -16,13 +16,21 @@ const bodyParser = require('body-parser')    // Responsável por gerenciar a che
 const bodyParserJSON = bodyParser.json()
 
 //Buscar Feed Seguindo
-router.get('/log/following/:id', cors(), bodyParserJSON, async (req, res) => {
+router.get('/log/following/:id', cors(), async (req, res) => {
+    const userId = req.params.id
+    const filtros = {
+        data_inicio: req.query.data_inicio,
+        data_fim: req.query.data_fim,
+        local_pais: req.query.local_pais,
+        local_estado: req.query.local_estado,
+        local_cidade: req.query.local_cidade,
+        nome_local: req.query.nome_local,
+        tipo_viagem_id: req.query.tipo_viagem_id
+    }
 
-    const contentType = req.headers['content-type']
-    const user_id = req.params.id
-    const filtros = req.body
 
-    const logs = await controllerLog.listarFeedSeguindo(user_id, filtros, contentType)
+    // Chama a função para buscar o conteudo
+    const logs = await controllerLog.listarFeedSeguindo(userId, filtros)
 
     res.status(logs.status_code)
     res.json(logs)
@@ -30,14 +38,21 @@ router.get('/log/following/:id', cors(), bodyParserJSON, async (req, res) => {
 })
 
 //Buscar Feed Recentes
-router.get('/log/explore/:id', cors(), bodyParserJSON, async (req, res) => {
+router.get('/log/explore/:id', cors(), async (req, res) => {
+    const userId = req.params.id
+    const filtros = {
+        data_inicio: req.query.data_inicio,
+        data_fim: req.query.data_fim,
+        local_pais: req.query.local_pais,
+        local_estado: req.query.local_estado,
+        local_cidade: req.query.local_cidade,
+        nome_local: req.query.nome_local,
+        tipo_viagem_id: req.query.tipo_viagem_id
+    }
 
-    const contentType = req.headers['content-type']
-    const user_id = req.params.id
-    const filtros = req.body
 
-
-    const logs = await controllerLog.buscarLogsFeed(user_id, filtros, contentType)
+    // Chama a função para buscar o conteudo
+    const logs = await controllerLog.buscarLogsFeed(userId, filtros)
 
     res.status(logs.status_code)
     res.json(logs)

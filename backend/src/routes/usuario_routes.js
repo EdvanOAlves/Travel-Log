@@ -24,18 +24,22 @@ router.get('/user/', cors(), async (req, res) => {
 
 })
 
-router.get('/user/profile/:id', cors(), bodyParserJSON, async (req, res) => {
-    userId = req.params.id
-    //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-    let dadosBody = req.body;
-
-
-    //Recebe o tipo de dados da requisição (JSON, XML, etc)
-    let contentType = req.headers['content-type']
+router.get('/user/profile/:id', cors(), async (req, res) => {
+    const userId = req.params.id
+    const perfil_id = req.query.perfil_id
+    const filtros = {
+        data_inicio: req.query.data_inicio,
+        data_fim: req.query.data_fim,
+        local_pais: req.query.local_pais,
+        local_estado: req.query.local_estado,
+        local_cidade: req.query.local_cidade,
+        nome_local: req.query.nome_local,
+        tipo_viagem_id: req.query.tipo_viagem_id
+    }
 
 
     // Chama a função para buscar o conteudo de usuario
-    const usuario = await controllerUsuario.buscarUsuarioPerfilId(userId, dadosBody, contentType)
+    const usuario = await controllerUsuario.buscarUsuarioPerfilId(userId, perfil_id, filtros)
 
     res.status(usuario.status_code)
     res.json(usuario)

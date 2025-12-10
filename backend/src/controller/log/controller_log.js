@@ -16,14 +16,10 @@ const controllerMidia = require("../midia/controller_midia.js")
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
 //Retorna os logs para o feed de explorar (os mais recentes)
-const buscarLogsFeed = async (usuario_id, input_filtros, contentType) => {
+const buscarLogsFeed = async (usuario_id, input_filtros) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
     try {
-        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
-            return MESSAGES.ERROR_CONTENT_TYPE                                 //415
-
         if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
             filtros = {
                 data_inicio: normalizar(input_filtros.data_inicio),
@@ -218,13 +214,11 @@ const listarLogsViagemId = async (viagem_id) => {
 }
 
 //Retorna os logs das pessoas que o usuário segue
-const listarFeedSeguindo = async (usuario_id, input_filtros, contentType) => {
+const listarFeedSeguindo = async (usuario_id, input_filtros) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
-            return MESSAGES.ERROR_CONTENT_TYPE                                 //415
 
         if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
             filtros = {
@@ -236,10 +230,11 @@ const listarFeedSeguindo = async (usuario_id, input_filtros, contentType) => {
                 nome_local: normalizar(input_filtros.nome_local),
                 tipo_viagem_id: normalizar(input_filtros.tipo_viagem_id)
             }
+            
 
             resultLog = await logDAO.getSelectLogsFollowing(usuario_id, filtros)
-            if (resultLog) {
 
+            if (resultLog) {
                 if (resultLog.length > 0) {
 
                     for (item of resultLog) {
