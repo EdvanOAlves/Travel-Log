@@ -61,7 +61,7 @@ const getSelectMediaById = async (id_media) => {
         
         sql = `SELECT * FROM tbl_log_midia WHERE id = ${id_media}`
 
-        result = await prisma.$executeRawUnsafe(sql)
+        result = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(result)) {
             return result
@@ -129,7 +129,7 @@ const setDeleteMedia = async (id_media) => {
 
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(Array.isArray(result)) {
+        if(result) {
             return result
         } else {
             return false

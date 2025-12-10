@@ -87,13 +87,13 @@ const buscarLogId = async (log_id) => {
 
                         resultMidia = await controllerMidia.listarMidiasLogId(log_id)
                         
-                        midias = resultMidia.items.midias
-
-                        log.midias = midias
+                        if (resultMidia.status_code == 200) {
+                            midias = resultMidia.items.midia
+                            log.midias = midias
+                            delete MESSAGES.DEFAULT_HEADER.items.midias
+                        }
 
                     }
-
-                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
@@ -300,22 +300,56 @@ const atualizaLog = async (log_id, log, contentType) => {
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
             validarId = await buscarLogId(log_id)
-
+            
             if (validarId.status_code == 200) {
 
                 valida = validarLog(log)
-
+                
                 if(!valida) {
 
                     resultLog = await logDAO.setUpdateLog(log_id, log)
 
                     if(resultLog) {
+                        
+                        midiaResult = await controllerMidia.listarMidiasLogId(log_id)
+                        midias = midiaResult.items.midias
+
+                        for (midia of midias) {
+                            
+                            idMidia = midia.midia_id
+
+                            deleteMidia = await controllerMidia.deletaMidia(idMidia)
+                            
+                            if (deleteMidia.status_code != 200) {
+                                MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
+                                return MESSAGES.ERROR_RELATINAL_INSERTION
+                            }
+
+                        }
+
+                        novasMidias = log.midias
+                        
+                        for (midia of novasMidias) {
+
+                            midiaObject = { link: midia.link, indice: midia.indice, log_id: log_id }
+                            
+                            resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
+                            
+                            if (resultMidia.status_code != 201) {
+                                
+                                MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
+                                return MESSAGES.ERROR_RELATINAL_INSERTION
+
+                            }
+
+                        }
+                        
 
                         MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_UPDATE_ITEM.status
                         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATE_ITEM.status_code
                         MESSAGES.DEFAULT_HEADER.message     = MESSAGES.SUCCESS_UPDATE_ITEM.message
                         delete MESSAGES.DEFAULT_HEADER.items
-
+                        
                         return MESSAGES.DEFAULT_HEADER //200
 
                     } else {
@@ -437,19 +471,19 @@ log = {
         
         {
 
-            link: "http://azurestorage/photo.png",
+            link: "teste",
             indice: 1
 
         },
         {
 
-            link: "http://azurestorage/photo.png",
+            link: "teste",
             indice: 2
 
         },
         {
 
-            link: "http://azurestorage/photo.png",
+            link: "teste",
             indice: 3
 
         }
@@ -460,7 +494,7 @@ log = {
 
 contentType = 'application/json'
 
-insereLog(log ,contentType)
+atualizaLog(55, log, contentType)
 
 module.exports = {
 

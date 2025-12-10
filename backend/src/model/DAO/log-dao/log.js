@@ -306,7 +306,7 @@ const setUpdateLog = async (log_id, log) => {
         result = await prisma.$executeRawUnsafe(sql)
 
         if (result) {
-            return resultw
+            return result
         }
         else {
             return false
