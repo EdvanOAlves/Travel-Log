@@ -117,8 +117,10 @@ header {
 
 #profileHeader {
     border-radius: 100%;
-    width: auto;
-    height: 70%;
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .containerSettings div {
@@ -240,9 +242,11 @@ main {
 }
 
 .profileFollower img {
-    width: 70%;
-    height: 70%;
+    width: 90%;
+    height: 90%;
     border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .containerButtonLogFollower {
@@ -476,7 +480,65 @@ main {
     pointer-events: all;
 }
 
-#containerFilterMob input {
+.containerFilterDateMob {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--cinza_escuro);
+    transition: 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.containerFilterDateMob span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    padding: 0;
+    width: 10%;
+    height: 100%;
+    color: var(--cinza_escuro);
+}
+
+.expandFilterDate {
+    z-index: -10;
+}
+
+.filterDateMob {
+    all: unset;
+    display: flex;
+
+    width: 45%;
+    height: 100%;
+    background-color: var(--branco);
+    border-color: var(--cinza_escuro);
+    font-size: 11px;
+    z-index: -10;
+    transition: 0.2s ease-in-out;
+}
+
+.showFilterDate {
+    z-index: 20;
+}
+
+#filterDateBeginMob {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding-left: 10px;
+}
+
+#filterDateEndMob {
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding-left: 5px;
+}
+
+#filterLocationMob{
     all: unset;
     display: flex;
     text-align: center;

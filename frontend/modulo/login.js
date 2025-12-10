@@ -99,7 +99,7 @@ function changeBackgroundImage() {
 }
 
 //Funções para as ações dos botões de Login e Cadastro
-buttonLogin.addEventListener('click', () => {
+buttonLogin.addEventListener('click', async () => {
     let email = document.getElementById('email').value
     let pass = document.getElementById('pass').value
     let spans = document.querySelectorAll('.containerInputsLogin span')
@@ -125,7 +125,12 @@ buttonLogin.addEventListener('click', () => {
         let circleProgress = document.querySelector('.circle')
         animationVerify.style.opacity = 1
 
-        if (true) {
+        let url = ``
+        let response = await fetch(url)
+
+        let responseLogin = await response.json()
+
+        if (responseLogin.status_code == 200) {
             circleProgress.classList.add('disableCircle')
             setTimeout(() => {
                 let circleImg = document.querySelector('.circle img')
@@ -134,7 +139,7 @@ buttonLogin.addEventListener('click', () => {
                 circleProgress.classList.add('enableCircle')
             }, 760);
 
-            window.open(`home.html`, "_self")
+            window.open(`home.html?user=${responseLogin.id}`, "_self")
         }
     }
 
