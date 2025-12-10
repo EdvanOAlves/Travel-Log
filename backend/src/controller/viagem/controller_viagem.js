@@ -21,7 +21,7 @@ const buscarViagemUsuarioId = async (usuario_id) => {
             
             if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
     
-                resultViagem = await viagemDAO.getSelectTravelsByUserId(user_id)
+                resultViagem = await viagemDAO.getSelectTravelsByUserId(usuario_id)
 
                 if(resultViagem) {
     
@@ -46,6 +46,7 @@ const buscarViagemUsuarioId = async (usuario_id) => {
             }
     
         } catch (error) {
+            console.log(error)
             return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
         }
 

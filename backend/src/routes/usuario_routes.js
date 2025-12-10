@@ -24,6 +24,25 @@ router.get('/user/', cors(), async (req, res) => {
 
 })
 
+router.get('/user/profile/:id', cors(), async (req, res) => {
+    const user_id = req.params.id
+    const perfil_id = req.query.perfil_id
+    const filtros = {
+        data_inicio: req.query.data_inicio,
+        data_fim: req.query.data_fim,
+        local_pais: req.query.local_pais,
+        local_estado: req.query.local_estado,
+        local_cidade: req.query.local_cidade,
+        nome_local: req.query.nome_local,
+        tipo_viagem_id: req.query.tipo_viagem_id
+    }
+
+    const usuario = await controllerUsuario.buscarUsuarioPerfilId(perfil_id, user_id, filtros)
+
+    res.status(usuario.status_code)
+    res.json(usuario)
+})
+
 router.get('/user/:id', cors(), async (req, res) => {
 
     const id = req.params.id

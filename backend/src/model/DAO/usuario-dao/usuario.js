@@ -177,6 +177,6 @@ module.exports = {
     getSelectUserLogin,
     setInsertUser,
     setUpdateUser,
-    setToggleUser
+    // setToggleUser
 }
 

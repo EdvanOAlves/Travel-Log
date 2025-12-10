@@ -120,17 +120,26 @@ const buscarLogId = async (log_id) => {
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const listarLogsUserId = async (usuario_id) => {
+const listarLogsUserId = async (usuario_id, input_filtros) => {
+
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
         if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
+            filtros = {
+                data_inicio: normalizar(input_filtros.data_inicio),
+                data_fim: normalizar(input_filtros.data_inicio),
+                local_pais:normalizar(input_filtros.data_inicio),
+                local_estado: normalizar(input_filtros.data_inicio), 
+                local_cidade: normalizar(input_filtros.data_inicio), 
+                nome_local: normalizar(input_filtros.data_inicio),
+                tipo_viagem_id: normalizar(input_filtros.data_inicio)
+            }
 
-            resultLog = await logDAO.getSelectAllLogsUserId(usuario_id)
+            resultLog = await logDAO.getSelectAllLogsUserId(usuario_id, filtros)
             
             if(resultLog) {
-
                 if(resultLog.length > 0) {
 
                     for(item of resultLog) {
@@ -164,6 +173,7 @@ const listarLogsUserId = async (usuario_id) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -497,43 +507,11 @@ const validarLog = (log) => {
 
 }
 
-log = {
-
-    descricao: "Minhas férias",
-    viagem_id: 6,
-    nome_pais: "China",
-    estado: "Xangai",
-    cidade: "Xangai",
-    nome_local: "Monte Fuji",
-    visivel: true,
-    midias: [
-        
-        {
-
-            link: "teste",
-            indice: 1
-
-        },
-        {
-
-            link: "teste",
-            indice: 2
-
-        },
-        {
-
-            link: "teste",
-            indice: 3
-
-        }
-
-    ]
-
+// Função para converter para "null", importante para o banco de dados
+const normalizar = (campo) =>{
+    return (campo === '' || campo === undefined) ? "null" : campo;
 }
 
-contentType = 'application/json'
-
-atualizaLog(55, log, contentType)
 
 module.exports = {
 

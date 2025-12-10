@@ -88,6 +88,9 @@ const getSelectFollowers = async (user_id) => {
 
                     relacao_id: item.f0,
                     seguidor_id: item.f1,
+                    nome_seguidor: item.f2,
+                    apelido_seguidor: item.f3,
+                    foto_perfil_seguidor: item.f4
 
                 }
 
