@@ -142,9 +142,14 @@ const buscarUsuarioId = async (usuario_id) => {
 
 // Buscar o todo o conteúdo de perfil de um usuário pelo id
 // perfil_id é o dono do perfil, user_id é o id da sessão atual, usado conferir se está seguindo o dono do perfil
-const buscarUsuarioPerfilId = async (perfil_id, user_id, input_filtros) => {
+const buscarUsuarioPerfilId = async (user_id, dadosBody, contentType) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     try {
+        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
+            return MESSAGES.ERROR_CONTENT_TYPE                                 //415
+        perfil_id = dadosBody.perfil_id
+        filtros = dadosBody.filtros
+
         if (isNaN(perfil_id) || perfil_id == '' || perfil_id == null || perfil_id == undefined || perfil_id <= 0) {
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
@@ -162,10 +167,10 @@ const buscarUsuarioPerfilId = async (perfil_id, user_id, input_filtros) => {
         
         // DADOS DE SEGUIDOR
         // Verificando se o userId é um seguidor desse usuario
-        resultUsuario.seguido = false
+        resultUsuario.items.seguido = false
         for (seguidor in resultUsuario.seguidores) {
             if (seguidor.id == user_id) {
-                resultUsuario.seguido = true
+                resultUsuario.items.seguido = true
             }
         }
         
@@ -175,18 +180,19 @@ const buscarUsuarioPerfilId = async (perfil_id, user_id, input_filtros) => {
             console.log('erro em viagem')
             return resultViagem                    //400, 500
         }
+        if(resultViagem.status_code == 404){
+            resultViagem.items = [];
+        }
         
         // DADOS DE LOG
-        resultLog = await usuarioLogController.listarLogsUserId(perfil_id, input_filtros)
+        resultLog = await usuarioLogController.listarLogsUserId(perfil_id, filtros)
         if (resultLog.status_code != 200 && resultLog.status_code != 404) { //404 é permitido, afinal o usuário pode só não ter conteudo
             console.log('erro em log')
             return resultLog                    //400, 500
         }
-
-        console.log('resultado dos logs')
-        console.log(resultLog)
-        console.log('resultado das viagens')
-        console.log(resultViagem)
+        if(resultLog.status_code == 404){
+            resultLog.items = [];
+        }
 
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
