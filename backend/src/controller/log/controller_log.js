@@ -127,8 +127,7 @@ const buscarLogId = async (log_id) => {
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const listarLogsUserId = async (usuario_id, input_filtros) => {
-
+const listarLogsUserId = async (usuario_id) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
@@ -305,9 +304,9 @@ const insereLog = async (log, contentType) => {
                     midias = log.midias
 
                     for (midia of midias) {
-
+                        
                         log = logRegistrado[0]
-
+                        
                         midiaObject = { link: midia.link, indice: midia.indice, log_id: log.id }
 
                         resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
@@ -322,6 +321,8 @@ const insereLog = async (log, contentType) => {
                     }
 
                     midiasCriadas = await controllerMidia.listarMidiasLogId(logRegistrado[0].id)
+                    
+                    logRegistrado[0].midias = midiasCriadas.items.midias
 
                     delete MESSAGES.DEFAULT_HEADER.items.midia
                     delete MESSAGES.DEFAULT_HEADER.items.midias
@@ -523,6 +524,9 @@ const normalizar = (campo) => {
     return (campo === '' || campo === undefined) ? null : campo;
 }
 
+contentType = 'application/json'
+
+
 
 module.exports = {
 
@@ -530,7 +534,6 @@ module.exports = {
     buscarLogId,
     listarLogsUserId,
     listarFeedSeguindo,
-    listarLogsViagemId,
     insereLog,
     atualizaLog,
     deletaLog

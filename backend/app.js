@@ -36,11 +36,13 @@ app.use((req, res, next) => {
 const comentarioRoutes  = require("./src/routes/comentario_routes.js")
 const usuarioRoutes     = require("./src/routes/usuario_routes.js")
 const seguidorRoutes    = require("./src/routes/seguidor_routes.js")
+const logsRoutes        = require("./src/routes/logs_routes")
 
 //EndPoints
 app.use('/v1/travellog', comentarioRoutes)
 app.use('/v1/travellog', usuarioRoutes)
 app.use('/v1/travellog', seguidorRoutes)
+app.use('/v1/travellog', logsRoutes)
 
 //EndPoint da documentação
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
@@ -48,3 +50,4 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.listen(PORT, () => {
     console.log("Está vivo...!!!")
 })
+
