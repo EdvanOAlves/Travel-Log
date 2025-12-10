@@ -16,7 +16,7 @@ const bodyParser = require('body-parser')    // Responsável por gerenciar a che
 const bodyParserJSON = bodyParser.json()
 
 //Buscar Feed Seguindo
-router.get('/log/:id', cors(), async (req, res) => {
+router.get('/log/following/:id', cors(), bodyParserJSON, async (req, res) => {
 
     const contentType = req.headers['content-type']
     const user_id = req.params.id
@@ -30,11 +30,12 @@ router.get('/log/:id', cors(), async (req, res) => {
 })
 
 //Buscar Feed Recentes
-router.get('/log/:id', cors(), async (req, res) => {
+router.get('/log/explore/:id', cors(), bodyParserJSON, async (req, res) => {
 
     const contentType = req.headers['content-type']
     const user_id = req.params.id
     const filtros = req.body
+
 
     const logs = await controllerLog.buscarLogsFeed(user_id, filtros, contentType)
 
