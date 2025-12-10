@@ -10,6 +10,7 @@ const liListTravelNewLog = document.querySelectorAll('#listTravel li')
 const iconProfileUser = document.getElementById('profileNav')
 const iconProfileMobile = document.querySelector('.containerSettings div')
 const sectionSettings = document.getElementById('sectionSettings')
+const inputConfirmPass = document.getElementById('passChangeInput')
 const iconSettingsDesk = document.getElementById('settingsNav')
 const iconSettingsMob = document.getElementById('settingsHeader')
 const buttonChangePass = document.getElementById('changePass')
@@ -335,6 +336,7 @@ buttonFollower.addEventListener('click', () => {
     }, 1500);
 })
 
+//Ícone para voltar a tela do perfil
 iconProfileUser.addEventListener('click', () => {
     sectionSettings.classList.remove('showSection')
 })
@@ -349,6 +351,7 @@ function showInputUpdate(input_id) {
     let inputShow = document.getElementById(input_id)
 
     inputShow.classList.toggle('showInput')
+    inputShow.focus()
 }
 
 //Validar entrada de dados Input
@@ -392,6 +395,35 @@ function valideDatasInputUpdate(input_id) {
     }
 }
 
+//Direcionamento para endpoints selecionados
+function sendReqOfUpdate() {
+    if (idCallMessage == 'deleteAccount') {
+        showModalDeleteAccount()
+    } else {
+        if (elementUpdate == 'nickname') {
+            inputNickname.classList.remove('showInput')
+            alert('update nickname')
+
+        } else if (elementUpdate == 'name') {
+            inputName.classList.remove('showInput')
+            alert('update name')
+
+        } else if (elementUpdate == 'description') {
+            inputDescription.classList.remove('showInput')
+            alert('update description')
+
+        } else if (elementUpdate == 'pass') {
+            alert('update pass')
+        }
+
+        const inputPass = document.getElementById('passChangeInput')
+        inputPass.value = ''
+
+        closeModalSettings()
+    }
+
+}
+
 //Função padrão para fechar modais
 function closeModalSettings() {
     filterBlackSettings.classList.remove('showFilterSettings')
@@ -404,6 +436,7 @@ function closeModalSettings() {
 function showModalMessagePass(button_id) {
     const messagePass = document.getElementById('messagePass')
 
+    inputConfirmPass.focus()
     filterBlackSettings.classList.toggle('showFilterSettings')
     messagePass.classList.toggle('showModal')
 
@@ -703,8 +736,16 @@ inputDescription.addEventListener('keypress', () => {
 //Ícone de fechar modais
 closeFilterSettings.addEventListener('click', closeModalSettings)
 
+//Event para acionar a tecla Enter para o input de confirmar senha
+inputConfirmPass.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        sendReqOfUpdate()
+    }
+})
+
 //Botão para direcionar a confirmação da senha para trocá-la
 buttonChangePass.addEventListener('click', () => {
+    elementUpdate = 'pass'
     showModalMessagePass(event.target.id)
 })
 
@@ -724,25 +765,7 @@ buttonCancelPass.addEventListener('click', closeModalSettings)
 
 //Botão para confirmar a senha, e lógica para tratar direcionamento de modais
 buttonConfirmPass.addEventListener('click', () => {
-    if (idCallMessage == 'deleteAccount') {
-        showModalDeleteAccount()
-    } else {
-        if (elementUpdate == 'nickname') {
-            alert('update nickname')
-
-        } else if (elementUpdate == 'name') {
-            alert('update name')
-
-        } else if (elementUpdate == 'description') {
-            alert('update description')
-
-        }
-
-        const inputPass = document.getElementById('passChangeInput')
-        inputPass.value = ''
-
-        closeModalSettings()
-    }
+    sendReqOfUpdate()
 })
 
 //Adiciona event para os LI de tipo de viagem para mobile

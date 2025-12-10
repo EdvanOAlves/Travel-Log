@@ -191,8 +191,8 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 95px;
-    height: 35px;
+    width: 85px;
+    height: 25px;
     gap: 10px;
     background-color: var(--azul_default);
     border-radius: 20px;
@@ -211,7 +211,7 @@ main {
 
 #followUser img {
     width: auto;
-    height: 12px;
+    height: 10px;
     transition: 0.4s ease-in-out;
 }
 
@@ -380,6 +380,21 @@ main {
 
 .viagemData {
     font-size: 10px;
+}
+
+/* Estatísticas */
+.containewStatistics {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    height: 80%;
+    padding: 10px;
+    gap: 10px;
+}
+
+.containewStatistics div {
+    width: 70%;
 }
 
 /* Aba de criação de Log */
@@ -1342,7 +1357,6 @@ main {
     width: 95%;
     height: 90%;
     background-color: var(--cor_web_post);
-    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.253);
 }
 
 .containerInfoSettings {
@@ -1592,6 +1606,7 @@ main {
     border-style: solid;
     border-color: var(--cinza_escuro);
     border-width: 1.5px;
+    z-index: 20;
 }
 
 #updateNickname.showInput {
@@ -1615,6 +1630,7 @@ main {
     border-style: solid;
     border-color: var(--cinza_escuro);
     border-width: 1.5px;
+    z-index: 20;
 }
 
 #updateName.showInput {
@@ -1637,6 +1653,7 @@ main {
     border-style: solid;
     border-color: var(--cinza_escuro);
     border-width: 1.5px;
+    z-index: 20;
 }
 
 #updateDescriptionProfile.showInput {
@@ -1806,7 +1823,34 @@ main {
     }
 
     #updateDescriptionProfile {
-        left: 15px;
+        width: 100%;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1280px) and (height: 600px) {
+    .containerSettingsMain {
+        width: 70%;
+        height: 100%;
+        top: 15px;
+        overflow: auto;
+    }
+
+    .containerInfoSettings {
+        height: 45%;
+        padding-top: 5px;
+    }
+
+    .containerDescriptionSettings {
+        height: 55%;
+    }
+
+    .profileImgSettings {
+        width: 100px;
+        height: 100px;
+    }
+
+    .containerFollowerSettings {
+        width: 40%;
     }
 }
 
@@ -1827,6 +1871,10 @@ main {
 
     .navMob {
         display: none;
+    }
+
+    #followUser {
+        margin-left: 25px;
     }
 
     main {
@@ -2202,12 +2250,17 @@ main {
     }
 
     .containerInfoSettings {
-        height: 40%;
+        height: 45%;
+        padding-top: 0px;
     }
 
     .profileImgSettings {
         width: 180px;
         height: 180px;
+    }
+
+    .containerDescriptionSettings {
+        height: 55%;
     }
 
     .containerFollowerSettings {
@@ -2236,9 +2289,5 @@ main {
     #messagePass {
         left: calc(0px + 280px);
         width: 35%;
-    }
-
-    #updateDescriptionProfile {
-        width: 94%;
     }
 }
