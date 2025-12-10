@@ -22,13 +22,16 @@ const prisma = new PrismaClient()
 
 //Retorna os logs para o feed de explorar (os mais recentes)
 //Precisa do id de usuário para identificar se o log foi curtido funciona
-const getSelectExploreLogs = async (user_id) => {
+const getSelectExploreLogs = async (user_id, filtros) => {
 
     try {
 
-        sql = `CALL BuscarLogsRecentes(${user_id})`
-
-        result = await prisma.$queryRawUnsafe(sql)
+        result = await prisma.$queryRaw`CALL BuscarLogsRecentes( 
+        ${user_id}, 
+        ${filtros.data_inicio},${filtros.data_fim},
+        ${filtros.local_pais}, ${filtros.local_estado}, ${filtros.local_cidade}, ${filtros.nome_local},
+        ${filtros.tipo_viagem_id})`
+        
         //Verifica se o array está vazio, pois precisa retornar
         //um 404 se não houver viagens cadastradas
         if (result.length == 0) {
@@ -87,11 +90,11 @@ const getSelectExploreLogs = async (user_id) => {
             return formattedResult
 
         } else {
-
             return []
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 
@@ -101,21 +104,19 @@ const getSelectExploreLogs = async (user_id) => {
 const getSelectAllLogsUserId = async (user_id, filtros) => {
     try {
 
-
-
-        sql = `CALL ListarLogsUsuario( 
+        
+        result = await prisma.$queryRaw`CALL ListarLogsUsuario( 
         ${user_id}, 
         ${filtros.data_inicio},${filtros.data_fim},
         ${filtros.local_pais}, ${filtros.local_estado}, ${filtros.local_cidade}, ${filtros.nome_local},
         ${filtros.tipo_viagem_id})`
         
-        result = await prisma.$queryRawUnsafe(sql)
-        
         //Verifica se o array está vazio, pois precisa retornar
         //um 404 se não houver viagens cadastradas
         if (result.length == 0) {
-            return result
+            return []
         }
+        
 
         //Se converte o resultado de verifica para String para passar na verificação
         //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
@@ -126,8 +127,7 @@ const getSelectAllLogsUserId = async (user_id, filtros) => {
             
             formattedResult = result.map(item => {
                 
-                return {
-                    
+                return {             
                     log_id: item.f0,
                     descricao: item.f1,
                     data_postagem: item.f2,
@@ -251,14 +251,19 @@ const getSelectLogById = async (log_id) => {
 
 }
 
+
+
+
 //Retorna os logs das pessoas que o usuário segue
-const getSelectLogsFollowing = async (user_id) => {
+const getSelectLogsFollowing = async (user_id, filtros) => {
+    console.log(user_id, filtros)
 
-    try {
-
-        sql = `CALL BuscarFeedSeguindo(${ user_id })`
-        
-        result = await prisma.$queryRawUnsafe(sql)
+    try {        
+        result = await prisma.$queryRaw`CALL BuscarFeedSeguindo( 
+        ${user_id}, 
+        ${filtros.data_inicio},${filtros.data_fim},
+        ${filtros.local_pais}, ${filtros.local_estado}, ${filtros.local_cidade}, ${filtros.nome_local},
+        ${filtros.tipo_viagem_id})`
         
         //Verifica se o array está vazio, pois precisa retornar
         //um 404 se não houver viagens cadastradas
@@ -315,6 +320,7 @@ const getSelectLogsFollowing = async (user_id) => {
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 
@@ -414,3 +420,4 @@ module.exports = {
     setDeleteLog
 
 }
+
