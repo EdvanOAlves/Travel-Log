@@ -17,7 +17,7 @@ const swaggerUi         = require('swagger-ui-express')
 const swaggerDocument   = require('./doc/index.js')
 
 // Retorna a porta do servidor atual ou colocamos uma porta local
-const PORT = process.PORT || 8000
+const PORT = process.PORT || 8080
 
 // Criando instância da classe express
 const app = express()
