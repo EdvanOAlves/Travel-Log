@@ -23,14 +23,11 @@ const PORT = process.PORT || 8080
 const app = express()
 
 // Configuração de permissões de requisição
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')    // Servidor de origem
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS') // Verbos permitidos
-
-    // Carrega as configurações no CORS da API
-    app.use(cors())
-    next() // Próximo, carregar os próximos EndPoints 
-})
+app.use(cors({
+    origin: '*', // Libera para qualquer origem 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'] // Resolve o erro de header bloqueado
+}))
 
 //Import da rota
 const comentarioRoutes  = require("./src/routes/comentario_routes.js")
