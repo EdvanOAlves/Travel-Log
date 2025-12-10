@@ -84,11 +84,11 @@ const getSelectExploreLogs = async (user_id) => {
                 }
             })
 
-            return formattedResult;
+            return formattedResult
 
         } else {
 
-            return false;
+            return []
         }
 
     } catch (error) {
@@ -134,10 +134,10 @@ const getSelectAllLogsUserId = async (user_id) => {
                 }
             })
 
-            return formattedResult;
+            return formattedResult
 
         } else {
-            return false;
+            return []
         }
 
     } catch (error) {
@@ -151,7 +151,7 @@ const getSelectAllLogsByTravelId = async (travel_id) => {
 
     try {
 
-        sql = `CALL BuscarLogsViagemId(${user_id})`
+        sql = `CALL BuscarLogsViagemId(${travel_id})`
         
         result = await prisma.$queryRawUnsafe(sql)
         
@@ -190,10 +190,10 @@ const getSelectAllLogsByTravelId = async (travel_id) => {
                 }
             })
 
-            return formattedResult;
+            return formattedResult
 
         } else {
-            return false;
+            return []
         }
 
     } catch (error) {
@@ -302,9 +302,9 @@ const getSelectLogsFollowing = async (user_id) => {
                 }
             })
 
-            return formattedResult;
+            return formattedResult
         } else {
-            return false;
+            return []
         }
 
     } catch (error) {
