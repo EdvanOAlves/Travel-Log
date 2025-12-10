@@ -74,7 +74,7 @@ body {
 
 /* Filtro escuro */
 #filterBlack {
-    position: absolute;
+    position: fixed;
     display: none;
     justify-content: end;
     top: 0;
@@ -166,6 +166,22 @@ main {
 
 .profileIdentifier {
     display: flex;
+}
+
+.containerProfileImgMain {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 130px;
+    border-radius: 100%;
+    background-color: var(--cinza_escuro);
+}
+
+#imgProfile {
+    border-radius: 100%;
+    width: 95%;
+    height: 95%;
 }
 
 .profileTitle {
@@ -302,11 +318,13 @@ main {
     align-content: flex-start;
     padding: 0px 5px 2% 10px;
     width: 100%;
+    min-height: 300px;
 }
 
 .log {
     width: 46%;
     height: 20%;
+    min-height: 50%;
     margin-top: 2%;
     margin-left: 2%;
     box-shadow: var(--default_shadow);
@@ -355,6 +373,7 @@ main {
 .viagem {
     width: 46%;
     height: 20%;
+    min-height: 50%;
     margin-top: 2%;
     margin-left: 10px;
     box-shadow: 5px 5px 15px #0004;
