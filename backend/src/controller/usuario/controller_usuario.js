@@ -158,7 +158,6 @@ const buscarUsuarioPerfilId = async (user_id, perfil_id, filtros) => {
         }
 
         // DADOS DE USUARIO
-        console.log(perfil_id)
         resultUsuario = await buscarUsuarioId(perfil_id)
 
         if (resultUsuario.status_code != 200) {
@@ -176,7 +175,7 @@ const buscarUsuarioPerfilId = async (user_id, perfil_id, filtros) => {
         
         // DADOS DE VIAGEM
         resultViagem = await usuarioViagemController.buscarViagemUsuarioId(perfil_id)
-        if (resultViagem.status_code != 200 && resultLog.status_code != 404) { //404 é permitido, afinal o usuário pode só não ter conteudo
+        if (resultViagem.status_code != 200 && resultViagem.status_code != 404) { //404 é permitido, afinal o usuário pode só não ter conteudo
             console.log('erro em viagem')
             return resultViagem                    //400, 500
         }
@@ -395,12 +394,6 @@ const validarUsuario = (usuario) => {
     }
 
 }
-
-async function main(){
-    teste = await buscarUsuarioPerfilId(1, 2, {})
-    console.log(teste)
-}
-main()
 
 module.exports = {
     listarUsuarios,
