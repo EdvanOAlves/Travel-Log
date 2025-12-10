@@ -53,14 +53,14 @@ const listarMidiasLogId = async (log_id) => {
 
 //Retorna uma midia pelo id
 const buscarMidiaId = async (midia_id) => {
+    
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     
     try {
         
-        if (!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
-        
-            resultMidia = await midiaDAO.getSelectMediaById(id)
-
+        if (!isNaN(midia_id) && midia_id != '' && midia_id != null && midia_id != undefined && midia_id > 0) {
+            
+            resultMidia = await midiaDAO.getSelectMediaById(midia_id)
             if (resultMidia) {
 
                 if (resultMidia.length > 0) {
@@ -105,10 +105,12 @@ const insereMidia = async (midia, contentType) => {
 
                 if(resultMidia) {
 
+                    midiaRegistrada = await midiaDAO.getSelectLastMedia()
+
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_CREATED_ITEM.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.message             = MESSAGES.SUCCESS_CREATED_ITEM.message
-                    delete MESSAGES.DEFAULT_HEADER
+                    MESSAGES.DEFAULT_HEADER.items.midia         = midiaRegistrada
 
                     return MESSAGES.DEFAULT_HEADER //200
     
@@ -132,13 +134,13 @@ const insereMidia = async (midia, contentType) => {
 
 // Deleta um registro de midia
 const deletaMidia = async (midia_id) => {
-
+    
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     
     try {
         
         let validarId = await buscarMidiaId(midia_id)
-
+        
         if (validarId.status_code == 200) {
 
             let resultMidia = await midiaDAO.setDeleteMedia(midia_id)
@@ -157,7 +159,9 @@ const deletaMidia = async (midia_id) => {
             }
 
         } else {
+            
             return validarId // (400, 404, 500)
+            
         }
 
     } catch (error) {

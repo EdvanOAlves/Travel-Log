@@ -62,7 +62,7 @@ const getSelectTravelsByUserId = async (user_id) => {
             return formattedResult;
 
         } else {
-            return false;
+            return []
         }
 
     } catch (error) {
@@ -114,7 +114,7 @@ const getSelectTravelByLogId = async (log_id) => {
             return formattedResult
 
         } else {
-            return false;
+            return []
         }
     } catch (error) {
         return false

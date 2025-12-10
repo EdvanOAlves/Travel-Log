@@ -57,10 +57,10 @@ const getSelectCommentsByLogId = async (log_id) => {
 
             })
 
-            return formattedResult;
+            return formattedResult
 
         } else {
-            return false;
+            return []
         }
 
     } catch (error) {

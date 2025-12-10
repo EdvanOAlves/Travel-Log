@@ -83,12 +83,12 @@ const getSelectExploreLogs = async (user_id) => {
 
                 }
             })
-            console.log(formattedResult)
 
-            return formattedResult;
+            return formattedResult
 
         } else {
-            return false;
+
+            return []
         }
 
     } catch (error) {
@@ -139,12 +139,11 @@ const getSelectAllLogsUserId = async (user_id, filtros) => {
                     
                 }
             })
-            
-            return formattedResult;
-            
+
+            return formattedResult
+
         } else {
-            console.log('Deu 404')
-            return false;
+            return []
         }
 
     } catch (error) {
@@ -159,7 +158,7 @@ const getSelectAllLogsByTravelId = async (travel_id) => {
 
     try {
 
-        sql = `CALL BuscarLogsViagemId(${ user_id })`
+        sql = `CALL BuscarLogsViagemId(${travel_id})`
         
         result = await prisma.$queryRawUnsafe(sql)
         
@@ -198,10 +197,10 @@ const getSelectAllLogsByTravelId = async (travel_id) => {
                 }
             })
 
-            return formattedResult;
+            return formattedResult
 
         } else {
-            return false;
+            return []
         }
 
     } catch (error) {
@@ -310,9 +309,9 @@ const getSelectLogsFollowing = async (user_id) => {
                 }
             })
 
-            return formattedResult;
+            return formattedResult
         } else {
-            return false;
+            return []
         }
 
     } catch (error) {
@@ -370,7 +369,7 @@ const setUpdateLog = async (log_id, log) => {
         result = await prisma.$executeRawUnsafe(sql)
 
         if (result) {
-            return resultw
+            return result
         }
         else {
             return false
@@ -415,6 +414,3 @@ module.exports = {
     setDeleteLog
 
 }
-
-// getSelectLogsFollowing(1)
-getSelectExploreLogs(1)
