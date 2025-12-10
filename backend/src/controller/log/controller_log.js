@@ -120,26 +120,17 @@ const buscarLogId = async (log_id) => {
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const listarLogsUserId = async (usuario_id, input_filtros) => {
-
+const listarLogsUserId = async (usuario_id) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
         if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
-            filtros = {
-                data_inicio: normalizar(input_filtros.data_inicio),
-                data_fim: normalizar(input_filtros.data_inicio),
-                local_pais:normalizar(input_filtros.data_inicio),
-                local_estado: normalizar(input_filtros.data_inicio), 
-                local_cidade: normalizar(input_filtros.data_inicio), 
-                nome_local: normalizar(input_filtros.data_inicio),
-                tipo_viagem_id: normalizar(input_filtros.data_inicio)
-            }
 
-            resultLog = await logDAO.getSelectAllLogsUserId(usuario_id, filtros)
+            resultLog = await logDAO.getSelectAllLogsUserId(usuario_id)
             
             if(resultLog) {
+
                 if(resultLog.length > 0) {
 
                     for(item of resultLog) {
@@ -158,46 +149,6 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
 
-                    return MESSAGES.DEFAULT_HEADER //200
-
-                } else {
-                    return MESSAGES.ERROR_NOT_FOUND //404
-                }
-
-            } else {
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-            }
-
-        } else {
-            return MESSAGES.ERROR_REQUIRED_FIELDS //400
-        }
-
-    } catch (error) {
-        console.log(error)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
-    }
-
-}
-
-//Retorna todos os logs pelo id da viagem
-const listarLogsViagemId = async (viagem_id) => {
-
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-        
-    try {
-        
-        if(!isNaN(viagem_id) && viagem_id != '' && viagem_id != null && viagem_id != undefined && viagem_id > 0) {
-
-            resultLog = await logDAO.getSelectAllLogsByTravelId(viagem_id)
-
-            if(resultLog) {
-
-                if(resultLog.length > 0) {
-
-                    MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
-                    
                     return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
@@ -294,9 +245,9 @@ const insereLog = async (log, contentType) => {
                     midias = log.midias
 
                     for (midia of midias) {
-
+                        
                         log = logRegistrado[0]
-
+                        
                         midiaObject = { link: midia.link, indice: midia.indice, log_id: log.id }
                         
                         resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
@@ -311,6 +262,8 @@ const insereLog = async (log, contentType) => {
                     }
 
                     midiasCriadas = await controllerMidia.listarMidiasLogId(logRegistrado[0].id)
+                    
+                    logRegistrado[0].midias = midiasCriadas.items.midias
 
                     delete MESSAGES.DEFAULT_HEADER.items.midia
                     delete MESSAGES.DEFAULT_HEADER.items.midias
@@ -507,10 +460,42 @@ const validarLog = (log) => {
 
 }
 
-// Função para converter para "null", importante para o banco de dados
-const normalizar = (campo) =>{
-    return (campo === '' || campo === undefined) ? "null" : campo;
+log = {
+
+    descricao: "Minhas férias",
+    viagem_id: 6,
+    nome_pais: "China",
+    estado: "Xangai",
+    cidade: "Xangai",
+    nome_local: "Monte Fuji",
+    visivel: true,
+    midias: [
+        
+        {
+
+            link: "teste",
+            indice: 1
+
+        },
+        {
+
+            link: "teste",
+            indice: 2
+
+        },
+        {
+
+            link: "teste",
+            indice: 3
+
+        }
+
+    ]
+
 }
+
+contentType = 'application/json'
+
 
 
 module.exports = {
@@ -519,7 +504,6 @@ module.exports = {
     buscarLogId,
     listarLogsUserId,
     listarFeedSeguindo,
-    listarLogsViagemId,
     insereLog,
     atualizaLog,
     deletaLog
