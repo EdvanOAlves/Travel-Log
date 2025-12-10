@@ -120,14 +120,14 @@ const buscarLogId = async (log_id) => {
 }
 
 //Retorna todos os logs do usuário pelo id funciona
-const listarLogsUserId = async (log_id) => {
+const listarLogsUserId = async (usuario_id) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
+        if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
-            resultLog = await logDAO.getSelectAllLogsUserId(log_id)
+            resultLog = await logDAO.getSelectAllLogsUserId(usuario_id)
             
             if(resultLog) {
 
