@@ -16,53 +16,60 @@ const controllerMidia = require("../midia/controller_midia.js")
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
 //Retorna os logs para o feed de explorar (os mais recentes)
-const buscarLogsFeed = async (usuario_id) => {
+const buscarLogsFeed = async (usuario_id, input_filtros, contentType) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
+        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
+            return MESSAGES.ERROR_CONTENT_TYPE                                 //415
 
         if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
-
-            resultLog = await logDAO.getSelectExploreLogs(usuario_id)
-
-            if (resultLog) {
-
-                if (resultLog.length > 0) {
-
-                    for (item of resultLog) {
-
-                        idLog = item.log[0].log_id
-
-                        resultMidia = await controllerMidia.listarMidiasLogId(idLog)
-
-                        if (resultMidia.status_code == 200) {
-                            item.log[0].midias = resultMidia.items.midias
-                        }
-
-                    }
-
-                    delete MESSAGES.DEFAULT_HEADER.items.midias
-
-                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.logs = resultLog
-
-                    return MESSAGES.DEFAULT_HEADER //200
-
-                } else {
-                    return MESSAGES.ERROR_NOT_FOUND //404
-                }
-
-            } else {
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+            filtros = {
+                data_inicio: normalizar(input_filtros.data_inicio),
+                data_fim: normalizar(input_filtros.data_fim),
+                local_pais: normalizar(input_filtros.local_pais),
+                local_estado: normalizar(input_filtros.local_estado),
+                local_cidade: normalizar(input_filtros.local_cidade),
+                nome_local: normalizar(input_filtros.nome_local),
+                tipo_viagem_id: normalizar(input_filtros.tipo_viagem_id)
             }
 
+            resultLog = await logDAO.getSelectExploreLogs(usuario_id, filtros)
+
+            if (!resultLog) {
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500s
+            }
+            if (resultLog.length == 0) {
+                return MESSAGES.ERROR_NOT_FOUND //404
+            }
+
+
+            for (item of resultLog) {
+
+                idLog = item.log[0].log_id
+
+                resultMidia = await controllerMidia.listarMidiasLogId(idLog)
+
+                if (resultMidia.status_code == 200) {
+                    item.log[0].midias = resultMidia.items.midias
+                }
+
+            }
+
+            delete MESSAGES.DEFAULT_HEADER.items.midias
+
+            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+            MESSAGES.DEFAULT_HEADER.items.logs = resultLog
+
+            return MESSAGES.DEFAULT_HEADER //200
         } else {
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -161,7 +168,7 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
 
             return MESSAGES.DEFAULT_HEADER //200
 
-        }else {
+        } else {
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
@@ -212,15 +219,26 @@ const listarLogsViagemId = async (viagem_id) => {
 }
 
 //Retorna os logs das pessoas que o usuário segue
-const listarFeedSeguindo = async (usuario_id) => {
+const listarFeedSeguindo = async (usuario_id, input_filtros, contentType) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
+        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
+            return MESSAGES.ERROR_CONTENT_TYPE                                 //415
 
         if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
+            filtros = {
+                data_inicio: normalizar(input_filtros.data_inicio),
+                data_fim: normalizar(input_filtros.data_fim),
+                local_pais: normalizar(input_filtros.local_pais),
+                local_estado: normalizar(input_filtros.local_estado),
+                local_cidade: normalizar(input_filtros.local_cidade),
+                nome_local: normalizar(input_filtros.nome_local),
+                tipo_viagem_id: normalizar(input_filtros.tipo_viagem_id)
+            }
 
-            resultLog = await logDAO.getSelectLogsFollowing(usuario_id)
+            resultLog = await logDAO.getSelectLogsFollowing(usuario_id, filtros)
             if (resultLog) {
 
                 if (resultLog.length > 0) {
@@ -516,5 +534,10 @@ module.exports = {
     insereLog,
     atualizaLog,
     deletaLog
-
 }
+
+async function main() {
+    teste = await listarFeedSeguindo(2, tmp_filtros, "APPLICATION/JSON")
+    console.log(teste)
+}
+main()
