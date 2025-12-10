@@ -9,8 +9,11 @@ const allFollower = document.querySelectorAll('.follower')
 const iconProfileUser = document.getElementById('profileNav')
 const iconProfileMobile = document.querySelector('.containerSettings div')
 const inputDateContainer = document.querySelector('.containerFilterDate')
+const inputContainerDateMob = document.querySelector('.containerFilterDateMob')
 const inputDateBegin = document.getElementById('filterDateBegin')
 const inputDateEnd = document.getElementById('filterDateEnd')
+const inputDateBeginMob = document.getElementById('filterDateBeginMob')
+const inputDateEndMob = document.getElementById('filterDateEndMob')
 const inputLocationFilter = document.getElementById('filterLocation')
 const inputFollowerDesk = document.getElementById('inputFollowerDesk')
 const inputFollowerMobile = document.getElementById('inputFollowerMob')
@@ -297,6 +300,33 @@ function valideDateValue() {
     }
 }
 
+//Valida a data dos inputs do filtro de data para Mobile
+function valideDateValueMob() {
+    if (inputDateBeginMob.value == '') {
+        inputDateBeginMob.animate([
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+        ],
+            {
+                duration: 2000
+            })
+    } else if (inputDateEndMob.value == '') {
+        inputDateEndMob.animate([
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+        ],
+            {
+                duration: 2000
+            })
+    } else {
+        //Função chamar logs pelo filtro de data
+    }
+}
+
 //Separa os seguidores selecionados pelo input
 function findFollower(name) {
     allFollower.forEach(follower => {
@@ -350,6 +380,34 @@ inputDateEnd.addEventListener('keypress', () => {
 inputLocationFilter.addEventListener('click', () => {
     inputLocationFilter.classList.add('expandFilterLocation')
 
+})
+
+//Expande o container de data para Mobile
+inputContainerDateMob.addEventListener('click', () => {
+    const inputDate = document.querySelectorAll('.filterDateMob')
+    const spanContainer = document.querySelector('.containerFilterDateMob span')
+
+    inputContainerDateMob.classList.add('expandFilterDate')
+    spanContainer.innerHTML = '-'
+
+    for (let i = 0; i < inputDate.length; i++) {
+        inputDate[i].classList.add('showFilterDate')
+
+    }
+})
+
+//Input da data de início do filtro para Mobile
+inputDateBeginMob.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDateValueMob()
+    }
+})
+
+//Input da data de fim do filtro para Mobile
+inputDateEndMob.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDateValueMob()
+    }
 })
 
 //Filtra os logs pela localização

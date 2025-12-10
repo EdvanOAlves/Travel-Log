@@ -20,8 +20,11 @@ const buttonDeleteAccount = document.getElementById('deleteAccount')
 const buttonConfirmDeleteAccount = document.getElementById('confirmDeleteAccount')
 const buttonCancelDeleteAccount = document.getElementById('cancelDeleteAccount')
 const inputDateContainer = document.querySelector('.containerFilterDate')
+const inputContainerDateMob = document.querySelector('.containerFilterDateMob')
 const inputDateBegin = document.getElementById('filterDateBegin')
 const inputDateEnd = document.getElementById('filterDateEnd')
+const inputDateBeginMob = document.getElementById('filterDateBeginMob')
+const inputDateEndMob = document.getElementById('filterDateEndMob')
 const inputLocationFilter = document.getElementById('filterLocation')
 const arrowChangeImgLogLeft = document.querySelectorAll('.containerArrowLeft')
 const arrowChangeImgLogRight = document.querySelectorAll('.containerArrowRight')
@@ -326,6 +329,33 @@ function valideDateValue() {
     }
 }
 
+//Valida a data dos inputs do filtro de data para Mobile
+function valideDateValueMob() {
+    if (inputDateBeginMob.value == '') {
+        inputDateBeginMob.animate([
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+        ],
+            {
+                duration: 2000
+            })
+    } else if (inputDateEndMob.value == '') {
+        inputDateEndMob.animate([
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+            { transform: 'scale(1.05)' },
+            { transform: 'scale(1)' },
+        ],
+            {
+                duration: 2000
+            })
+    } else {
+        //Função chamar logs pelo filtro de data
+    }
+}
+
 //Botão para seguir
 buttonFollower.addEventListener('click', () => {
     let imgButton = document.querySelector('#followUser img')
@@ -496,6 +526,34 @@ inputDateBegin.addEventListener('keypress', () => {
 inputDateEnd.addEventListener('keypress', () => {
     if (event.key == 'Enter') {
         valideDateValue()
+    }
+})
+
+//Expande o container de data para Mobile
+inputContainerDateMob.addEventListener('click', () => {
+    const inputDate = document.querySelectorAll('.filterDateMob')
+    const spanContainer = document.querySelector('.containerFilterDateMob span')
+
+    inputContainerDateMob.classList.add('expandFilterDate')
+    spanContainer.innerHTML = '-'
+
+    for (let i = 0; i < inputDate.length; i++) {
+        inputDate[i].classList.add('showFilterDate')
+
+    }
+})
+
+//Input da data de início do filtro para Mobile
+inputDateBeginMob.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDateValueMob()
+    }
+})
+
+//Input da data de fim do filtro para Mobile
+inputDateEndMob.addEventListener('keypress', () => {
+    if (event.key == 'Enter') {
+        valideDateValueMob()
     }
 })
 

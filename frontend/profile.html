@@ -278,8 +278,8 @@
             </div>
 
             <!-- Estatísticas -->
-            <div class="containerLogs">
-                <div class="containewStatistics">
+            <div id="containerStatisticsMain" class="containerLogs">
+                <div class="containerStatistics">
                     <div>
                         <span>Conta criada desde</span>
                         <span class="resultTimeAccount">12/02/2021</span>
@@ -298,7 +298,7 @@
                     </div>
                     <div>
                         <span>Post mais popular</span>
-                        <div class="log logPopular">
+                        <div id="10" class="log logPopular">
                             <img src="./img/fotos/praiaLog 2.png" alt="" class="logThumbnail">
                             <footer class="logFooter">
                                 <img src="./img/Location_Icon.svg" alt="" class="locationIcon">
@@ -510,7 +510,11 @@
 
     <footer class="navMob">
         <div id="containerFilterMob">
-            <input id="filterDateMob" type="text" placeholder="Data">
+            <div class="containerFilterDateMob">
+                <input id="filterDateBeginMob" class="filterDateMob" type="date">
+                <span>Data</span>
+                <input id="filterDateEndMob" class="filterDateMob" type="date">
+            </div>
             <input id="filterLocationMob" type="text" placeholder="Localização">
             <div class="containerListTypeLogMob">
                 <span>Tipo</span>
