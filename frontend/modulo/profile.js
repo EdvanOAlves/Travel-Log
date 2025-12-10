@@ -96,7 +96,7 @@ estatisticaNavButton.addEventListener('click', () => {
 
 //Cria e adiciona os Logs a tela principal
 function createLogs(log) {
-    const containerLogs = document.getElementById('containerLogs')
+    const containerLogs = document.getElementById('container-de-logs')
     let logDiv = document.createElement('div')
     let headerLog = document.createElement('div')
     let backImg = document.createElement('div')
@@ -136,7 +136,7 @@ function createLogs(log) {
     numberFav.classList.add('numberFav')
     divLocation.classList.add('containerLocationLog')
     spanLocation.classList.add('lcoationLog')
-
+    console.log(containerLogs)
     headerLog.append(divProfile, spanName)
     divProfile.appendChild(imgProfile)
     backImg.append(divArrow1, divArrow2, imgLog)
@@ -149,12 +149,15 @@ function createLogs(log) {
     logDiv.append(headerLog, backImg, footerLog)
     containerLogs.appendChild(logDiv)
 
-    //Validar quantidade Imgs
-    if (log.midia.length == 0) {
-        divArrow1.classList.add('hiddeArrowImg')
-        divArrow2.classList.add('hiddeArrowImg')
+    logDiv.id = `log${log.log_id}`
+    logDiv.dataset.id = log.log_id
 
-    }
+    //Validar quantidade Imgs
+    // if (log.midia.length == 0) {
+    //     divArrow1.classList.add('hiddeArrowImg')
+    //     divArrow2.classList.add('hiddeArrowImg')
+
+    // }
 
 }
 
@@ -887,3 +890,21 @@ document.addEventListener('click', () => {
 
     }
 })
+
+
+// INTEGRAÇÃO
+async function getAllDatasProfile() {
+    let url = `http://localhost:8080/v1/travellog/user/profile/1?data_inicio=&data_fim=&local_pais=&local_estado=&local_cidade=&nome_local=&tipo_viagem_id=&perfil_id=1`
+    let response = await fetch(url)
+
+    let data = await response.json()
+    console.log(data.items.logs)
+
+    data.items.logs.forEach((log) => {
+        createLogs(log)
+    })
+
+
+}
+
+getAllDatasProfile()
