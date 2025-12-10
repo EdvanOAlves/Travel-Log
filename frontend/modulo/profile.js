@@ -1,12 +1,12 @@
 'use strict'
 
+var id_user = null
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
 const filterBlackSettings = document.getElementById('filterBlackSettings')
 const closeFilterSettings = document.getElementById('closeFilterSettings')
 const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
 const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
-const liListTravelNewLog = document.querySelectorAll('#listTravel li')
 const iconProfileUser = document.getElementById('profileNav')
 const iconProfileMobile = document.querySelector('.containerSettings div')
 const sectionSettings = document.getElementById('sectionSettings')
@@ -98,59 +98,38 @@ estatisticaNavButton.addEventListener('click', () => {
 function createLogs(log) {
     const containerLogs = document.getElementById('container-de-logs')
     let logDiv = document.createElement('div')
-    let headerLog = document.createElement('div')
-    let backImg = document.createElement('div')
-    let footerLog = document.createElement('div')
-    let divProfile = document.createElement('div')
-    let imgProfile = document.createElement('img')
-    let spanName = document.createElement('span')
-    let divArrow1 = document.createElement('div')
-    let divArrow2 = document.createElement('div')
     let imgLog = document.createElement('img')
-    let arrowRight = document.createElement('img')
-    let arrowLeft = document.createElement('img')
-    let divLikes = document.createElement('div')
-    let imgLike = document.createElement('img')
-    let numberLikes = document.createElement('span')
-    let divFav = document.createElement('div')
-    let imgFav = document.createElement('img')
-    let numberFav = document.createElement('span')
-    let divLocation = document.createElement('div')
-    let imgLocation = document.createElement('img')
-    let spanLocation = document.createElement('span')
+    let footer = document.createElement('footer')
+    let imgFooter = document.createElement('img')
+    let span = document.createElement('span')
 
     logDiv.classList.add('log')
-    headerLog.classList.add('headerLog')
-    backImg.classList.add('backgroundImgLog')
-    footerLog.classList.add('footerLog')
-    divProfile.classList.add('profileLog')
-    spanName.classList.add('nameProfileLog')
-    imgLog.classList.add('imgLog')
-    arrowRight.classList.add('arrowImgLogRight')
-    arrowLeft.classList.add('arrowImgLogLeft')
-    divLikes.classList.add('likesLog')
-    imgLike.classList.add('likeImg')
-    numberLikes.classList.add('numberLikes')
-    divFav.classList.add('favLog')
-    imgFav.classList.add('favImg')
-    numberFav.classList.add('numberFav')
-    divLocation.classList.add('containerLocationLog')
-    spanLocation.classList.add('lcoationLog')
-    console.log(containerLogs)
-    headerLog.append(divProfile, spanName)
-    divProfile.appendChild(imgProfile)
-    backImg.append(divArrow1, divArrow2, imgLog)
-    divArrow1.appendChild(arrowLeft)
-    divArrow2.appendChild(arrowRight)
-    footerLog.append(divLikes, divFav, divLocation)
-    divLikes.append(imgLike, numberLikes)
-    divFav.append(imgFav, numberFav)
-    divLocation.append(imgLocation, spanLocation)
-    logDiv.append(headerLog, backImg, footerLog)
-    containerLogs.appendChild(logDiv)
+    imgLog.classList.add('logThumbnail')
+    imgFooter.classList.add('locationIcon')
+    footer.classList.add('logFooter')
+    span.classList.add('footerTxt')
+
+    logDiv.append(imgLog, footer)
+    footer.append(imgFooter, span)
+    containerDeLogs.append(logDiv)
 
     logDiv.id = `log${log.log_id}`
     logDiv.dataset.id = log.log_id
+
+    let imgDataSet = log.midias[0].link
+    for (let i = 1; i < log.midias.length; i++) {
+        imgDataSet += `,${log.midias[i].link}`
+
+    }
+
+    imgLog.dataset.img = imgDataSet
+
+    let imgLogFirst = imgDataSet.split(',')
+    imgLog.src = imgLogFirst[0]
+
+    logDiv.addEventListener('click', () => {
+        logFull(logDiv.id)
+    })
 
     //Validar quantidade Imgs
     // if (log.midia.length == 0) {
@@ -159,6 +138,66 @@ function createLogs(log) {
 
     // }
 
+}
+
+//Cria viagens
+function createTravel(travel) {
+    const containerTravel = document.getElementById('container-de-viagens')
+    let divTravel = document.createElement('div')
+    let img = document.createElement('img')
+    let footer = document.createElement('footer')
+    let spanTxt = document.createElement('span')
+    let span = document.createElement('span')
+
+    divTravel.append(img, footer)
+    footer.append(spanTxt, span)
+    containerTravel.appendChild(divTravel)
+
+    divTravel.classList.add('viagem')
+    img.classList.add('logThumbnail')
+    footer.classList.add('viagemFooter')
+    spanTxt.classList.add('footerTxt')
+    span.classList.add('viagemData')
+
+    spanTxt.innerHTML = travel.viagem_titulo
+
+    let dateFimChar = travel.data_fim.slice(0, 10)
+    let spliceDate = dateFimChar.split('-')
+
+    let dataFim = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
+
+    span.innerHTML = dataFim
+}
+
+//Adiciona dados do usuério
+function setDataUser(user) {
+    let imgProfile = document.getElementById('imgProfile')
+    let name = document.querySelector('.profileNickname')
+    let logs = document.querySelector('.titleInfo')
+    let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
+    let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
+    let description = document.querySelector('.profileDescription')
+
+    imgProfile.src = user.usuario[0].foto_perfil
+    name.innerHTML = user.usuario[0].apelido
+    logs.innerHTML = `Ainda não`
+    followers.innerHTML = `Seguidores ${user.seguidores.length}`
+    following.innerHTML = 'Ainda não'
+    description.innerHTML = user.usuario[0].descricao
+}
+
+//Criar log
+async function postLog() {
+    let response = await fetch(url, bodyPost)
+
+
+    let bodyPost = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newLog),
+    }
 }
 
 //Altera a imagem do log para a esquerda
@@ -226,6 +265,7 @@ function getTravelLi(li) {
     const listTravel = document.querySelector('#listTravel ul')
 
     let createLi = document.createElement('li')
+    createLi.innerHTML = li.viagem_titulo
 
     listTravel.appendChild(createLi)
 }
@@ -277,8 +317,10 @@ function showLogsTravel() {
 }
 
 //Destaca o Log clicado
-function logFull(id) {
-    const logClick = document.getElementById(id).querySelectorAll('*')
+async function logFull(id) {
+    const logClickElement = document.getElementById(id)
+    console.log(logClickElement.dataset.id)
+    const logClick = logClickElement.querySelectorAll('*')
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
@@ -288,7 +330,50 @@ function logFull(id) {
     filterBlack.classList.toggle('showFilter')
     logFull1.classList.toggle('showModal')
 
-    // logFull[12].dataset.img = logClick[7].dataset.img
+    logFull[12].dataset.img = logClick[0].dataset.img
+
+    let url = `http://localhost:8080/v1/travellog/comment/fromlog?log_id=${logClickElement.dataset.id}`
+    let response = await fetch(url)
+
+    let comments = await response.json()
+    console.log(comments)
+    comments.items.comentario.forEach((comment) => {
+        createComments(comment)
+    })
+}
+
+//Criar comentários
+function createComments(comment) {
+    const container = document.querySelector('.commentsLog')
+    let divComment = document.createElement('div')
+    let header = document.createElement('div')
+    let contaienrImg = document.createElement('div')
+    let imgProfile = document.createElement('img')
+    let name = document.createElement('span')
+    let p = document.createElement('p')
+    let date = document.createElement('span')
+
+    divComment.classList.add('comment')
+    header.classList.add('headerComments')
+    contaienrImg.classList.add('profileComment')
+    name.classList.add('nameCommentLog')
+    p.classList.add('commentText')
+    date.classList.add('dateComment')
+
+    container.appendChild(divComment)
+    divComment.append(header, p, date)
+    header.append(contaienrImg, imgProfile, name)
+
+    name.innerHTML = comment.apelido
+    p.innerHTML = comment.conteudo
+    imgProfile.src = comment.foto_perfil
+
+    let dateChar = comment.data.slice(0, 10)
+    let spliceDate = dateChar.split('-')
+
+    let dateComment = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
+    date.innerHTML = dateComment
+
 }
 
 //Destaca a aba de criação de Log
@@ -630,6 +715,7 @@ arrowChangeImgLogLeftLogFull.addEventListener('click', () => {
 //Altera a imagem do Log em destaque para a direita
 arrowChangeImgLogRightLogFull.addEventListener('click', () => {
     let imgLog = document.querySelector(`#logFull .imgLog`)
+
     let dataImg = imgLog.dataset.img.split(',')
     let dataPosition = Number(imgLog.dataset.position)
 
@@ -845,13 +931,6 @@ liListTravelDesk.forEach(li => {
     })
 })
 
-//Adiciona event para os LI de viagens
-liListTravelNewLog.forEach(li => {
-    li.addEventListener('click', () => {
-        setTravel(li)
-    })
-})
-
 //Fecha ícones quando a aba de configurações for clicada
 sectionSettings.addEventListener('click', () => {
     if (!editNickname.contains(event.target) && !inputNickname.contains(event.target)) {
@@ -898,13 +977,31 @@ async function getAllDatasProfile() {
     let response = await fetch(url)
 
     let data = await response.json()
-    console.log(data.items.logs)
+    console.log(data.items)
+
+    id_user = data.items.usuario.usuario[0].id
 
     data.items.logs.forEach((log) => {
         createLogs(log)
     })
 
+    data.items.viagens.forEach((travel) => {
+        createTravel(travel)
+    })
 
+    data.items.viagens.forEach((travel) => {
+        getTravelLi(travel)
+    })
+
+    const liListTravelNewLog = document.querySelectorAll('#listTravel li')
+    //Adiciona event para os LI de viagens
+    liListTravelNewLog.forEach(li => {
+        li.addEventListener('click', () => {
+            setTravel(li)
+        })
+    })
+
+    setDataUser(data.items.usuario)
 }
 
 getAllDatasProfile()
