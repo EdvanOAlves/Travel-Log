@@ -7,7 +7,6 @@
  *********************************************************************/
 
 // Importando funções de dependência de dados do usuário
-const log = require("../../../doc/components/log.js")
 const logDAO = require("../../model/DAO/log-dao/log.js")
 
 // Importa controller de midia para fazer inserção das imagens do log no banco de dados
@@ -88,13 +87,13 @@ const buscarLogId = async (log_id) => {
 
                         resultMidia = await controllerMidia.listarMidiasLogId(log_id)
                         
-                        midias = resultMidia.items.midias
-
-                        log.midias = midias
+                        if (resultMidia.status_code == 200) {
+                            midias = resultMidia.items.midia
+                            log.midias = midias
+                            delete MESSAGES.DEFAULT_HEADER.items.midias
+                        }
 
                     }
-
-                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
@@ -122,7 +121,6 @@ const buscarLogId = async (log_id) => {
 
 //Retorna todos os logs do usuário pelo id funciona
 const listarLogsUserId = async (usuario_id) => {
-
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
@@ -130,15 +128,27 @@ const listarLogsUserId = async (usuario_id) => {
         if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
             resultLog = await logDAO.getSelectAllLogsUserId(usuario_id)
-
+            
             if(resultLog) {
 
                 if(resultLog.length > 0) {
 
+                    for(item of resultLog) {
+
+                        logId = item.log_id
+
+                        resultMidia = await controllerMidia.listarMidiasLogId(logId)
+                        
+                        if(resultMidia.status_code == 200) {
+                            item.midias = resultMidia.items.midias
+                        }
+
+                    }
+
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
-                    
+
                     return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
@@ -199,25 +209,39 @@ const listarLogsViagemId = async (viagem_id) => {
 }
 
 //Retorna os logs das pessoas que o usuário segue
-const listarFeedSeguindo = async (log_id) => {
+const listarFeedSeguindo = async (usuario_id) => {
     
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
-        if(!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
+        if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
             resultLog = await logDAO.getSelectLogsFollowing(usuario_id)
-
             if(resultLog) {
 
                 if(resultLog.length > 0) {
+
+                    for (item of resultLog) {
+
+                        log = item.log[0]
+                        logId = log.log_id
+                        
+                        resultMidia = await controllerMidia.listarMidiasLogId(logId)
+                        
+                        if(resultMidia.status_code == 200) {
+                            midias = resultMidia.items.midias
+                            log.midias = midias
+                        }
+
+                    }
+
+                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
                     MESSAGES.DEFAULT_HEADER.items.logs          = resultLog
 
-                    console.log(MESSAGES.DEFAULT_HEADER.items)
                     return MESSAGES.DEFAULT_HEADER //200
 
                 } else {
@@ -248,17 +272,41 @@ const insereLog = async (log, contentType) => {
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
             validar = validarLog(log)
-
+            
             if(!validar) {
     
                 resultLog = await logDAO.setInsertLog(log)
-
+                
                 if(resultLog) {
     
-                    logRegistrado = await logDAO.getLastLog()
+                    logRegistrado = await logDAO.getSelectLastLog()
+
+                    midias = log.midias
+
+                    for (midia of midias) {
+
+                        log = logRegistrado[0]
+
+                        midiaObject = { link: midia.link, indice: midia.indice, log_id: log.id }
+                        
+                        resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
+
+                        if (resultMidia.status_code != 201) {
+                            
+                            MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
+                            return MESSAGES.ERROR_RELATINAL_INSERTION
+
+                        }
+
+                    }
+
+                    midiasCriadas = await controllerMidia.listarMidiasLogId(logRegistrado[0].id)
+
+                    delete MESSAGES.DEFAULT_HEADER.items.midia
+                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.items.log           = logRegistrado
     
                     return MESSAGES.DEFAULT_HEADER //200
@@ -275,9 +323,9 @@ const insereLog = async (log, contentType) => {
             return MESSAGES.ERROR_CONTENT_TYPE //415
         }
     
-        } catch (error) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
-        }
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
 
 }
 
@@ -291,22 +339,56 @@ const atualizaLog = async (log_id, log, contentType) => {
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
             validarId = await buscarLogId(log_id)
-
+            
             if (validarId.status_code == 200) {
 
                 valida = validarLog(log)
-
+                
                 if(!valida) {
 
                     resultLog = await logDAO.setUpdateLog(log_id, log)
 
                     if(resultLog) {
+                        
+                        midiaResult = await controllerMidia.listarMidiasLogId(log_id)
+                        midias = midiaResult.items.midias
+
+                        for (midia of midias) {
+                            
+                            idMidia = midia.midia_id
+
+                            deleteMidia = await controllerMidia.deletaMidia(idMidia)
+                            
+                            if (deleteMidia.status_code != 200) {
+                                MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
+                                return MESSAGES.ERROR_RELATINAL_INSERTION
+                            }
+
+                        }
+
+                        novasMidias = log.midias
+                        
+                        for (midia of novasMidias) {
+
+                            midiaObject = { link: midia.link, indice: midia.indice, log_id: log_id }
+                            
+                            resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
+                            
+                            if (resultMidia.status_code != 201) {
+                                
+                                MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
+                                return MESSAGES.ERROR_RELATINAL_INSERTION
+
+                            }
+
+                        }
+                        
 
                         MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_UPDATE_ITEM.status
                         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATE_ITEM.status_code
                         MESSAGES.DEFAULT_HEADER.message     = MESSAGES.SUCCESS_UPDATE_ITEM.message
                         delete MESSAGES.DEFAULT_HEADER.items
-
+                        
                         return MESSAGES.DEFAULT_HEADER //200
 
                     } else {
@@ -415,7 +497,43 @@ const validarLog = (log) => {
 
 }
 
-buscarLogsFeed(4)
+log = {
+
+    descricao: "Minhas férias",
+    viagem_id: 6,
+    nome_pais: "China",
+    estado: "Xangai",
+    cidade: "Xangai",
+    nome_local: "Monte Fuji",
+    visivel: true,
+    midias: [
+        
+        {
+
+            link: "teste",
+            indice: 1
+
+        },
+        {
+
+            link: "teste",
+            indice: 2
+
+        },
+        {
+
+            link: "teste",
+            indice: 3
+
+        }
+
+    ]
+
+}
+
+contentType = 'application/json'
+
+atualizaLog(55, log, contentType)
 
 module.exports = {
 

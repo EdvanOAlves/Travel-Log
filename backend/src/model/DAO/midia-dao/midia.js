@@ -61,7 +61,27 @@ const getSelectMediaById = async (id_media) => {
         
         sql = `SELECT * FROM tbl_log_midia WHERE id = ${id_media}`
 
-        result = await prisma.$executeRawUnsafe(sql)
+        result = await prisma.$queryRawUnsafe(sql)
+
+        if(Array.isArray(result)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+const getSelectLastMedia = async () => {
+
+    try {
+        
+        sql = `select * from tbl_log_midia order by id desc limit 1`
+
+        result = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(result)) {
             return result
@@ -87,8 +107,8 @@ const setInsertMedia = async (media) => {
         )`
 
         result = await prisma.$executeRawUnsafe(sql)
-
-        if(Array.isArray(result)) {
+        
+        if(result) {
             return result
         } else {
             return false
@@ -109,7 +129,7 @@ const setDeleteMedia = async (id_media) => {
 
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(Array.isArray(result)) {
+        if(result) {
             return result
         } else {
             return false
@@ -124,6 +144,7 @@ const setDeleteMedia = async (id_media) => {
 module.exports = {
     getSelectMediasByLogId,
     getSelectMediaById,
+    getSelectLastMedia,
     setInsertMedia,
     setDeleteMedia
 }

@@ -83,11 +83,11 @@ const getSelectExploreLogs = async (user_id) => {
                     
                 }
             })
-            console.log(formattedResult)
 
             return formattedResult;
 
         } else {
+
             return false;
         }
 
@@ -99,7 +99,6 @@ const getSelectExploreLogs = async (user_id) => {
 
 //Retorna todos os logs do usuário pelo id funciona
 const getSelectAllLogsUserId = async (user_id) => {
-
     try {
 
         sql = `CALL ListarLogsUsuario(${user_id})`
@@ -363,7 +362,7 @@ const setUpdateLog = async (log_id, log) => {
         result = await prisma.$executeRawUnsafe(sql)
 
         if (result) {
-            return resultw
+            return result
         }
         else {
             return false
@@ -408,6 +407,3 @@ module.exports = {
     setDeleteLog
 
 }
-
-// getSelectLogsFollowing(1)
-getSelectExploreLogs(1)
