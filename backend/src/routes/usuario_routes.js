@@ -24,7 +24,7 @@ router.get('/user/', cors(), async (req, res) => {
 
 })
 
-router.get('/user/profile/:id', cors(), bodyParserJSON, async (req, res) => {
+router.get('/user/profile/:id', cors(), async (req, res) => {
     const userId = req.params.id
     const perfil_id = req.query.perfil_id
     const filtros = {

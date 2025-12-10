@@ -257,7 +257,7 @@ const getSelectLogById = async (log_id) => {
 //Retorna os logs das pessoas que o usuário segue
 const getSelectLogsFollowing = async (user_id, filtros) => {
 
-    try {        
+    try {
         result = await prisma.$queryRaw`CALL BuscarFeedSeguindo( 
         ${user_id}, 
         ${filtros.data_inicio},${filtros.data_fim},
