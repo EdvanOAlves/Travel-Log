@@ -101,21 +101,19 @@ const getSelectExploreLogs = async (user_id) => {
 const getSelectAllLogsUserId = async (user_id, filtros) => {
     try {
 
-
-
-        sql = `CALL ListarLogsUsuario( 
+        
+        result = await prisma.$queryRaw`CALL ListarLogsUsuario( 
         ${user_id}, 
         ${filtros.data_inicio},${filtros.data_fim},
         ${filtros.local_pais}, ${filtros.local_estado}, ${filtros.local_cidade}, ${filtros.nome_local},
         ${filtros.tipo_viagem_id})`
         
-        result = await prisma.$queryRawUnsafe(sql)
-        
         //Verifica se o array está vazio, pois precisa retornar
         //um 404 se não houver viagens cadastradas
         if (result.length == 0) {
-            return result
+            return []
         }
+        
 
         //Se converte o resultado de verifica para String para passar na verificação
         //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
@@ -126,8 +124,7 @@ const getSelectAllLogsUserId = async (user_id, filtros) => {
             
             formattedResult = result.map(item => {
                 
-                return {
-                    
+                return {             
                     log_id: item.f0,
                     descricao: item.f1,
                     data_postagem: item.f2,
