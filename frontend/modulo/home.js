@@ -47,23 +47,23 @@ function createLogs(log) {
     let backImg = document.createElement('div')
     let footerLog = document.createElement('div')
     let divProfile = document.createElement('div')
-    let imgProfile = document.createElement('img')
-    let spanName = document.createElement('span')
+    let imgProfile = document.createElement('img') //
+    let spanName = document.createElement('span') //
     let divArrow1 = document.createElement('div')
     let divArrow2 = document.createElement('div')
-    let imgLog = document.createElement('img')
+    let imgLog = document.createElement('img') 
     let arrowRight = document.createElement('img')
     let arrowLeft = document.createElement('img')
     let divLikes = document.createElement('div')
     let imgLike = document.createElement('img')
-    let numberLikes = document.createElement('span')
+    let numberLikes = document.createElement('span')//
     let divFav = document.createElement('div')
     let imgFav = document.createElement('img')
-    let numberFav = document.createElement('span')
+    let numberFav = document.createElement('span') //
     let divLocation = document.createElement('div')
     let imgLocation = document.createElement('img')
-    let spanLocation = document.createElement('span')
-
+    let spanLocation = document.createElement('span') //
+    
     logDiv.classList.add('log')
     headerLog.classList.add('headerLog')
     backImg.classList.add('backgroundImgLog')
@@ -81,7 +81,31 @@ function createLogs(log) {
     numberFav.classList.add('numberFav')
     divLocation.classList.add('containerLocationLog')
     spanLocation.classList.add('lcoationLog')
+    
+    // Conteudo do log
+    imgProfile.src = log.foto_perfil;
+    spanName.textContent = log.apelido;
+    //imgLog a fazer
+    numberLikes.textContent = log.curtidas;
+    numberFav.textContent = log.favoritos;
 
+    // Local precisa de uma tratativa
+    
+    const localJson =  log.log[0].local[0];
+
+    const parts = [
+        localJson.nome_local,
+        localJson.cidade,
+        localJson.estado,
+        localJson.pais.pais
+    ].filter(part => part); // remove null, undefined ou string vazia
+    const locationString = parts.join(' - ');
+
+    console.log(localJson),
+    console.log(locationString),
+    spanLocation.textContent = locationString
+
+    
     headerLog.append(divProfile, spanName)
     divProfile.appendChild(imgProfile)
     backImg.append(divArrow1, divArrow2, imgLog)
@@ -92,15 +116,18 @@ function createLogs(log) {
     divFav.append(imgFav, numberFav)
     divLocation.append(imgLocation, spanLocation)
     logDiv.append(headerLog, backImg, footerLog)
+
+    
     containerLogs.appendChild(logDiv)
 
+
     //Validar quantidade Imgs
-    if (log.midia.length == 0) {
-        divArrow1.classList.add('hiddeArrowImg')
-        divArrow2.classList.add('hiddeArrowImg')
-
-    }
-
+    // if (log.midia.length == 0) {
+    //     divArrow1.classList.add('hiddeArrowImg')
+    //     divArrow2.classList.add('hiddeArrowImg')
+        
+    // }
+    
 }
 
 //Altera a imagem do log para a esquerda
@@ -762,3 +789,49 @@ async function init() {
 }
 
 init()
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO
+// ----------------------------------------------------------
+
+async function getHomeContent(id, inputFilters){
+    const params = new URLSearchParams(inputFilters)
+    const endPoint = `http://localhost:8080/v1/travellog/log/following/${id}?${params.toString()}`
+    const response = await fetch(endPoint)
+    const data = await response.json();
+    return data
+}
+
+// carregando conteúdo da home
+async function loadHomeContent(id, inputFilters){
+    const homeLogs = await getHomeContent(id, inputFilters)
+
+    homeLogs.items.logs.forEach(createLogs)
+}
+
+async function getExploreContent(id, inputFilters){
+    const params = new URLSearchParams(inputFilters)
+    const endPoint = `http://localhost:8080/v1/travellog/log/explore/${id}?${params.toString()}`
+    const response = await fetch(endPoint)
+    const data = await response.json();
+    return data
+}
+
+
+async function loadExploreContent(id, inputFilters){
+    const exploreLogs = await getExploreContent(id, inputFilters)
+
+    exploreLogs.items.logs.forEach(createLogs);
+}
+// -------------------------------------
+
+
+
+
+// ----------------------------------------------------------
+//              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO
+// ----------------------------------------------------------
+
+// TODO: Incluir no carregamento da página e todas as vezes que chamar atualizações do conteúdo o id da sessão do usuario
+// loadHomeContent()
+// loadExploreContent(1, {})
