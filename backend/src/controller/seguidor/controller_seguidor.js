@@ -23,13 +23,13 @@ const DEFAULT_MESSAGES = require("../module/config_messages.js")
 //Retorna todos os usuários que o usuário segue pelo id
 const buscarSeguindo = async (usuario_id) => {
 
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
         
         if(!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
 
-            resultSeguidor = await seguidorDAO.getSelectFollowing(user_id)
+            resultSeguidor = await seguidorDAO.getSelectFollowing(usuario_id)
 
             if(resultSeguidor) {
 
@@ -37,7 +37,7 @@ const buscarSeguindo = async (usuario_id) => {
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.seguidores    = resultSeguidor
+                    MESSAGES.DEFAULT_HEADER.items.seguindo     = resultSeguidor
 
                     return MESSAGES.DEFAULT_HEADER //200
 
@@ -54,6 +54,7 @@ const buscarSeguindo = async (usuario_id) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
