@@ -227,6 +227,9 @@ function createFollower(follower) {
 
     divFollowerMob.append(divProfileMob, spanNameMob)
     divProfileMob.appendChild(imgProfileMob)
+
+    divFollower.addEventListener('click', () => loadProfile(follower.id))
+
     containerFollowerMobile.appendChild(divFollowerMob)
 
 }
@@ -810,6 +813,19 @@ async function init() {
 //              MÉTODOS DE INTEGRAÇÃO (Requisições)
 // ----------------------------------------------------------
 
+async function getFollowingList(id){
+    const endPoint = `http://localhost:8080/v1/travellog/following/${id}`
+    const response = await fetch(endPoint)
+    const data = await response.json();
+    return data
+}
+
+async function getToFollowList(){
+    const endPoint = `http://localhost:8080/v1/travellog/user/`
+    const response = await fetch(endPoint)
+    const data = await response.json();
+    return data
+}
 
 async function getHomeContent(id, inputFilters) {
     const params = new URLSearchParams(inputFilters)
@@ -819,12 +835,6 @@ async function getHomeContent(id, inputFilters) {
     return data
 }
 
-async function getFollowingList(id){
-    const endPoint = `http://localhost:8080/v1/travellog/following/${id}?`
-    const response = await fetch(endPoint)
-    const data = await response.json();
-    return data
-}
 
 async function getExploreContent(id, inputFilters) {
     const params = new URLSearchParams(inputFilters)
@@ -839,20 +849,42 @@ async function getExploreContent(id, inputFilters) {
 //              MÉTODOS DE INTEGRAÇÃO (Carregamento)
 // ----------------------------------------------------------
 
+
+//Para carregar a lista de perfis seguindo
 async function loadFollowingTab(id){
-    let containerFollower = getElementById('containerFollowerListaaa')
+    const userId = localStorage.getItem('userId');
+    
+    let containerFollower = document.getElementById('containerFollowerList')
+    
+    
     clearChildren(containerFollower)
-    const followingList = await getFollowingList(id)
-    followingList.items.seguindo.forEach(createFollower)
+    
+    const followingList = await getFollowingList(userId)
+    console.log(followingList)
+    if (followingList.status_code == 404){
+        loadToFollowTab(containerLogs)
+    }
+    else{
+        // console.log(followingList.items.usuarios)
+        // followingList.items.logs.forEach(createLogs)
+    }
+    // followingList.items.seguindo.forEach(createFollower)
+}
+
+// Para carregar todos os usuarios, é o discover de perfis
+async function loadToFollowTab(containerLogs){
+    
+    const toFollowList = await getToFollowList()
+    console.log(toFollowList)
+    toFollowList.items.usuario.forEach(createFollower)
+    
 }
 
 // carregando conteúdo da home
 async function loadHomeContent(id, inputFilters) {
-    console.log('1')
     clearChildren(containerLogs)
     
     const homeLogs = await getHomeContent(id, inputFilters)
-    console.log(homeLogs.status_code)
     
     if (homeLogs.status_code == 404){
         loadEmptyHome(containerLogs)
@@ -865,8 +897,7 @@ async function loadHomeContent(id, inputFilters) {
 function loadEmptyHome(){
     let emptyText = document.createElement('h2')
     emptyText.textContent = `"Opa! Nenhum conteúdo dos perfis que você segue, experimente a aba "Explorar"`
-    console.log(containerLogs)
-
+    
     containerLogs.appendChild(emptyText)
 }
 
@@ -887,10 +918,16 @@ function clearChildren(container){
 }
 
 // ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Para abrir outra página)
+// ----------------------------------------------------------
+
+
+
+// ----------------------------------------------------------
 //              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO
 // ----------------------------------------------------------
-let userId = localStorage.getItem('userId');
+const userId = 1
 
 loadHomeContent(userId)
-// loadFollowingTab(userId)
+loadFollowingTab(userId)
 // loadExploreContent(1, {})

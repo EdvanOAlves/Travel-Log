@@ -50,7 +50,6 @@ router.get('/user/:id', cors(), async (req, res) => {
     const id = req.params.id
 
     const usuario = await controllerUsuario.buscarUsuarioId(id)
-    console.log(usuario)
 
     res.status(usuario.status_code)
     res.json(usuario)
