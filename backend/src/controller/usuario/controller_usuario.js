@@ -35,43 +35,6 @@ const listarUsuarios = async () => {
 
             if (resultUsuarios.length > 0) {
 
-                for (usuario of resultUsuarios) {
-
-                    resultSeguidores = await usuarioSeguidorController
-                        .listarSeguidoresUsuarioid(usuario.id)
-
-                    arraySeguidores = resultSeguidores.items.seguidores
-
-                    seguidores = []
-
-                    for (seguidor of arraySeguidores) {
-
-                        id = seguidor.id_seguidor
-
-                        resultUsuario = await usuarioDAO.getSelectUserById(id)
-
-                        usuarioObject = resultUsuario[0]
-
-                        seguidores.push({
-
-                            id: usuarioObject.id,
-                            nome: usuarioObject.nome,
-                            apelido: usuarioObject.apelido,
-                            foto_perfil: usuarioObject.link_foto_perfil
-
-                        })
-
-
-                    }
-
-
-                    usuario.qtd_seguidores = arraySeguidores.length
-                    usuario.seguidores = seguidores
-
-                }
-
-                delete MESSAGES.DEFAULT_HEADER.items.seguidores
-
                 MESSAGES.DEFAULT_HEADER.status = DEFAULT_MESSAGES.SUCCESS_REQUEST.status
                 MESSAGES.DEFAULT_HEADER.status_code = DEFAULT_MESSAGES.SUCCESS_REQUEST.status_code
                 MESSAGES.DEFAULT_HEADER.items.usuario = resultUsuarios
@@ -85,8 +48,9 @@ const listarUsuarios = async () => {
         } else {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
         }
-
+        
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
