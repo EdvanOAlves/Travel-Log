@@ -92,6 +92,7 @@ function createLogs(log) {
     // Local precisa de uma tratativa
 
     const localJson = log.log[0].local[0];
+    console.log(localJson)
 
     const parts = [
         localJson.nome_local,
@@ -849,6 +850,11 @@ async function getExploreContent(id, inputFilters) {
 //              MÉTODOS DE INTEGRAÇÃO (Carregamento)
 // ----------------------------------------------------------
 
+function initExplorar(){
+    const btnExplorar = document.getElementById('mobLikes');
+    btnExplorar.addEventListener('click',() => loadExploreContent(userId))
+}
+
 
 //Para carregar a lista de perfis seguindo
 async function loadFollowingTab(id){
@@ -876,6 +882,8 @@ async function loadToFollowTab(containerLogs){
     
     const toFollowList = await getToFollowList()
     console.log(toFollowList)
+    const searchInput = document.getElementById('inputFollowerDesk')
+    searchInput.placeholder = "Usuários"
     toFollowList.items.usuario.forEach(createFollower)
     
 }
@@ -902,7 +910,7 @@ function loadEmptyHome(){
 }
 
 async function loadExploreContent(id, inputFilters) {
-    //clearChildren(containerLogs)
+    clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
     exploreLogs.items.logs.forEach(createLogs);
 }
@@ -920,14 +928,17 @@ function clearChildren(container){
 // ----------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO (Para abrir outra página)
 // ----------------------------------------------------------
+function loadProfile(perfil_id){
+    localStorage.setItem('perfil_id', perfil_id)
+    window.location.href = `profile.html`
 
+}
 
 
 // ----------------------------------------------------------
 //              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO
 // ----------------------------------------------------------
-const userId = 1
-
+const userId = localStorage.getItem('userId')
+initExplorar()
 loadHomeContent(userId)
 loadFollowingTab(userId)
-// loadExploreContent(1, {})
