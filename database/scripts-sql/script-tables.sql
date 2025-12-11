@@ -85,7 +85,6 @@ CREATE TABLE tbl_log(
 CREATE TABLE tbl_log_midia(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     link VARCHAR(255) NOT NULL,
-    indice INT NOT NULL,
 	log_id INT NOT NULL,
 
 	CONSTRAINT fk_midia_log

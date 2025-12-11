@@ -12,8 +12,7 @@ DELIMITER $$
 			
 			SELECT 
 				tbl_log_midia.id,
-                tbl_log_midia.link,
-                tbl_log_midia.indice
+                tbl_log_midia.link
                 FROM tbl_log_midia JOIN
                 tbl_log ON tbl_log.id = tbl_log_midia.log_id
                 WHERE tbl_log.id = l_id;
@@ -31,7 +30,9 @@ DELIMITER ;
 -- REGISTRA UMA MIDIA (FOTO OU VÍDEO)
 DELIMITER $$
 
-	CREATE PROCEDURE CriarMidia(IN var_link VARCHAR(255), IN var_indice INT, IN l_id INT)
+	CREATE PROCEDURE CriarMidia(
+    IN var_link VARCHAR(255),
+    IN l_id INT)
     BEGIN
     
 		DECLARE log_existe INT;
@@ -42,11 +43,9 @@ DELIMITER $$
 			
 			INSERT INTO tbl_log_midia(
 				link,
-				indice,
 				log_id
 			) VALUES (
 				var_link,
-				var_indice,
 				l_id
 			);
             
