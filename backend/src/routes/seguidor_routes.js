@@ -20,7 +20,7 @@ router.post('/follow', cors(), bodyParserJSON, async (req, res) => {
     const dadosBody     = req.body
     const contentType   = req.headers['content-type']
 
-    const seguidor = await controllerSeguidor.segueUsuario(dadosBody, contentType)
+    const seguidor = await controllerSeguidor.insereSeguidor(dadosBody, contentType)
 
     res.status(seguidor.status_code)
     res.json(seguidor)
