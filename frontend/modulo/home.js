@@ -1,5 +1,7 @@
 'use strict'
 
+import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
+
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
 const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
@@ -687,6 +689,31 @@ document.addEventListener('click', () => {
     }
 })
 
+
+async function uploadImageLog () {
+    const uploadParams = {
+        storageAccount: "travellog",
+        containerName: "logs",
+        file: document.getElementById("selectImgInput").files[0],
+        sasToken: 'sp=c&st=2025-12-11T00:37:42Z&se=2025-12-20T03:00:00Z&spr=https&sv=2024-11-04&sr=c&sig=iLcABEgTFCqBVhJ7FZNQhHieVnrL%2FBHgGEkqQvCoRQg%3D'
+    }
+
+    const midia = await uploadImageToAzure(uploadParams)
+
+}
+
+function preview ({target}) {
+
+    let blob = URL.createObjectURL(target.files[0])
+
+}
+
+document.getElementById("selectImgInput")
+        .addEventListener('change', preview)
+
+document.getElementById("saveLog")
+        .addEventListener("click", uploadImageLog)
+
 async function init() {
 		
 		//Pega a input do HTML
@@ -728,11 +755,10 @@ async function init() {
 
         }
 
-        console.log(localObject)
-        
         localObject = []
 
     })
 
-
 }
+
+init()
