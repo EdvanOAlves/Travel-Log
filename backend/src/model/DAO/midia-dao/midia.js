@@ -20,7 +20,6 @@ const getSelectMediasByLogId = async (id_log) => {
         sql = `CALL ListarMidiasLog(${id_log})`
 
         result = await prisma.$queryRawUnsafe(sql)
-        console.log(result)
 
         //Verifica se o array está vazio, pois precisa retornar
         //um 404 se não houver viagens cadastradas

@@ -155,7 +155,6 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
                 
                 if (resultMidia.status_code == 200) {
                     item.midias = resultMidia.items.midias
-                    console.log(item)
                 }
             }
             
@@ -319,7 +318,6 @@ const insereLog = async (log, contentType) => {
 
                     midiasCriadas = await controllerMidia.listarMidiasLogId(logRegistrado[0].id)
                     
-                    console.log(midiasCriadas)
                     
                     logRegistrado[0].midias = midiasCriadas.items
 
