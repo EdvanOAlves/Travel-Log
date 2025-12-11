@@ -124,7 +124,7 @@ const buscarLogId = async (log_id) => {
 
 //Retorna todos os logs do usuário pelo id funciona
 const listarLogsUserId = async (usuario_id, input_filtros) => {
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
         if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
@@ -139,24 +139,23 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
             }
 
             resultLog = await logDAO.getSelectAllLogsUserId(usuario_id, filtros)
-
+            
             if (!resultLog) {
                 return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
             if (resultLog.length == 0) {
                 return MESSAGES.ERROR_NOT_FOUND //404
             }
-
             for (item of resultLog) {
-
+                
                 logId = item.log_id
                 resultMidia = await controllerMidia.listarMidiasLogId(logId)
-
+                
                 if (resultMidia.status_code == 200) {
                     item.midias = resultMidia.items.midias
                 }
             }
-
+            
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
             MESSAGES.DEFAULT_HEADER.items.logs = resultLog
