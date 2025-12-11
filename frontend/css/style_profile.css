@@ -1802,15 +1802,15 @@ main {
     }
 
     .followerInfo {
-        margin-left: 200px;
+        margin-left: 250px;
     }
 
     .profileDescription {
-        margin-left: 200px;
+        margin-left: 250px;
     }
 
     .profileIdentifier {
-        margin-left: 185px;
+        margin-left: 235px;
     }
 
     .log {
@@ -2049,7 +2049,7 @@ main {
         padding-left: 16px;
         gap: 10px;
         height: 60px;
-        margin-left: 60px;
+        margin-left: 10px;
     }
 
     .profileContent {

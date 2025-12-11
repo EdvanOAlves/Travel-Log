@@ -4,6 +4,7 @@ import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
 
 var id_user = null
 let localObject = []
+let data_user
 const saveLog = document.getElementById('saveLog')
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
@@ -97,8 +98,17 @@ estatisticaNavButton.addEventListener('click', () => {
 });
 
 //Cria e adiciona os Logs a tela principal
-function createLogs(log) {
-    const containerLogs = document.getElementById('container-de-logs')
+function createLogs(log, id_viagem, call_id) {
+
+    let containerDeLogs
+    console.log(call_id)
+    if (call_id == 'Travel') {
+        containerDeLogs = document.querySelector('.containerTravelLogs')
+
+    } else {
+        containerDeLogs = document.getElementById('container-de-logs')
+    }
+
     let logDiv = document.createElement('div')
     let imgLog = document.createElement('img')
     let footer = document.createElement('footer')
@@ -117,21 +127,21 @@ function createLogs(log) {
 
     logDiv.id = `log${log.log_id}`
     logDiv.dataset.id = log.log_id
-
+    console.log(log.midias)
     imgFooter.src = 'img/Location_Icon.svg'
-    console.log('oi')
+
     span.innerHTML = `${log.local[0].pais.pais}, ${log.local[0].estado}, ${log.local[0].estado} - ${log.local[0].nome_local}`
 
-    // let imgDataSet = log.midias[0].link
-    // for (let i = 1; i < log.midias.length; i++) {
-    //     imgDataSet += `,${log.midias[i].link}`
+    let imgDataSet = log.midias[0].link
+    for (let i = 1; i < log.midias.length; i++) {
+        imgDataSet += `,${log.midias[i].link}`
 
-    // }
+    }
 
-    // imgLog.dataset.img = imgDataSet
+    imgLog.dataset.img = imgDataSet
 
-    // let imgLogFirst = imgDataSet.split(',')
-    // imgLog.src = imgLogFirst[0]
+    let imgLogFirst = imgDataSet.split(',')
+    imgLog.src = imgLogFirst[0]
 
     logDiv.addEventListener('click', () => {
         logFull(logDiv.id)
@@ -167,31 +177,51 @@ function createTravel(travel) {
 
     spanTxt.innerHTML = travel.viagem_titulo
 
-    
 
+    divTravel.dataset.id = travel.id_viagem
     let dateFimChar = travel.data_inicio.slice(0, 10)
     let spliceDate = dateFimChar.split('-')
 
     let dataFim = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
 
     span.innerHTML = dataFim
+
+    divTravel.addEventListener('click', () => {
+        showLogsTravel(divTravel.dataset.id)
+    })
 }
 
 //Adiciona dados do usuério
 function setDataUser(user) {
+    let imgSettings = document.querySelector('.profileImgSettings')
+    let nicknameSettings = document.querySelector('.nickNameSettings')
+    let nameSettings = document.querySelector('.nameSettings')
+    let logsSettings = document.querySelector('.logsSettings')
+    let seguidoresSettings = document.querySelector('.followerSettings')
+    let seguindoSettings = document.querySelector('.followingSettings')
+    let descricaoSettings = document.querySelector('.descriptionSettings')
+
+    imgSettings.src = user.foto_perfil
+    nicknameSettings.innerHTML = user.apelido
+    nameSettings.innerHTML = user.nome
+    logsSettings.innerHTML = `Logs ${user.logs.length}`
+    seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
+    seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
+    descricaoSettings.innerHTML = user.descricao
+
     let imgProfile = document.getElementById('imgProfile')
     let name = document.querySelector('.profileNickname')
     let logs = document.querySelector('.titleInfo')
     let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
     let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
     let description = document.querySelector('.profileDescription')
-
-    imgProfile.src = user.usuario[0].foto_perfil
-    name.innerHTML = user.usuario[0].apelido
-    logs.innerHTML = `Ainda não`
-    // followers.innerHTML = `Seguidores ${user.seguidores.length}`
-    following.innerHTML = 'Ainda não'
-    description.innerHTML = user.usuario[0].descricao
+    console.log(user)
+    imgProfile.src = user.foto_perfil
+    name.innerHTML = user.apelido
+    logs.innerHTML = `Logs ${user.logs.length}`
+    followers.innerHTML = `Seguidores ${user.seguidores.length}`
+    following.innerHTML = `Seguindo ${user.seguindo.length}`
+    description.innerHTML = user.descricao
 }
 
 //Criar log
@@ -351,11 +381,17 @@ function setTypeTravel(li) {
 }
 
 //Exibe Logs relacionados com aquela viagem
-function showLogsTravel() {
+function showLogsTravel(travel_id) {
     const sectionLogs = document.getElementById('logsOfTravel')
 
     sectionLogs.classList.toggle('showLogsTravel')
     sectionLogs.style.animation = '1.5s showScaleLogs linear'
+    console.log(data_user)
+    data_user.perfil.logs.forEach(log => {
+        createLogs(log, travel_id, 'Travel')
+    })
+
+
 }
 
 //Destaca o Log clicado
@@ -1006,18 +1042,19 @@ async function getAllDatasProfile() {
 
     let data = await response.json()
     console.log(data.items)
+    data_user = data.items
 
-    id_user = data.items.usuario.usuario[0].id
+    id_user = data.items.perfil.id
 
-    data.items.logs.forEach((log) => {
+    data.items.perfil.logs.forEach((log) => {
         createLogs(log)
     })
 
-    data.items.viagens.forEach((travel) => {
+    data.items.perfil.viagens.forEach((travel) => {
         createTravel(travel)
     })
 
-    data.items.viagens.forEach((travel) => {
+    data.items.perfil.viagens.forEach((travel) => {
         getTravelLi(travel)
     })
 
@@ -1029,7 +1066,7 @@ async function getAllDatasProfile() {
         })
     })
 
-    setDataUser(data.items.usuario)
+    setDataUser(data.items.perfil)
 }
 
 async function getTypeTravel() {
