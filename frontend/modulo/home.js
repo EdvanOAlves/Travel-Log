@@ -191,7 +191,7 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 //Cria e adiciona os seguidores
 function createFollower(follower) {
     console.log(follower)
-    const containerFollower = document.querySelector('containerFollowerList')
+    const containerFollower = document.getElementById('containerFollowerList')
     
     let divFollower = document.createElement('div')
     let divProfile = document.createElement('div')
@@ -801,14 +801,9 @@ async function init() {
 init()
 
 // ----------------------------------------------------------
-//              MÉTODOS DE INTEGRAÇÃO
+//              MÉTODOS DE INTEGRAÇÃO (Requisições)
 // ----------------------------------------------------------
 
-function clearChildren(container){
-    while (container.firstChild){
-        container.removeChild(container.firstChild)
-    }
-}
 
 async function getHomeContent(id, inputFilters) {
     const params = new URLSearchParams(inputFilters)
@@ -825,15 +820,6 @@ async function getFollowingList(id){
     return data
 }
 
-// carregando conteúdo da home
-async function loadHomeContent(id, inputFilters) {
-    clearChildren(containerLogs)
-
-    const homeLogs = await getHomeContent(id, inputFilters)
-
-    homeLogs.items.logs.forEach(createLogs)
-}
-
 async function getExploreContent(id, inputFilters) {
     const params = new URLSearchParams(inputFilters)
     const endPoint = `http://localhost:8080/v1/travellog/log/explore/${id}?${params.toString()}`
@@ -843,21 +829,56 @@ async function getExploreContent(id, inputFilters) {
 }
 
 
-async function loadExploreContent(id, inputFilters) {
-    const exploreLogs = await getExploreContent(id, inputFilters)
-    exploreLogs.items.logs.forEach(createLogs);
-}
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Carregamento)
+// ----------------------------------------------------------
 
 async function loadFollowingTab(id){
+    let containerFollower = getElementById('containerFollowerListaaa')
     clearChildren(containerFollower)
     const followingList = await getFollowingList(id)
     followingList.items.seguindo.forEach(createFollower)
 }
 
-// -------------------------------------
+// carregando conteúdo da home
+async function loadHomeContent(id, inputFilters) {
+    console.log('1')
+    clearChildren(containerLogs)
+    
+    const homeLogs = await getHomeContent(id, inputFilters)
+    console.log(homeLogs.status_code)
+    
+    if (homeLogs.status_code == 404){
+        loadEmptyHome(containerLogs)
+    }
+    else{
+        homeLogs.items.logs.forEach(createLogs)
+    }
+}
 
+function loadEmptyHome(){
+    let emptyText = document.createElement('h2')
+    emptyText.textContent = `"Opa! Nenhum conteúdo dos perfis que você segue, experimente a aba "Explorar"`
+    console.log(containerLogs)
 
+    containerLogs.appendChild(emptyText)
+}
 
+async function loadExploreContent(id, inputFilters) {
+    //clearChildren(containerLogs)
+    const exploreLogs = await getExploreContent(id, inputFilters)
+    exploreLogs.items.logs.forEach(createLogs);
+}
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Funções tratativas)
+// ----------------------------------------------------------
+
+function clearChildren(container){
+    while (container.firstChild){
+        container.removeChild(container.firstChild)
+    }
+}
 
 // ----------------------------------------------------------
 //              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO
@@ -865,5 +886,5 @@ async function loadFollowingTab(id){
 let userId = localStorage.getItem('userId');
 
 loadHomeContent(userId)
-loadFollowingTab(userId)
+// loadFollowingTab(userId)
 // loadExploreContent(1, {})
