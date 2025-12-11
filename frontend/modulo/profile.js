@@ -1,6 +1,10 @@
 'use strict'
 
+import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
+
 var id_user = null
+let localObject = []
+const saveLog = document.getElementById('saveLog')
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
 const filterBlackSettings = document.getElementById('filterBlackSettings')
@@ -114,16 +118,20 @@ function createLogs(log) {
     logDiv.id = `log${log.log_id}`
     logDiv.dataset.id = log.log_id
 
-    let imgDataSet = log.midias[0].link
-    for (let i = 1; i < log.midias.length; i++) {
-        imgDataSet += `,${log.midias[i].link}`
+    imgFooter.src = 'img/Location_Icon.svg'
+    console.log('oi')
+    span.innerHTML = `${log.local[0].pais.pais}, ${log.local[0].estado}, ${log.local[0].estado} - ${log.local[0].nome_local}`
 
-    }
+    // let imgDataSet = log.midias[0].link
+    // for (let i = 1; i < log.midias.length; i++) {
+    //     imgDataSet += `,${log.midias[i].link}`
 
-    imgLog.dataset.img = imgDataSet
+    // }
 
-    let imgLogFirst = imgDataSet.split(',')
-    imgLog.src = imgLogFirst[0]
+    // imgLog.dataset.img = imgDataSet
+
+    // let imgLogFirst = imgDataSet.split(',')
+    // imgLog.src = imgLogFirst[0]
 
     logDiv.addEventListener('click', () => {
         logFull(logDiv.id)
@@ -159,7 +167,9 @@ function createTravel(travel) {
 
     spanTxt.innerHTML = travel.viagem_titulo
 
-    let dateFimChar = travel.data_fim.slice(0, 10)
+    
+
+    let dateFimChar = travel.data_inicio.slice(0, 10)
     let spliceDate = dateFimChar.split('-')
 
     let dataFim = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
@@ -179,15 +189,38 @@ function setDataUser(user) {
     imgProfile.src = user.usuario[0].foto_perfil
     name.innerHTML = user.usuario[0].apelido
     logs.innerHTML = `Ainda não`
-    followers.innerHTML = `Seguidores ${user.seguidores.length}`
+    // followers.innerHTML = `Seguidores ${user.seguidores.length}`
     following.innerHTML = 'Ainda não'
     description.innerHTML = user.usuario[0].descricao
 }
 
 //Criar log
 async function postLog() {
-    let response = await fetch(url, bodyPost)
+    let des = document.getElementById('descriptionNewLog').value
+    let via = Number(document.querySelector('.selectTravel span').dataset.id)
+    let vis = document.getElementById('visibleTravel').textContent
+    console.log(via)
+    if (vis == 'Público') {
+        vis = true
 
+    } else {
+        vis = false
+    }
+
+    let imgLink = await uploadImageLog()
+
+    let newLog = {
+        descricao: des,
+        viagem_id: via,
+        visivel: true,
+        nome_pais: localObject[3].pais,
+        estado: localObject[2].estado,
+        cidade: localObject[1].cidade,
+        nome_local: localObject[0].local_nome,
+        midias: [
+            { link: imgLink, indice: 1 }
+        ]
+    }
 
     let bodyPost = {
         method: 'POST',
@@ -196,6 +229,11 @@ async function postLog() {
         },
         body: JSON.stringify(newLog),
     }
+
+    let url = `http://localhost:8080/v1/travellog/log/`
+    let response = await fetch(url, bodyPost)
+
+    localObject = []
 }
 
 //Altera a imagem do log para a esquerda
@@ -262,8 +300,10 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 function getTravelLi(li) {
     const listTravel = document.querySelector('#listTravel ul')
 
+
     let createLi = document.createElement('li')
     createLi.innerHTML = li.viagem_titulo
+    createLi.dataset.id = li.id_viagem
 
     listTravel.appendChild(createLi)
 }
@@ -272,7 +312,7 @@ function getTravelLi(li) {
 function getTypeTravelDefault(li) {
     const listTravelDesk = document.querySelector('#listTypeLog ul')
     const listTravelMob = document.querySelector('#listTypeLogMob ul')
-    console.log(li)
+
     let liDesk = document.createElement('li')
     let liMob = document.createElement('li')
 
@@ -289,6 +329,7 @@ function setTravel(li) {
     const listTravel = document.getElementById('listTravel')
 
     textTravel.innerHTML = li.textContent
+    textTravel.dataset.id = li.dataset.id
 
     listTravel.classList.remove('expandListTravelNewLog')
 }
@@ -320,7 +361,7 @@ function showLogsTravel() {
 //Destaca o Log clicado
 async function logFull(id) {
     const logClickElement = document.getElementById(id)
-    console.log(logClickElement.dataset.id)
+
     const logClick = logClickElement.querySelectorAll('*')
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
@@ -337,7 +378,7 @@ async function logFull(id) {
     let response = await fetch(url)
 
     let comments = await response.json()
-    console.log(comments)
+
     comments.items.comentario.forEach((comment) => {
         createComments(comment)
     })
@@ -651,6 +692,8 @@ inputLocationFilter.addEventListener('click', () => {
     inputLocationFilter.classList.add('expandFilterLocation')
 
 })
+
+saveLog.addEventListener('click', postLog)
 
 //Filtra os logs pela localização
 inputLocationFilter.addEventListener('keypress', () => {
@@ -1020,3 +1063,79 @@ async function getTypeTravel() {
 
 getTypeTravel()
 getAllDatasProfile()
+
+
+// -------------------------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO COM GOOGLE E AZURE
+// -------------------------------------------------------------------------
+
+async function uploadImageLog() {
+    const uploadParams = {
+        storageAccount: "travellog",
+        containerName: "logs",
+        file: document.getElementById("selectImgInput").files[0],
+        sasToken: 'sp=c&st=2025-12-11T00:37:42Z&se=2025-12-20T03:00:00Z&spr=https&sv=2024-11-04&sr=c&sig=iLcABEgTFCqBVhJ7FZNQhHieVnrL%2FBHgGEkqQvCoRQg%3D'
+    }
+
+    const midia = await uploadImageToAzure(uploadParams)
+
+    return JSON.stringify(midia)
+
+}
+
+function preview({ target }) {
+
+    let blob = URL.createObjectURL(target.files[0])
+
+}
+
+document.getElementById("selectImgInput")
+    .addEventListener('change', preview)
+
+// document.getElementById("saveLog")
+//     .addEventListener("click", uploadImageLog)
+
+
+//Google api
+init()
+
+async function init() {
+
+    //Pega a input do HTML
+    const localizacao = document.getElementById("locationNewLogInput")
+
+    //Inicializa uma nova instância do widget de auto-complete.
+    let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+
+        fields: ["name", "address_components", "geometry"],
+        types: ["establishment", "geocode"]
+
+    })
+
+    autoComplete.addListener('place_changed', async () => {
+        let place = autoComplete.getPlace()
+
+        localObject.push({ local_nome: place.name })
+
+        let componentsAdress = place.address_components
+
+        for (let components of componentsAdress) {
+
+            if (components.types[0] == 'country') {
+                localObject.push({ pais: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_1') {
+                localObject.push({ estado: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_2') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'sublocality') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'locality') {
+                localObject.push({ cidade: components.long_name })
+            }
+
+        }
+
+        console.log(localObject)
+    })
+
+}

@@ -707,18 +707,18 @@ liListTravelNewLog.forEach(li => {
 
 //Fecha alguns icones clicando no corpo do web-site
 document.addEventListener('click', () => {
-    if (!inputDateContainer.contains(event.target)) {
-        const inputDate = document.querySelectorAll('.filterDate')
-        const spanContainer = document.querySelector('.containerFilterDate span')
+    // if (!inputDateContainer.contains(event.target)) {
+    //     const inputDate = document.querySelectorAll('.filterDate')
+    //     const spanContainer = document.querySelector('.containerFilterDate span')
 
-        spanContainer.innerHTML = 'Data'
-        inputDateContainer.classList.remove('expandFilterDate')
+    //     spanContainer.innerHTML = 'Data'
+    //     inputDateContainer.classList.remove('expandFilterDate')
 
-        for (let i = 0; i < inputDate.length; i++) {
-            inputDate[i].classList.remove('showFilterDate')
+    //     for (let i = 0; i < inputDate.length; i++) {
+    //         inputDate[i].classList.remove('showFilterDate')
 
-        }
-    }
+    //     }
+    // }
 
     if (!inputLocationFilter.contains(event.target)) {
         inputLocationFilter.classList.remove('expandFilterLocation')
@@ -737,6 +737,8 @@ async function uploadImageLog() {
 
     const midia = await uploadImageToAzure(uploadParams)
 
+    console.log(JSON.stringify(midia))
+
 }
 
 function preview({ target }) {
@@ -750,6 +752,10 @@ document.getElementById("selectImgInput")
 
 document.getElementById("saveLog")
     .addEventListener("click", uploadImageLog)
+
+
+//Google api
+init()
 
 async function init() {
 
@@ -792,13 +798,13 @@ async function init() {
 
         }
 
+        console.log(localObject)
+
         localObject = []
 
     })
 
 }
-
-init()
 
 // ----------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO (Requisições)
