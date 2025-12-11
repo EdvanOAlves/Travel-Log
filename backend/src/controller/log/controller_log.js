@@ -140,6 +140,8 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
 
             resultLog = await logDAO.getSelectAllLogsUserId(usuario_id, filtros)
             
+
+            
             if (!resultLog) {
                 return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
@@ -153,6 +155,7 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
                 
                 if (resultMidia.status_code == 200) {
                     item.midias = resultMidia.items.midias
+                    console.log(item)
                 }
             }
             
@@ -279,7 +282,7 @@ const listarFeedSeguindo = async (usuario_id, input_filtros) => {
 //Registra um log novo funciona
 const insereLog = async (log, contentType) => {
 
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
 
@@ -301,7 +304,7 @@ const insereLog = async (log, contentType) => {
                         
                         log = logRegistrado[0]
                         
-                        midiaObject = { link: midia.link, indice: midia.indice, log_id: log.id }
+                        midiaObject = { link: midia.link, log_id: log.id }
 
                         resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
 
@@ -316,7 +319,9 @@ const insereLog = async (log, contentType) => {
 
                     midiasCriadas = await controllerMidia.listarMidiasLogId(logRegistrado[0].id)
                     
-                    logRegistrado[0].midias = midiasCriadas.items.midias
+                    console.log(midiasCriadas)
+                    
+                    logRegistrado[0].midias = midiasCriadas.items
 
                     delete MESSAGES.DEFAULT_HEADER.items.midia
                     delete MESSAGES.DEFAULT_HEADER.items.midias
@@ -340,6 +345,7 @@ const insereLog = async (log, contentType) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -386,7 +392,7 @@ const atualizaLog = async (log_id, log, contentType) => {
 
                         for (midia of novasMidias) {
 
-                            midiaObject = { link: midia.link, indice: midia.indice, log_id: log_id }
+                            midiaObject = { link: midia.link, log_id: log_id }
 
                             resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
 
