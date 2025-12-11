@@ -686,3 +686,53 @@ document.addEventListener('click', () => {
 
     }
 })
+
+async function init() {
+		
+		//Pega a input do HTML
+        const localizacao = document.getElementById("locationNewLogInput")
+
+		//Inicializa uma nova instância do widget de auto-complete.
+        let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+
+		// Não definimos nenhum valor para o campo types, para ser possível
+		//buscar estabelecimentos
+
+        fields: [ "name", "address_components", "geometry" ],
+        types: [ "establishment", "geocode" ]
+
+    })
+
+    let localObject = []
+
+    autoComplete.addListener('place_changed', async () => {
+        let place = autoComplete.getPlace()
+
+        localObject.push({local_nome: place.name})
+
+        let componentsAdress = place.address_components
+
+        for (let components of componentsAdress) {
+            
+            if (components.types[0] == 'country') {
+                localObject.push({pais: components.long_name})
+            } else if (components.types[0] == 'administrative_area_level_1') {
+                localObject.push({estado: components.long_name})
+            } else if (components.types[0] == 'administrative_area_level_2') {
+                localObject.push({cidade: components.long_name})
+            } else if (components.types[0] == 'sublocality') {
+                localObject.push({cidade: components.long_name})
+            } else if (components.types[0] == 'locality') {
+                localObject.push({cidade: components.long_name})
+            }
+
+        }
+
+        console.log(localObject)
+        
+        localObject = []
+
+    })
+
+
+}
