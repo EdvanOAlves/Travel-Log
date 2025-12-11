@@ -5,8 +5,6 @@ const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
 const filterBlackSettings = document.getElementById('filterBlackSettings')
 const closeFilterSettings = document.getElementById('closeFilterSettings')
-const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
-const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
 const iconProfileUser = document.getElementById('profileNav')
 const iconProfileMobile = document.querySelector('.containerSettings div')
 const sectionSettings = document.getElementById('sectionSettings')
@@ -274,9 +272,12 @@ function getTravelLi(li) {
 function getTypeTravelDefault(li) {
     const listTravelDesk = document.querySelector('#listTypeLog ul')
     const listTravelMob = document.querySelector('#listTypeLogMob ul')
-
+    console.log(li)
     let liDesk = document.createElement('li')
     let liMob = document.createElement('li')
+
+    liDesk.innerHTML = li.nome
+    liMob.innerHTML = li.nome
 
     listTravelDesk.appendChild(liDesk)
     listTravelMob.appendChild(liMob)
@@ -915,22 +916,6 @@ buttonConfirmPass.addEventListener('click', () => {
     sendReqOfUpdate()
 })
 
-//Adiciona event para os LI de tipo de viagem para mobile
-liListTravelMob.forEach(li => {
-    li.addEventListener('click', () => {
-        setTypeTravel(li)
-
-    })
-})
-
-//Adiciona event para os LI de tipo de viagem para desktop
-liListTravelDesk.forEach(li => {
-    li.addEventListener('click', () => {
-        setTypeTravel(li)
-
-    })
-})
-
 //Fecha ícones quando a aba de configurações for clicada
 sectionSettings.addEventListener('click', () => {
     if (!editNickname.contains(event.target) && !inputNickname.contains(event.target)) {
@@ -1004,4 +989,34 @@ async function getAllDatasProfile() {
     setDataUser(data.items.usuario)
 }
 
+async function getTypeTravel() {
+    let url = "http://localhost:8080/v1/travellog/traveltype/"
+    let response = await fetch(url)
+
+    let type = await response.json()
+    type.items.tipos_viagens.forEach((type) => {
+        getTypeTravelDefault(type)
+    })
+
+    const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
+    const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
+
+    //Adiciona event para os LI de tipo de viagem para mobile
+    liListTravelMob.forEach((li) => {
+        li.addEventListener('click', () => {
+            setTypeTravel(li)
+
+        })
+    })
+
+    //Adiciona event para os LI de tipo de viagem para desktop
+    liListTravelDesk.forEach(li => {
+        li.addEventListener('click', () => {
+            setTypeTravel(li)
+
+        })
+    })
+}
+
+getTypeTravel()
 getAllDatasProfile()

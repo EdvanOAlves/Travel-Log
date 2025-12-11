@@ -1222,7 +1222,7 @@ main {
     padding: 5px;
     background-color: var(--branco);
     border-radius: 20px;
-    z-index: -10;
+    z-index: 10;
     transition: 0.5s ease-in-out;
 }
 
@@ -1791,7 +1791,7 @@ main {
         position: relative;
     }
 
-    #imgProfile {
+    .containerProfileImgMain {
         position: absolute;
         width: auto;
         height: 130px;
@@ -2022,7 +2022,7 @@ main {
         padding-top: 50px;
     }
 
-    #imgProfile {
+    .containerProfileImgMain {
         position: absolute;
         width: auto;
         height: 130px;
@@ -2033,11 +2033,11 @@ main {
     }
 
     .followerInfo {
-        margin-left: 200px;
+        margin-left: 260px;
     }
 
     .profileDescription {
-        margin-left: 200px;
+        margin-left: 260px;
     }
 
     .profileIdentifier {
@@ -2045,11 +2045,11 @@ main {
     }
 
     .profileTitle {
-
         padding-top: 0px;
         padding-left: 16px;
         gap: 10px;
         height: 60px;
+        margin-left: 60px;
     }
 
     .profileContent {
