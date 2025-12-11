@@ -153,7 +153,6 @@ DELIMITER ;
 
 -- LISTAR LOGS PELO ID DO USUÁRIO
 DELIMITER $$
-
 CREATE PROCEDURE ListarLogsUsuario(
 	IN u_id INT,
 	-- Filtros
@@ -177,7 +176,13 @@ BEGIN
 			tbl_log.contagem_favoritos,
 			tbl_log.visivel,
 			tbl_log.viagem_id,
-			tbl_log.local_id
+			tbl_log.local_id,
+            tbl_local.nome AS ponto_interesse,
+			tbl_local.cidade AS cidade,
+			tbl_local.estado AS estado,
+    
+			tbl_pais.id AS pais_id,
+			tbl_pais.nome AS pais
 		FROM tbl_log
 		JOIN tbl_viagem ON tbl_viagem.id = tbl_log.viagem_id
 		JOIN tbl_usuario ON tbl_usuario.id = tbl_viagem.usuario_id
