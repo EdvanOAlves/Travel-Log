@@ -1,5 +1,7 @@
 'use strict'
 
+import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
+
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
 const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
@@ -714,6 +716,80 @@ document.addEventListener('click', () => {
     }
 })
 
+
+async function uploadImageLog () {
+    const uploadParams = {
+        storageAccount: "travellog",
+        containerName: "logs",
+        file: document.getElementById("selectImgInput").files[0],
+        sasToken: 'sp=c&st=2025-12-11T00:37:42Z&se=2025-12-20T03:00:00Z&spr=https&sv=2024-11-04&sr=c&sig=iLcABEgTFCqBVhJ7FZNQhHieVnrL%2FBHgGEkqQvCoRQg%3D'
+    }
+
+    const midia = await uploadImageToAzure(uploadParams)
+
+}
+
+function preview ({target}) {
+
+    let blob = URL.createObjectURL(target.files[0])
+
+}
+
+document.getElementById("selectImgInput")
+        .addEventListener('change', preview)
+
+document.getElementById("saveLog")
+        .addEventListener("click", uploadImageLog)
+
+async function init() {
+		
+		//Pega a input do HTML
+        const localizacao = document.getElementById("locationNewLogInput")
+
+		//Inicializa uma nova instância do widget de auto-complete.
+        let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+
+		// Não definimos nenhum valor para o campo types, para ser possível
+		//buscar estabelecimentos
+
+        fields: [ "name", "address_components", "geometry" ],
+        types: [ "establishment", "geocode" ]
+
+    })
+
+    let localObject = []
+
+    autoComplete.addListener('place_changed', async () => {
+        let place = autoComplete.getPlace()
+
+        localObject.push({local_nome: place.name})
+
+        let componentsAdress = place.address_components
+
+        for (let components of componentsAdress) {
+            
+            if (components.types[0] == 'country') {
+                localObject.push({pais: components.long_name})
+            } else if (components.types[0] == 'administrative_area_level_1') {
+                localObject.push({estado: components.long_name})
+            } else if (components.types[0] == 'administrative_area_level_2') {
+                localObject.push({cidade: components.long_name})
+            } else if (components.types[0] == 'sublocality') {
+                localObject.push({cidade: components.long_name})
+            } else if (components.types[0] == 'locality') {
+                localObject.push({cidade: components.long_name})
+            }
+
+        }
+
+        localObject = []
+
+    })
+
+}
+
+init()
+
 // ----------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO
 // ----------------------------------------------------------
@@ -759,4 +835,3 @@ async function loadExploreContent(id, inputFilters){
 // TODO: Incluir no carregamento da página e todas as vezes que chamar atualizações do conteúdo o id da sessão do usuario
 // loadHomeContent()
 // loadExploreContent(1, {})
-

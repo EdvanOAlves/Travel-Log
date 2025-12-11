@@ -15,7 +15,7 @@ const DEFAULT_MESSAGES = require("../module/config_messages.js")
 //Retorna todas as midias de determinado log
 const listarMidiasLogId = async (log_id) => {
 
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
             
     try {
         

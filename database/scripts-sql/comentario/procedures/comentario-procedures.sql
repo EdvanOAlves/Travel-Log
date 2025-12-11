@@ -104,5 +104,3 @@ BEGIN
         WHERE usuario_id = input_usuario_id;
     END IF;
 END$$
-
-DELIMITER ;
