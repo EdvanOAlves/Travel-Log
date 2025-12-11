@@ -2,9 +2,9 @@ module.exports = {
 
     post: {
 
-        tags: ["EndPoints [post]"],
+        tags: ["EndPoints [POST]"],
         description: 'Cadastra um post no sistema.',
-        operationId: 'inserirPost(post, contentType)',
+        operationId: 'inserirPost',
         requestBody: {
             content: {
                 "application/json": {
@@ -20,7 +20,7 @@ module.exports = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/log"
+                            $ref: "#/components/schemas/logInsert"
                         }
                     }
                 }

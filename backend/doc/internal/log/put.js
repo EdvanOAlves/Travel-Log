@@ -3,7 +3,7 @@ module.exports = {
 
         tags: ["EndPoints [POST]"],
         description: 'Atualiza um post do sistema.',
-        operationId: 'atualizarPost(id, post, contentType)',
+        operationId: 'atualizarPost',
         parameters: [{
             name: "id",
             in: "path",
