@@ -936,7 +936,7 @@ function clearChildren(container){
 //              MÉTODOS DE INTEGRAÇÃO (Para abrir outra página)
 // ----------------------------------------------------------
 function loadProfile(perfil_id){
-    localStorage.setItem('perfil_id', perfil_id)
+    localStorage.setItem('perfilId', perfil_id)
     window.location.href = `profile.html`
 
 }

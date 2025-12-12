@@ -29,6 +29,9 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'] // Resolve o erro de header bloqueado
 }))
 
+app.use(bodyParser.json());
+
+
 //Import da rota
 const comentarioRoutes  = require("./src/routes/comentario_routes.js")
 const logsRoutes        = require("./src/routes/logs_routes")
