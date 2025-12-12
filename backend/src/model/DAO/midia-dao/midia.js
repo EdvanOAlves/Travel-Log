@@ -102,11 +102,15 @@ const setInsertMedia = async (media) => {
 
     try {
         
-        sql = `CALL CriarMidia(
-            '${media.link}',
-            ${media.indice},
-            ${media.log_id}
-        )`
+        sql = `
+        INSERT INTO tbl_log_midia (
+            log_id,
+            link
+        ) VALUES (
+            ${media.log_id},
+            ${media.link}
+        )
+        `
 
         result = await prisma.$executeRawUnsafe(sql)
         
