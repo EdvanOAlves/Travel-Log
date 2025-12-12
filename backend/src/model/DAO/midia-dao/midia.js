@@ -37,10 +37,8 @@ const getSelectMediasByLogId = async (id_log) => {
             formattedResult = result.map(item => {
 
                 return {
-
                     midia_id: item.f0,
                     link: item.f1,
-                    indice: item.f2
 
                 }
 

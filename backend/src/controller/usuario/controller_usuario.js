@@ -35,43 +35,6 @@ const listarUsuarios = async () => {
 
             if (resultUsuarios.length > 0) {
 
-                for (usuario of resultUsuarios) {
-
-                    resultSeguidores = await usuarioSeguidorController
-                        .listarSeguidoresUsuarioid(usuario.id)
-
-                    arraySeguidores = resultSeguidores.items.seguidores
-
-                    seguidores = []
-
-                    for (seguidor of arraySeguidores) {
-
-                        id = seguidor.id_seguidor
-
-                        resultUsuario = await usuarioDAO.getSelectUserById(id)
-
-                        usuarioObject = resultUsuario[0]
-
-                        seguidores.push({
-
-                            id: usuarioObject.id,
-                            nome: usuarioObject.nome,
-                            apelido: usuarioObject.apelido,
-                            foto_perfil: usuarioObject.link_foto_perfil
-
-                        })
-
-
-                    }
-
-
-                    usuario.qtd_seguidores = arraySeguidores.length
-                    usuario.seguidores = seguidores
-
-                }
-
-                delete MESSAGES.DEFAULT_HEADER.items.seguidores
-
                 MESSAGES.DEFAULT_HEADER.status = DEFAULT_MESSAGES.SUCCESS_REQUEST.status
                 MESSAGES.DEFAULT_HEADER.status_code = DEFAULT_MESSAGES.SUCCESS_REQUEST.status_code
                 MESSAGES.DEFAULT_HEADER.items.usuario = resultUsuarios
@@ -85,8 +48,9 @@ const listarUsuarios = async () => {
         } else {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
         }
-
+        
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -95,11 +59,12 @@ const listarUsuarios = async () => {
 //Buscar um usuário pelo id
 const buscarUsuarioId = async (usuario_id) => {
 
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
 
         if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
+
 
             resultUsuario = await usuarioDAO.getSelectUserById(usuario_id)
 
@@ -116,12 +81,26 @@ const buscarUsuarioId = async (usuario_id) => {
                         arraySeguidores = resultSeguidores.items.seguidores
                     }
 
-                    resultUsuario.qtd_seguidores = arraySeguidores.length
-                    resultUsuario.seguidores = arraySeguidores
+                    resultSeguindo = await usuarioSeguidorController.buscarSeguindo(usuario_id)
+                    //Caso o usuário não esteja seguindo ninguém
+                    if (resultSeguindo.status_code == 404){
+                        arraySeguindo = []
+                    }
+                    else{
+                        arraySeguindo = resultSeguindo.items.seguindo
+                    }
 
+                    resultUsuario[0].qtd_seguidores = arraySeguidores.length
+                    resultUsuario[0].qtd_seguindo = arraySeguindo.length
+                    
+                    
+                    resultUsuario[0].seguidores = arraySeguidores
+                    resultUsuario[0].seguindo = arraySeguindo
+
+                    
                     MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.usuario = resultUsuario
+                    MESSAGES.DEFAULT_HEADER.items.usuario = resultUsuario[0]
 
                     return MESSAGES.DEFAULT_HEADER //200
 
@@ -138,6 +117,7 @@ const buscarUsuarioId = async (usuario_id) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -189,7 +169,7 @@ const buscarLogin = async (email, senha) => {
 // Buscar o todo o conteúdo de perfil de um usuário pelo id
 // perfil_id é o dono do perfil, user_id é o id da sessão atual, usado conferir se está seguindo o dono do perfil
 const buscarUsuarioPerfilId = async (user_id, perfil_id, filtros) => {
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     try {
         if (isNaN(perfil_id) || perfil_id == '' || perfil_id == null || perfil_id == undefined || perfil_id <= 0) {
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
@@ -205,13 +185,15 @@ const buscarUsuarioPerfilId = async (user_id, perfil_id, filtros) => {
         if (resultUsuario.status_code != 200) {
             return resultUsuario                    //400, 404, 500
         }
+
+        perfil = resultUsuario.items.usuario
         
         // DADOS DE SEGUIDOR
         // Verificando se o userId é um seguidor desse usuario
-        resultUsuario.items.seguido = false
+        perfil.seguido = false
         for (seguidor in resultUsuario.seguidores) {
             if (seguidor.id == user_id) {
-                resultUsuario.items.seguido = true
+                perfil.seguido = true
             }
         }
         
@@ -234,12 +216,13 @@ const buscarUsuarioPerfilId = async (user_id, perfil_id, filtros) => {
         if(resultLog.status_code == 404){
             resultLog.items = [];
         }
+        
+        perfil.viagens = resultViagem.items.viagens
+        perfil.logs = resultLog.items.logs
 
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-        MESSAGES.DEFAULT_HEADER.items.usuario = resultUsuario.items
-        MESSAGES.DEFAULT_HEADER.items.viagens = resultViagem.items.viagens
-        MESSAGES.DEFAULT_HEADER.items.logs = resultLog.items.logs
+        MESSAGES.DEFAULT_HEADER.items.perfil = perfil
 
         return MESSAGES.DEFAULT_HEADER //200
     } catch (error) {

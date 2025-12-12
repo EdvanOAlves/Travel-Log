@@ -44,10 +44,11 @@ BEGIN
             AND seguidor_id = input_seguidor_id;
     END IF;
 END $$
+
 -- Para deixar de seguir um usuário
 CREATE PROCEDURE RemoverRelacaoSeguidor(
     IN input_usuario_id INT,
-    IN input_seguidor INT
+    IN input_seguidor_id INT
 )
 BEGIN
     DECLARE id_relacao INT DEFAULT 0;

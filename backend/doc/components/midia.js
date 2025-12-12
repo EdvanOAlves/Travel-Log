@@ -2,23 +2,15 @@ module.exports = {
     midia: {
         type: 'object',
         properties: {
-            "id": {
+            "midia_id": {
                 "type": "int",
-                "description": "id",
+                "description": "midia_id",
                 "example": 1
             },
             "link": {
                 "type": "string",
                 "description": "link",
                 "example": "http://storagephoto/midia.png"
-            },
-            "index": {
-                "type": "int",
-                "description": "index",
-                "example": 1
-            },
-            "id_postagem": {
-                $ref: "#/schema/components/log"
             }
         }
     },
@@ -29,17 +21,7 @@ module.exports = {
             "link": {
                 "type": "string",
                 "description": "link",
-                "example": "http://storagephoto/midia.png"
-            },
-            "index": {
-                "type": "int",
-                "description": "index",
-                "example": 1
-            },
-            "id_postagem": {
-                "type": "int",
-                "description": "foreign key",
-                "example": "1"
+                "example": "http://storagephoto/minha_familia.png"
             }
         }
     }

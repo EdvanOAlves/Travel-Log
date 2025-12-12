@@ -15,6 +15,17 @@ const bodyParser = require('body-parser')    // Responsável por gerenciar a che
 
 const bodyParserJSON = bodyParser.json()
 
+router.get('/travel/:id', cors(), async (req, res) => {
+
+    const id = req.params.id
+
+    const viagem = await controllerViagem.buscarViagemUsuarioId(id)
+
+    res.status(viagem.status_code)
+    res.json(viagem)
+
+})
+
 // Registra uma viagem
 router.post("/travel", cors(), bodyParserJSON, async (req, res) => {
 

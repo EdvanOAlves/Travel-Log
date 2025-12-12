@@ -1,6 +1,11 @@
 'use strict'
 
+import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
+
 var id_user = null
+let localObject = []
+let data_user
+const saveLog = document.getElementById('saveLog')
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
 const filterBlackSettings = document.getElementById('filterBlackSettings')
@@ -93,8 +98,17 @@ estatisticaNavButton.addEventListener('click', () => {
 });
 
 //Cria e adiciona os Logs a tela principal
-function createLogs(log) {
-    const containerLogs = document.getElementById('container-de-logs')
+function createLogs(log, id_viagem, call_id) {
+
+    let containerDeLogs
+    console.log(call_id)
+    if (call_id == 'Travel') {
+        containerDeLogs = document.querySelector('.containerTravelLogs')
+
+    } else {
+        containerDeLogs = document.getElementById('container-de-logs')
+    }
+
     let logDiv = document.createElement('div')
     let imgLog = document.createElement('img')
     let footer = document.createElement('footer')
@@ -113,6 +127,10 @@ function createLogs(log) {
 
     logDiv.id = `log${log.log_id}`
     logDiv.dataset.id = log.log_id
+    console.log(log.midias)
+    imgFooter.src = 'img/Location_Icon.svg'
+
+    span.innerHTML = `${log.local[0].pais.pais}, ${log.local[0].estado}, ${log.local[0].estado} - ${log.local[0].nome_local}`
 
     let imgDataSet = log.midias[0].link
     for (let i = 1; i < log.midias.length; i++) {
@@ -159,35 +177,176 @@ function createTravel(travel) {
 
     spanTxt.innerHTML = travel.viagem_titulo
 
-    let dateFimChar = travel.data_fim.slice(0, 10)
+
+    divTravel.dataset.id = travel.id_viagem
+    let dateFimChar = travel.data_inicio.slice(0, 10)
     let spliceDate = dateFimChar.split('-')
 
     let dataFim = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
 
     span.innerHTML = dataFim
+
+    divTravel.addEventListener('click', () => {
+        showLogsTravel(divTravel.dataset.id)
+    })
 }
 
 //Adiciona dados do usuério
 function setDataUser(user) {
+    let imgSettings = document.querySelector('.profileImgSettings')
+    let nicknameSettings = document.querySelector('.nickNameSettings')
+    let nameSettings = document.querySelector('.nameSettings')
+    let logsSettings = document.querySelector('.logsSettings')
+    let seguidoresSettings = document.querySelector('.followerSettings')
+    let seguindoSettings = document.querySelector('.followingSettings')
+    let descricaoSettings = document.querySelector('.descriptionSettings')
+
+
+    // Caso o perfil não pertença ao usuário
+    if (perfilId != userId) {
+        loadVisitorContent(user)
+
+    } else {
+        loadOwnerContent(user)
+    }
+
+
+    // 
+
+
+
+    imgSettings.src = user.foto_perfil
+    nicknameSettings.innerHTML = user.apelido
+    nameSettings.innerHTML = user.nome
+    logsSettings.innerHTML = `Logs ${user.logs.length}`
+    seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
+    seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
+    descricaoSettings.innerHTML = user.descricao
+
     let imgProfile = document.getElementById('imgProfile')
     let name = document.querySelector('.profileNickname')
     let logs = document.querySelector('.titleInfo')
     let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
     let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
     let description = document.querySelector('.profileDescription')
-
-    imgProfile.src = user.usuario[0].foto_perfil
-    name.innerHTML = user.usuario[0].apelido
-    logs.innerHTML = `Ainda não`
+    console.log(user)
+    imgProfile.src = user.foto_perfil
+    name.innerHTML = user.apelido
+    logs.innerHTML = `Logs ${user.logs.length}`
     followers.innerHTML = `Seguidores ${user.seguidores.length}`
-    following.innerHTML = 'Ainda não'
-    description.innerHTML = user.usuario[0].descricao
+    following.innerHTML = `Seguindo ${user.seguindo.length}`
+    description.innerHTML = user.descricao
+}
+
+function loadVisitorContent(user) {
+    const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
+    const newLog = document.querySelector('.logCreator')
+
+    console.log('inferno')
+    newLog.classList.add('display-none')
+
+    
+
+    let containerFollowerUser = document.querySelector('.containerFollowerUser')
+    const btnFollow = document.getElementById('followUser')
+    const btnImg = document.createElement('img')
+    btnFollow.id = 'followUser'
+    containerFollowerUser.appendChild(btnFollow)
+
+    const perfilSeguidores = user.seguidores
+
+    let userSeguindo = false
+    for (let seguidor in perfilSeguidores) {
+        if (seguidor.id == userId) {
+            userSeguindo = true
+        }
+    }
+    if (userSeguindo) {
+        btnImg.src = './img/confirm.png'
+    } else {
+        btnImg.src = './img/plus.png'
+    }
+    btnFollow.appendChild(btnImg)
+
+    // Função de seguir
+    btnFollow.addEventListener('click', () => {
+        if (!userSeguindo) {
+            addFollow(followBody)
+            userSeguindo = true;
+            btnImg.style.animation = '3s rotateFollow linear'
+            setTimeout(() => {
+                btnImg.src = 'img/confirm.png'
+            }, 1000);
+        } else {
+            removeFollow(followBody)
+            userSeguindo = false;
+
+            btnImg.style.animation = '3s rotateFollow linear'
+            setTimeout(() => {
+                btnImg.src = 'img/plus.png'
+            }, 1000);
+
+        }
+
+        // let imgButton = document.querySelector('#followUser img')
+
+
+
+    })
+}
+async function addFollow(followBody) {
+    console.log(followBody)
+    let url = `http://localhost:8080/v1/travellog/follow/`
+
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(followBody)
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+}
+
+async function removeFollow(followBody) {
+    await fetch('http://localhost:8080/v1/travellog/follow/', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(followBody)
+
+    })
 }
 
 //Criar log
 async function postLog() {
-    let response = await fetch(url, bodyPost)
+    let des = document.getElementById('descriptionNewLog').value
+    let via = Number(document.querySelector('.selectTravel span').dataset.id)
+    let vis = document.getElementById('visibleTravel').textContent
+    console.log(via)
+    if (vis == 'Público') {
+        vis = true
 
+    } else {
+        vis = false
+    }
+
+    let imgLink = await uploadImageLog()
+
+    let newLog = {
+        descricao: des,
+        viagem_id: via,
+        visivel: true,
+        nome_pais: localObject[3].pais,
+        estado: localObject[2].estado,
+        cidade: localObject[1].cidade,
+        nome_local: localObject[0].local_nome,
+        midias: [
+            { link: imgLink, indice: 1 }
+        ]
+    }
 
     let bodyPost = {
         method: 'POST',
@@ -196,6 +355,11 @@ async function postLog() {
         },
         body: JSON.stringify(newLog),
     }
+
+    let url = `http://localhost:8080/v1/travellog/log/`
+    let response = await fetch(url, bodyPost)
+
+    localObject = []
 }
 
 //Altera a imagem do log para a esquerda
@@ -262,8 +426,10 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 function getTravelLi(li) {
     const listTravel = document.querySelector('#listTravel ul')
 
+
     let createLi = document.createElement('li')
     createLi.innerHTML = li.viagem_titulo
+    createLi.dataset.id = li.id_viagem
 
     listTravel.appendChild(createLi)
 }
@@ -272,7 +438,7 @@ function getTravelLi(li) {
 function getTypeTravelDefault(li) {
     const listTravelDesk = document.querySelector('#listTypeLog ul')
     const listTravelMob = document.querySelector('#listTypeLogMob ul')
-    console.log(li)
+
     let liDesk = document.createElement('li')
     let liMob = document.createElement('li')
 
@@ -289,6 +455,7 @@ function setTravel(li) {
     const listTravel = document.getElementById('listTravel')
 
     textTravel.innerHTML = li.textContent
+    textTravel.dataset.id = li.dataset.id
 
     listTravel.classList.remove('expandListTravelNewLog')
 }
@@ -310,17 +477,23 @@ function setTypeTravel(li) {
 }
 
 //Exibe Logs relacionados com aquela viagem
-function showLogsTravel() {
+function showLogsTravel(travel_id) {
     const sectionLogs = document.getElementById('logsOfTravel')
 
     sectionLogs.classList.toggle('showLogsTravel')
     sectionLogs.style.animation = '1.5s showScaleLogs linear'
+    console.log(data_user)
+    data_user.perfil.logs.forEach(log => {
+        createLogs(log, travel_id, 'Travel')
+    })
+
+
 }
 
 //Destaca o Log clicado
 async function logFull(id) {
     const logClickElement = document.getElementById(id)
-    console.log(logClickElement.dataset.id)
+
     const logClick = logClickElement.querySelectorAll('*')
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
@@ -337,7 +510,7 @@ async function logFull(id) {
     let response = await fetch(url)
 
     let comments = await response.json()
-    console.log(comments)
+
     comments.items.comentario.forEach((comment) => {
         createComments(comment)
     })
@@ -652,6 +825,8 @@ inputLocationFilter.addEventListener('click', () => {
 
 })
 
+saveLog.addEventListener('click', postLog)
+
 //Filtra os logs pela localização
 inputLocationFilter.addEventListener('keypress', () => {
     if (event.key == 'Enter') {
@@ -957,24 +1132,27 @@ document.addEventListener('click', () => {
 
 
 // INTEGRAÇÃO
-async function getAllDatasProfile() {
-    let url = `http://localhost:8080/v1/travellog/user/profile/1?data_inicio=&data_fim=&local_pais=&local_estado=&local_cidade=&nome_local=&tipo_viagem_id=&perfil_id=1`
+async function getAllDatasProfile(inputFilters) {
+    const params = new URLSearchParams(inputFilters)
+    console.log(userId, perfilId)
+    let url = `http://localhost:8080/v1/travellog/user/profile/${userId}?${params.toString()}&perfil_id=${perfilId}`
     let response = await fetch(url)
 
     let data = await response.json()
+    console.log('oopa')
     console.log(data.items)
+    data_user = data.items
 
-    id_user = data.items.usuario.usuario[0].id
 
-    data.items.logs.forEach((log) => {
+    data.items.perfil.logs.forEach((log) => {
         createLogs(log)
     })
 
-    data.items.viagens.forEach((travel) => {
+    data.items.perfil.viagens.forEach((travel) => {
         createTravel(travel)
     })
 
-    data.items.viagens.forEach((travel) => {
+    data.items.perfil.viagens.forEach((travel) => {
         getTravelLi(travel)
     })
 
@@ -986,7 +1164,7 @@ async function getAllDatasProfile() {
         })
     })
 
-    setDataUser(data.items.usuario)
+    setDataUser(data.items.perfil)
 }
 
 async function getTypeTravel() {
@@ -1018,5 +1196,101 @@ async function getTypeTravel() {
     })
 }
 
+
+
+
+
+// -------------------------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO COM GOOGLE E AZURE
+// -------------------------------------------------------------------------
+
+async function uploadImageLog() {
+    const uploadParams = {
+        storageAccount: "travellog",
+        containerName: "logs",
+        file: document.getElementById("selectImgInput").files[0],
+        sasToken: 'sp=c&st=2025-12-11T00:37:42Z&se=2025-12-20T03:00:00Z&spr=https&sv=2024-11-04&sr=c&sig=iLcABEgTFCqBVhJ7FZNQhHieVnrL%2FBHgGEkqQvCoRQg%3D'
+    }
+
+    const midia = await uploadImageToAzure(uploadParams)
+
+    return JSON.stringify(midia)
+
+}
+
+function preview({ target }) {
+
+    let blob = URL.createObjectURL(target.files[0])
+
+}
+
+document.getElementById("selectImgInput")
+    .addEventListener('change', preview)
+
+// document.getElementById("saveLog")
+//     .addEventListener("click", uploadImageLog)
+
+
+
+
+// window.init = async function init() {
+
+//     //Pega a input do HTML
+//     const localizacao = document.getElementById("locationNewLogInput")
+
+//     //Inicializa uma nova instância do widget de auto-complete.
+//     let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+
+//         fields: ["name", "address_components", "geometry"],
+//         types: ["establishment", "geocode"]
+
+//     })
+
+//     autoComplete.addListener('place_changed', async () => {
+//         let place = autoComplete.getPlace()
+
+//         localObject.push({ local_nome: place.name })
+
+//         let componentsAdress = place.address_components
+
+//         for (let components of componentsAdress) {
+
+//             if (components.types[0] == 'country') {
+//                 localObject.push({ pais: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_1') {
+//                 localObject.push({ estado: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_2') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'sublocality') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'locality') {
+//                 localObject.push({ cidade: components.long_name })
+//             }
+
+//         }
+
+//         console.log(localObject)
+//     })
+
+// }
+
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Funções tratativas)
+// ----------------------------------------------------------
+
+function clearChildren(container) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild)
+    }
+}
+
+// ----------------------------------------------------------
+//              Verdadeiro inicio (Chamando as funções)
+// ----------------------------------------------------------
+
+const userId = localStorage.getItem('userId')
+const perfilId = localStorage.getItem('perfilId')
 getTypeTravel()
 getAllDatasProfile()
+

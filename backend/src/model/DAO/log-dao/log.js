@@ -61,13 +61,13 @@ const getSelectExploreLogs = async (user_id, filtros) => {
                             favoritos: item.f7,
                             local: [
                                 {
-                                    local_id: item.f8,
-                                    nome_local: item.f9,
-                                    cidade: item.f10,
-                                    estado: item.f11,
+                                    local_id: item.f12,
+                                    nome_local: item.f13,
+                                    cidade: item.f14,
+                                    estado: item.f15,
                                     pais: {
-                                        pais_id: item.f12,
-                                        pais: item.f13
+                                        pais_id: item.f16,
+                                        pais: item.f17
                                     }
                                 }
                             ]

@@ -10,8 +10,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzXyS7Di_gT-AVHDhfr1Ol4K05yUe03nA&loading=async&libraries=places&callback=init"
+        async defer></script>
     <script src="modulo/home.js" defer type="module"></script>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzXyS7Di_gT-AVHDhfr1Ol4K05yUe03nA&loading=async&libraries=places&callback=init"></script>
     <title>Document</title>
 </head>
 
@@ -238,7 +240,7 @@
                         <img src="img/search.png" alt="">
                         <input id="inputFollowerDesk" type="text" autocomplete="off" placeholder="Seguindo">
                     </div>
-                    <div class="containerFollowerList">
+                    <div class="containerFollowerList" id="containerFollowerList">
                         <div class="follower">
                             <div class="profileFollower">
                                 <img src="img/profile.png" alt="">

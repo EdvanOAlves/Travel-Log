@@ -51,7 +51,7 @@ function createLogs(log) {
     let spanName = document.createElement('span') //
     let divArrow1 = document.createElement('div')
     let divArrow2 = document.createElement('div')
-    let imgLog = document.createElement('img') 
+    let imgLog = document.createElement('img')
     let arrowRight = document.createElement('img')
     let arrowLeft = document.createElement('img')
     let divLikes = document.createElement('div')
@@ -63,7 +63,7 @@ function createLogs(log) {
     let divLocation = document.createElement('div')
     let imgLocation = document.createElement('img')
     let spanLocation = document.createElement('span') //
-    
+
     logDiv.classList.add('log')
     headerLog.classList.add('headerLog')
     backImg.classList.add('backgroundImgLog')
@@ -81,7 +81,7 @@ function createLogs(log) {
     numberFav.classList.add('numberFav')
     divLocation.classList.add('containerLocationLog')
     spanLocation.classList.add('lcoationLog')
-    
+
     // Conteudo do log
     imgProfile.src = log.foto_perfil;
     spanName.textContent = log.apelido;
@@ -90,8 +90,9 @@ function createLogs(log) {
     numberFav.textContent = log.favoritos;
 
     // Local precisa de uma tratativa
-    
-    const localJson =  log.log[0].local[0];
+
+    const localJson = log.log[0].local[0];
+    console.log(localJson)
 
     const parts = [
         localJson.nome_local,
@@ -101,11 +102,9 @@ function createLogs(log) {
     ].filter(part => part); // remove null, undefined ou string vazia
     const locationString = parts.join(' - ');
 
-    console.log(localJson),
-    console.log(locationString),
     spanLocation.textContent = locationString
 
-    
+
     headerLog.append(divProfile, spanName)
     divProfile.appendChild(imgProfile)
     backImg.append(divArrow1, divArrow2, imgLog)
@@ -117,7 +116,7 @@ function createLogs(log) {
     divLocation.append(imgLocation, spanLocation)
     logDiv.append(headerLog, backImg, footerLog)
 
-    
+
     containerLogs.appendChild(logDiv)
 
 
@@ -125,9 +124,9 @@ function createLogs(log) {
     // if (log.midia.length == 0) {
     //     divArrow1.classList.add('hiddeArrowImg')
     //     divArrow2.classList.add('hiddeArrowImg')
-        
+
     // }
-    
+
 }
 
 //Altera a imagem do log para a esquerda
@@ -192,31 +191,53 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 
 //Cria e adiciona os seguidores
 function createFollower(follower) {
-    const containerFollower = document.querySelector('containerFollowerList')
-    const containerFollowerMobile = document.getElementById('resultFollower')
-
+    console.log('seguidor')
+    console.log(follower)
+    const containerFollower = document.getElementById('containerFollowerList')
+    
     let divFollower = document.createElement('div')
     let divProfile = document.createElement('div')
     let imgProfile = document.createElement('img')
     let spanName = document.createElement('span')
-
+    
+    
+    spanName.classList.add('nameFollower')
     divFollower.classList.add('follower')
     divProfile.classList.add('profileFollower')
-
+    
     divFollower.append(divProfile, spanName)
     divProfile.appendChild(imgProfile)
+    
+    spanName.textContent = `@${follower.apelido}`
+    imgProfile.src = follower.foto_perfil
+    
+    
     containerFollower.appendChild(divFollower)
-
+    
+    const containerFollowerMobile = document.getElementById('resultFollower')
     let divFollowerMob = document.createElement('div')
     let divProfileMob = document.createElement('div')
     let imgProfileMob = document.createElement('img')
     let spanNameMob = document.createElement('span')
 
     divFollowerMob.classList.add('follower')
+    spanNameMob.classList.add('nameFollower')
     divProfileMob.classList.add('profileFollower')
+
+    spanNameMob.textContent =`@${follower.apelido}`
+    imgProfileMob.src = follower.foto_perfil
 
     divFollowerMob.append(divProfileMob, spanNameMob)
     divProfileMob.appendChild(imgProfileMob)
+
+    if (follower.id){
+        divFollower.addEventListener('click', () => loadProfile(follower.id))
+    }
+    else{
+        divFollower.addEventListener('click', () => loadProfile(follower.seguido_id))
+    }
+
+
     containerFollowerMobile.appendChild(divFollowerMob)
 
 }
@@ -697,18 +718,18 @@ liListTravelNewLog.forEach(li => {
 
 //Fecha alguns icones clicando no corpo do web-site
 document.addEventListener('click', () => {
-    if (!inputDateContainer.contains(event.target)) {
-        const inputDate = document.querySelectorAll('.filterDate')
-        const spanContainer = document.querySelector('.containerFilterDate span')
+    // if (!inputDateContainer.contains(event.target)) {
+    //     const inputDate = document.querySelectorAll('.filterDate')
+    //     const spanContainer = document.querySelector('.containerFilterDate span')
 
-        spanContainer.innerHTML = 'Data'
-        inputDateContainer.classList.remove('expandFilterDate')
+    //     spanContainer.innerHTML = 'Data'
+    //     inputDateContainer.classList.remove('expandFilterDate')
 
-        for (let i = 0; i < inputDate.length; i++) {
-            inputDate[i].classList.remove('showFilterDate')
+    //     for (let i = 0; i < inputDate.length; i++) {
+    //         inputDate[i].classList.remove('showFilterDate')
 
-        }
-    }
+    //     }
+    // }
 
     if (!inputLocationFilter.contains(event.target)) {
         inputLocationFilter.classList.remove('expandFilterLocation')
@@ -717,7 +738,7 @@ document.addEventListener('click', () => {
 })
 
 
-async function uploadImageLog () {
+async function uploadImageLog() {
     const uploadParams = {
         storageAccount: "travellog",
         containerName: "logs",
@@ -727,74 +748,94 @@ async function uploadImageLog () {
 
     const midia = await uploadImageToAzure(uploadParams)
 
+    console.log(JSON.stringify(midia))
+
 }
 
-function preview ({target}) {
+function preview({ target }) {
 
     let blob = URL.createObjectURL(target.files[0])
 
 }
 
 document.getElementById("selectImgInput")
-        .addEventListener('change', preview)
+    .addEventListener('change', preview)
 
-document.getElementById("saveLog")
-        .addEventListener("click", uploadImageLog)
+const btnSaveLog = document.getElementById('saveLog')
+btnSaveLog.addEventListener("click", postLog)
 
-async function init() {
-		
-		//Pega a input do HTML
-        const localizacao = document.getElementById("locationNewLogInput")
+    // .addEventListener("click", uploadImageLog)
 
-		//Inicializa uma nova instância do widget de auto-complete.
-        let autoComplete = new google.maps.places.Autocomplete(localizacao, {
 
-		// Não definimos nenhum valor para o campo types, para ser possível
-		//buscar estabelecimentos
+//Google api
+// window.init = async function init() {
 
-        fields: [ "name", "address_components", "geometry" ],
-        types: [ "establishment", "geocode" ]
+//     //Pega a input do HTML
+//     const localizacao = document.getElementById("locationNewLogInput")
 
-    })
+//     //Inicializa uma nova instância do widget de auto-complete.
+//     let autoComplete = new google.maps.places.Autocomplete(localizacao, {
 
-    let localObject = []
+//         // Não definimos nenhum valor para o campo types, para ser possível
+//         //buscar estabelecimentos
 
-    autoComplete.addListener('place_changed', async () => {
-        let place = autoComplete.getPlace()
+//         fields: ["name", "address_components", "geometry"],
+//         types: ["establishment", "geocode"]
 
-        localObject.push({local_nome: place.name})
+//     })
 
-        let componentsAdress = place.address_components
+//     let localObject = []
 
-        for (let components of componentsAdress) {
-            
-            if (components.types[0] == 'country') {
-                localObject.push({pais: components.long_name})
-            } else if (components.types[0] == 'administrative_area_level_1') {
-                localObject.push({estado: components.long_name})
-            } else if (components.types[0] == 'administrative_area_level_2') {
-                localObject.push({cidade: components.long_name})
-            } else if (components.types[0] == 'sublocality') {
-                localObject.push({cidade: components.long_name})
-            } else if (components.types[0] == 'locality') {
-                localObject.push({cidade: components.long_name})
-            }
+//     autoComplete.addListener('place_changed', async () => {
+//         let place = autoComplete.getPlace()
 
-        }
+//         localObject.push({ local_nome: place.name })
 
-        localObject = []
+//         let componentsAdress = place.address_components
 
-    })
+//         for (let components of componentsAdress) {
 
+//             if (components.types[0] == 'country') {
+//                 localObject.push({ pais: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_1') {
+//                 localObject.push({ estado: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_2') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'sublocality') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'locality') {
+//                 localObject.push({ cidade: components.long_name })
+//             }
+
+//         }
+
+//         console.log(localObject)
+
+//         localObject = []
+
+//     })
+
+// }
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Requisições)
+// ----------------------------------------------------------
+
+async function getFollowingList(id){
+    const endPoint = `http://localhost:8080/v1/travellog/following/${id}`
+    const response = await fetch(endPoint)
+    const data = await response.json();
+    return data
 }
 
-init()
+async function getToFollowList(){
+    const endPoint = `http://localhost:8080/v1/travellog/user/`
+    const response = await fetch(endPoint)
+    const data = await response.json();
+    return data
+}
 
-// ----------------------------------------------------------
-//              MÉTODOS DE INTEGRAÇÃO
-// ----------------------------------------------------------
-
-async function getHomeContent(id, inputFilters){
+async function getHomeContent(id, inputFilters) {
     const params = new URLSearchParams(inputFilters)
     const endPoint = `http://localhost:8080/v1/travellog/log/following/${id}?${params.toString()}`
     const response = await fetch(endPoint)
@@ -802,14 +843,8 @@ async function getHomeContent(id, inputFilters){
     return data
 }
 
-// carregando conteúdo da home
-async function loadHomeContent(id, inputFilters){
-    const homeLogs = await getHomeContent(id, inputFilters)
 
-    homeLogs.items.logs.forEach(createLogs)
-}
-
-async function getExploreContent(id, inputFilters){
+async function getExploreContent(id, inputFilters) {
     const params = new URLSearchParams(inputFilters)
     const endPoint = `http://localhost:8080/v1/travellog/log/explore/${id}?${params.toString()}`
     const response = await fetch(endPoint)
@@ -817,21 +852,124 @@ async function getExploreContent(id, inputFilters){
     return data
 }
 
+async function getUserTravels(){
+    const endPoint = `http://localhost:8080/v1/travellog/user/${userId}`
+    const response = await fetch(endPoint)
+    const data = await response.json()
+    return data
+}
 
-async function loadExploreContent(id, inputFilters){
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Carregamento)
+// ----------------------------------------------------------
+
+function initExplorar(){
+    const btnExplorar = document.getElementById('mobLikes');
+    btnExplorar.addEventListener('click',() => loadExploreContent(userId))
+}
+
+
+//Para carregar a lista de perfis seguindo
+async function loadFollowingTab(id){
+    
+    let containerFollower = document.getElementById('containerFollowerList')
+    
+    
+    clearChildren(containerFollower)
+    
+    const followingList = await getFollowingList(id)
+    console.log(followingList)
+    if (followingList.status_code == 404){
+        loadToFollowTab(containerLogs)
+    }
+    else{
+        console.log('valido')
+        console.log(followingList.items.seguindo)
+        followingList.items.seguindo.forEach(createFollower)
+    }
+    // followingList.items.seguindo.forEach(createFollower)
+}
+
+// Para carregar todos os usuarios, é o discover de perfis
+async function loadToFollowTab(containerLogs){
+    
+    const toFollowList = await getToFollowList()
+    console.log(toFollowList)
+    const searchInput = document.getElementById('inputFollowerDesk')
+    searchInput.placeholder = "Usuários"
+    toFollowList.items.usuario.forEach(createFollower)
+    
+}
+
+// carregando conteúdo da home
+async function loadHomeContent(id, inputFilters) {
+    clearChildren(containerLogs)
+    
+    const homeLogs = await getHomeContent(id, inputFilters)
+    
+    if (homeLogs.status_code == 404){
+        loadEmptyHome(containerLogs)
+    }
+    else{
+        homeLogs.items.logs.forEach(createLogs)
+    }
+}
+
+function loadEmptyHome(){
+    let emptyText = document.createElement('h2')
+    emptyText.textContent = `"Opa! Nenhum conteúdo dos perfis que você segue, experimente a aba "Explorar"`
+    
+    containerLogs.appendChild(emptyText)
+}
+
+async function loadExploreContent(id, inputFilters) {
+    clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
-
     exploreLogs.items.logs.forEach(createLogs);
 }
-// -------------------------------------
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Funções tratativas)
+// ----------------------------------------------------------
+
+function clearChildren(container){
+    while (container.firstChild){
+        container.removeChild(container.firstChild)
+    }
+}
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Para abrir outra página)
+// ----------------------------------------------------------
+function loadProfile(perfil_id){
+    localStorage.setItem('perfilId', perfil_id)
+    window.location.href = `profile.html`
+
+}
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Para postagem)
+// ----------------------------------------------------------
+async function postLog(){
+    const inputDescription = document.getElementById('descriptionNewLog')
+    const dadosViagem = getUserTravels()
+    const locationInput = document.getElementById('locationNewLogInput')
+    
+    const descricao = inputDescription.value
+    const viagem_id = dadosViagem.items.viagens[0].id_viagem
+
+    // const stringLocal = 
+
+    //TODO: Por enquanto ele só pega a primeira viagem do usuário, implementar depois a escolha
 
 
-
+    
+}
 
 // ----------------------------------------------------------
 //              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO
 // ----------------------------------------------------------
-
-// TODO: Incluir no carregamento da página e todas as vezes que chamar atualizações do conteúdo o id da sessão do usuario
-// loadHomeContent()
-// loadExploreContent(1, {})
+const userId = localStorage.getItem('userId')
+initExplorar()
+loadHomeContent(userId)
+loadFollowingTab(userId)

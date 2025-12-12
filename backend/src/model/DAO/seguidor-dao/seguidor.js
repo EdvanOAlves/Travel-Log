@@ -138,7 +138,7 @@ const setDeleteFollower = async (follow) => {
 
     try {
 
-        sql = `CALL RemoverRelacaoSeguidores(${follow.usuario_id}, ${follow.seguidor_id})`
+        sql = `CALL RemoverRelacaoSeguidor(${follow.usuario_id}, ${follow.seguidor_id})`
             
         result = await prisma.$executeRawUnsafe(sql)   
         

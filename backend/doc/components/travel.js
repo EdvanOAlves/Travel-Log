@@ -110,5 +110,31 @@ module.exports = {
                 $ref: "#/components/schemas/travelGetLog"
             }
         }
+    },
+
+    travelAlias: {
+        type: 'object',
+        properties: {
+            "viagem_id": {
+                "type": "int",
+                "description": "id",
+                "example": 1
+            },
+            "titulo": {
+                "type": "string",
+                "description": "titulo",
+                "example": "Férias bem legais!!!"
+            },
+            "tipo_viagem_id": {
+                "type": "int",
+                "description": "tipo_viagem_id",
+                "example": "Férias bem legais!!!"
+            },
+            "tipo_viagem": {
+                "type": "string",
+                "description": "titulo",
+                "example": "Férias"
+            }
+        }
     }
 }

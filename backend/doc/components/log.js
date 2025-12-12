@@ -1,8 +1,10 @@
+const local = require("./local");
+
 module.exports = {
     log: {
         type: 'object',
         properties: {
-            "id": {
+            "log_id": {
                 "type": "int",
                 "description": "id",
                 "example": 1
@@ -12,7 +14,7 @@ module.exports = {
                 "description": "description",
                 "example": "Férias nas maldivas, com minha linda companheira no ano de 2025."
             },
-            "data": {
+            "data_postagem": {
                 "type": "string",
                 "description": "data_inicio",
                 "example": "2025-10-24"
@@ -22,16 +24,67 @@ module.exports = {
                 "description": "curtidas",
                 "example": 0
             },
-            "favoritados": {
+            "favoritos": {
                 "type": "int",
-                "description": "favoritados",
+                "description": "favoritos",
                 "example": 0
             },
-            "viagem": {
-                $ref: "#/components/schemas/travel"
-            },
             "local": {
-                $ref: "#/components/schemas/local"
+                "type": "array",
+                "items": {
+                    $ref: '#/components/schemas/local'
+                }
+            },
+            "midias": {
+                "type": "array",
+                "items": {
+                    $ref: '#/components/schemas/midia'
+                }
+            }
+            
+        }
+    },
+
+    logExplore: {
+        type: "object",
+        properties:{
+
+            "usuario_id": {
+                "type": "int",
+                "description": "usuario_id",
+                "example": 1
+            },
+            "apelido": {
+                "type": "string",
+                "description": "apelido",
+                "example": "lacerda"
+            },
+            "foto_perfil": {
+                "type": "string",
+                "description": "apelido",
+                "example": "http://storage.photo"
+            },
+            "log": {
+                "type": "array",
+                "items": {
+                    $ref: "#/components/schemas/log"
+                }
+            },
+            "viagem": {
+                "type": "array",
+                "items": {
+                    $ref: "#/components/schemas/travelAlias"
+                }
+            },
+            "curtido": {
+                "type": "boolean",
+                "description": "curtido",
+                "example": false
+            },
+            "favoritado": {
+                "type": "boolean",
+                "description": "favoritado",
+                "example": false
             }
         }
     },
@@ -41,18 +94,44 @@ module.exports = {
         properties: {
             "descricao": {
                 "type": "string",
-                "description": "description",
+                "description": "descricao",
                 "example": "Férias nas maldivas, com minha linda companheira no ano de 2025."
             },
-            "id_collection": {
+            "viagem_id": {
                 "type": "int",
-                "description": "collection",
+                "description": "viagem_id",
                 "example": 1
             },
-            "id_local": {
-                "type": "int",
-                "description": "local",
-                "example": 1
+            "visivel": {
+                "type": "boolean",
+                "description": "visivel",
+                "example": true
+            },
+            "nome_pais": {
+                "type": "string",
+                "description": "nome_pais",
+                "example": "Brasil"
+            },
+            "estado": {
+                "type": "string",
+                "description": "estado",
+                "example": "São Paulo"
+            },
+            "cidade": {
+                "type": "string",
+                "description": "cidade",
+                "example": "Jandira"
+            },
+            "nome_local": {
+                "type": "string",
+                "description": "nome_local",
+                "example": "Jandira Plaza Shopping"
+            },
+            "midias": {
+                "type": "array",
+                "items": {
+                    $ref: '#/components/schemas/midiaCreate'
+                }
             }
         }
     },
@@ -91,5 +170,42 @@ module.exports = {
             }
         }
 
+    },
+
+    logInsert: {
+        "type": 'object',
+        properties: {
+            "log_id": {
+                "type": "int",
+                "description": "id",
+                "example": 1
+            },
+            "descricao": {
+                "type": "string",
+                "description": "description",
+                "example": "Férias nas maldivas, com minha linda companheira no ano de 2025."
+            },
+            "data_postagem": {
+                "type": "string",
+                "description": "data_inicio",
+                "example": "2025-10-24"
+            },
+            "curtidas": {
+                "type": "int",
+                "description": "curtidas",
+                "example": 0
+            },
+            "favoritos": {
+                "type": "int",
+                "description": "favoritos",
+                "example": 0
+            },
+             "midias": {
+                "type": "array",
+                "items": {
+                    $ref: '#/components/schemas/midia'
+                }
+            }
+        }
     }
 }

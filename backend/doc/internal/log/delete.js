@@ -2,7 +2,7 @@ module.exports = {
     delete: {
         tags: ["EndPoints [POST]"],
         description: 'Deleta um post do usuário',
-        operationId: 'deletarPost(id)',
+        operationId: 'deletarLog',
         parameters: [{
             name: "id",
             in: "path",
