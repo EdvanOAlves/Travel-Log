@@ -7,19 +7,19 @@ module.exports = {
                 "description": "id",
                 "example": 1
             },
-            "nome": {
+            "nome_local": {
                 "type": "string",
                 "description": "nome",
                 "example": "Masjid Al-Sultan Muhammad Thakurufaanu Al-Auzam"
             },
-            "estado": {
-                "type": "string",
-                "description": "estado",
-                "example": "Malé"
-            },
             "cidade": {
                 "type": "string",
                 "description": "cidade",
+                "example": "Malé"
+            },
+            "estado": {
+                "type": "string",
+                "description": "estado",
                 "example": "Malé"
             },
             "pais": {

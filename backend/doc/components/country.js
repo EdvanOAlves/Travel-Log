@@ -10,7 +10,7 @@ module.exports = {
             "nome": {
                 "type": "string",
                 "description": "nome",
-                "example": "Brasil"
+                "example": "Maldivas"
             }
         }
     },

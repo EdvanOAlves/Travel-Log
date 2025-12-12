@@ -168,20 +168,10 @@ module.exports = {
                 "description": "id",
                 "example": 1
             },
-            "nome": {
-                "type": "string",
-                "description": "name",
-                "example": "Mercury"
-            },
-            "usuario": {
+            "apelido": {
                 "type": "string",
                 "description": "user",
                 "example": "mercury.cxs"
-            },
-            "email": {
-                "type": "string",
-                "description": "email",
-                "example": "mercury@email.com"
             },
             "foto_perfil": {
                 "type": "string",

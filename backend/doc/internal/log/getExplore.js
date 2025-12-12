@@ -1,8 +1,8 @@
 module.exports = {
     get: {
         tags: ["EndPoints [POST]"],
-        description: 'Retorna um post do sistema pelo id.',
-        operationId: 'listarPostId(id)',
+        description: 'Retorna posts para o feed de recentes do usuário pelo id',
+        operationId: 'buscarLogsRecentes',
         parameters: [{
             name: "id",
             in: "path",
@@ -19,7 +19,7 @@ module.exports = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/log"
+                            $ref: "#/components/schemas/logExplore"
                         }
                     }
                 }
