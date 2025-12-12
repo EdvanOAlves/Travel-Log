@@ -495,18 +495,18 @@ const validarLog = (log) => {
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [PAÍS NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (log.estado == null || log.estado == undefined || log.estado == "" || typeof log.estado !== "string" || log.estado.length > 75) {
+    } else if ( log.estado.length > 75) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ESTADO NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (log.cidade == null || log.cidade == undefined || log.cidade == "" || typeof log.cidade !== "string" || log.cidade.length > 75) {
+    } else if ( log.cidade.length > 75) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [CIDADE NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
 
-    } else if (log.nome_local == null || log.nome_local == undefined || log.nome_local == "" || typeof log.nome_local !== "string" || log.nome_local.length > 255) {
+    } else if ( log.nome_local.length > 255) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [NOME LOCAL INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS

@@ -754,61 +754,61 @@ function preview({ target }) {
 document.getElementById("selectImgInput")
     .addEventListener('change', preview)
 
-document.getElementById("saveLog")
-    .addEventListener("click", uploadImageLog)
+const btnSaveLog = document.getElementById('saveLog')
+btnSaveLog.addEventListener("click", postLog)
+
+    // .addEventListener("click", uploadImageLog)
 
 
 //Google api
-init()
+// window.init = async function init() {
 
-async function init() {
+//     //Pega a input do HTML
+//     const localizacao = document.getElementById("locationNewLogInput")
 
-    //Pega a input do HTML
-    const localizacao = document.getElementById("locationNewLogInput")
+//     //Inicializa uma nova instância do widget de auto-complete.
+//     let autoComplete = new google.maps.places.Autocomplete(localizacao, {
 
-    //Inicializa uma nova instância do widget de auto-complete.
-    let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+//         // Não definimos nenhum valor para o campo types, para ser possível
+//         //buscar estabelecimentos
 
-        // Não definimos nenhum valor para o campo types, para ser possível
-        //buscar estabelecimentos
+//         fields: ["name", "address_components", "geometry"],
+//         types: ["establishment", "geocode"]
 
-        fields: ["name", "address_components", "geometry"],
-        types: ["establishment", "geocode"]
+//     })
 
-    })
+//     let localObject = []
 
-    let localObject = []
+//     autoComplete.addListener('place_changed', async () => {
+//         let place = autoComplete.getPlace()
 
-    autoComplete.addListener('place_changed', async () => {
-        let place = autoComplete.getPlace()
+//         localObject.push({ local_nome: place.name })
 
-        localObject.push({ local_nome: place.name })
+//         let componentsAdress = place.address_components
 
-        let componentsAdress = place.address_components
+//         for (let components of componentsAdress) {
 
-        for (let components of componentsAdress) {
+//             if (components.types[0] == 'country') {
+//                 localObject.push({ pais: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_1') {
+//                 localObject.push({ estado: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_2') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'sublocality') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'locality') {
+//                 localObject.push({ cidade: components.long_name })
+//             }
 
-            if (components.types[0] == 'country') {
-                localObject.push({ pais: components.long_name })
-            } else if (components.types[0] == 'administrative_area_level_1') {
-                localObject.push({ estado: components.long_name })
-            } else if (components.types[0] == 'administrative_area_level_2') {
-                localObject.push({ cidade: components.long_name })
-            } else if (components.types[0] == 'sublocality') {
-                localObject.push({ cidade: components.long_name })
-            } else if (components.types[0] == 'locality') {
-                localObject.push({ cidade: components.long_name })
-            }
+//         }
 
-        }
+//         console.log(localObject)
 
-        console.log(localObject)
+//         localObject = []
 
-        localObject = []
+//     })
 
-    })
-
-}
+// }
 
 // ----------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO (Requisições)
@@ -842,6 +842,13 @@ async function getExploreContent(id, inputFilters) {
     const endPoint = `http://localhost:8080/v1/travellog/log/explore/${id}?${params.toString()}`
     const response = await fetch(endPoint)
     const data = await response.json();
+    return data
+}
+
+async function getUserTravels(){
+    const endPoint = `http://localhost:8080/v1/travellog/user/${userId}`
+    const response = await fetch(endPoint)
+    const data = await response.json()
     return data
 }
 
@@ -933,7 +940,24 @@ function loadProfile(perfil_id){
     window.location.href = `profile.html`
 
 }
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Para postagem)
+// ----------------------------------------------------------
+async function postLog(){
+    const inputDescription = document.getElementById('descriptionNewLog')
+    const dadosViagem = getUserTravels()
+    const locationInput = document.getElementById('locationNewLogInput')
+    
+    const descricao = inputDescription.value
+    const viagem_id = dadosViagem.items.viagens[0].id_viagem
 
+    // const stringLocal = 
+
+    //TODO: Por enquanto ele só pega a primeira viagem do usuário, implementar depois a escolha
+
+
+    
+}
 
 // ----------------------------------------------------------
 //              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO

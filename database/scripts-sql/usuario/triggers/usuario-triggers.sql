@@ -35,6 +35,13 @@ CREATE TRIGGER trg_desativa_comentarios_usuario
         WHERE usuario_id = OLD.id;
 	END $$
 
-CREATE TRIGGER trg_remover_
+CREATE TRIGGER tgr_cria_viagem_default_usuario
+	AFTER INSERT ON tbl_usuario
+    FOR EACH ROW
+    BEGIN
+    INSERT INTO tbl_viagem(titulo, data_inicio, usuario_id, tipo_viagem_id)
+    VALUES('Férias Bem Legais', CURRENT_DATE(), NEW.id, 4);
+END $$
+select * from tbl_tipo_viagem$$
 
 DELIMITER ;
