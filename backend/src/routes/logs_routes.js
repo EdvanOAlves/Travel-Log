@@ -73,11 +73,11 @@ router.post('/log/', cors(), bodyParserJSON, async (req, res) => {
 })
 
 //Atualiza log
-router.put('/log/', cors(), bodyParserJSON, async (req, res) => {
+router.put('/log/:id', cors(), bodyParserJSON, async (req, res) => {
 
     const contentType = req.headers['content-type']
     const dadosBody   = req.body
-    const log_id      = Number(req.query.log_id)
+    const log_id      = req.params.id
 
     const log = await controllerLog.atualizaLog(log_id, dadosBody, contentType)
 
@@ -87,11 +87,11 @@ router.put('/log/', cors(), bodyParserJSON, async (req, res) => {
 })
 
 //Deleta log
-router.delete('/log/', cors(), bodyParserJSON, async (req, res) => {
+router.delete('/log/:id', cors(), bodyParserJSON, async (req, res) => {
 
-    const log_id = req.query.log_id
+    const id = req.params.id
 
-    const log = await controllerLog.deletaLog(log_id)
+    const log = await controllerLog.deletaLog(id)
 
     res.status(log.status_code)
     res.json(log)
