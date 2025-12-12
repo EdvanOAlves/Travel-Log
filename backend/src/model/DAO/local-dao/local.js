@@ -124,9 +124,31 @@ const setInsertLocal = async (local) => {
 
 }
 
+//Retorna o último local registrado
+const getSelectLastLocal = async () => {
+
+    try {
+    
+        sql = `select * from tbl_local order by id desc limit 1`
+
+        result = await prisma.$executeRawUnsafe(sql)
+
+        if (result) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 
 module.exports = {
     getSelectLocationsByUserId,
     getSelectCountriesByUserId,
+    getSelectLastLocal,
     setInsertLocal
 }
