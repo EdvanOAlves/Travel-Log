@@ -11,6 +11,8 @@ const logDAO = require("../../model/DAO/log-dao/log.js")
 
 // Importa controller de midia para fazer inserção das imagens do log no banco de dados
 const controllerMidia = require("../midia/controller_midia.js")
+const controllerLocal = require("../local/controller_local.js")
+const controllerPais  = require("../pais/controller_pais.js")
 
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
@@ -287,46 +289,66 @@ const insereLog = async (log, contentType) => {
 
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
+            resultPais = await controllerPais.buscarPaisNome(log.nome_pais)
+            paisId = resultPais.items.pais[0].id
+
+            local = {
+                
+                nome_local: `${log.nome_local}`,
+                estado: `${log.estado}`,
+                cidade: `${log.cidade}`,
+                pais_id: paisId
+
+            }
+
+            resultLocal = await controllerLocal.insereLocal(local, contentType)
+            idLocal = resultLocal.items.local[0].id
+
             validar = validarLog(log)
 
             if (!validar) {
 
-                resultLog = await logDAO.setInsertLog(log)
+                logInsert = {
+                    descricao: `${log.descricao}`,
+                    viagem_id: log.viagem_id,
+                    local_id: idLocal
+                }
+
+                resultLog = await logDAO.setInsertLog(logInsert)
 
                 if (resultLog) {
 
-                    logRegistrado = await logDAO.getSelectLastLog()
-
                     midias = log.midias
+
+                    logRegistrado = await logDAO.getSelectLastLog()
+                    idLog = logRegistrado[0].id
+
+                    arrayMidias = []
 
                     for (midia of midias) {
                         
-                        log = logRegistrado[0]
-                        
-                        midiaObject = { link: midia.link, log_id: log.id }
+                        midiaObject = {
 
-                        resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
-
-                        if (resultMidia.status_code != 201) {
-
-                            MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
-                            return MESSAGES.ERROR_RELATINAL_INSERTION
+                            log_id: idLog,
+                            link: midia.link
 
                         }
 
+                        resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
+                        midia = resultMidia.items.midia[0]
+                        arrayMidias.push(midia)
+
                     }
 
-                    midiasCriadas = await controllerMidia.listarMidiasLogId(logRegistrado[0].id)
-                    
-                    
-                    logRegistrado[0].midias = midiasCriadas.items
+                    logRegistrado[0].midias = arrayMidias
 
                     delete MESSAGES.DEFAULT_HEADER.items.midia
-                    delete MESSAGES.DEFAULT_HEADER.items.midias
 
-                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code
-                    MESSAGES.DEFAULT_HEADER.items.log = logRegistrado
+                    MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_CREATED_ITEM.message
+                    MESSAGES.DEFAULT_HEADER.items.log       = logRegistrado
+
 
                     return MESSAGES.DEFAULT_HEADER //200
 

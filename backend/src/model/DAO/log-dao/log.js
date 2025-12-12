@@ -341,17 +341,33 @@ const setInsertLog = async (log) => {
 
     try {
 
-        sql = `CALL PublicarLog(
-        '${log.descricao}',
-        ${log.viagem_id},
-        ${log.visivel},
-        '${log.nome_pais}',
-        '${log.estado}',
-        '${log.cidade}',
-        '${log.nome_local}'
-    )`
+        sql = `
+            INSERT INTO tbl_log (
+                descricao,
+                data_publicacao,
+                contagem_curtidas,
+                contagem_favoritos,
+                visivel,
+                viagem_id,
+                local_id
+            ) VALUES (
+             
+                '${log.descricao}',
+                curdate(),
+                0,
+                0,
+                true,
+                ${log.viagem_id},
+                ${log.local_id}
 
-        result = await prisma.$executeRawUnsafe(sql)
+            )
+        `
+
+        try {
+            result = await prisma.$executeRawUnsafe(sql)
+        } catch (error) {
+            console.log(error)
+        }
 
         if (result) {
             return result;

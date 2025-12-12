@@ -83,8 +83,74 @@ const buscarPaisesVisitadosUsuarioId = async (user_id) => {
     }
 }
 
+const insereLocal = async (local, contentType) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        
+        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
+
+            validar = validaLocal(local)
+
+            if(!validar) {
+
+                resultLocal = await localDAO.setInsertLocal(local)
+                
+                if(resultLocal) {
+
+                    lastLocal = await localDAO.getSelectLastLocal()
+
+                    MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_CREATED_ITEM.status
+                    MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_CREATED_ITEM.message
+                    MESSAGES.DEFAULT_HEADER.items.local     = lastLocal
+
+                    return MESSAGES.DEFAULT_HEADER //201
+
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+
+            } else {
+                return validar //400
+            }
+
+        } else {
+            return MESSAGES.ERROR_CONTENT_TYPE //415
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+
+}
+
+const validaLocal = (local) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    if (local.nome_local == null || !isNaN(local.nome_local) || local.nome_local == "" || local.nome_local == undefined) {
+        MESSAGES.ERROR_REQUIRED_FIELDS += ' [NOME LOCAL INVALIDO]'
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+    } else if (local.estado == null || !isNaN(local.estado) || local.estado == "" || local.estado == undefined) {
+        MESSAGES.ERROR_REQUIRED_FIELDS += ' [ESTADO INVALIDO]'
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+    } else if (local.cidade == null || !isNaN(local.cidade) || local.cidade == "" || local.cidade == undefined) {
+        MESSAGES.ERROR_REQUIRED_FIELDS += ' [CIDADE INVALIDO]'
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+    } else if(isNaN(local.pais_id) || local.pais_id == "" || local.pais_id == undefined || local.pais_id == null) {
+        MESSAGES.ERROR_REQUIRED_FIELDS += ' [PAIS ID INVALIDO]'
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+    } else {
+        return false 
+    }
+
+}
+
 
 module.exports = {
     buscarLocaisVisitadosUsuarioId,
-    buscarPaisesVisitadosUsuarioId
+    buscarPaisesVisitadosUsuarioId,
+    insereLocal
 }

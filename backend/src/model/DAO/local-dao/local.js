@@ -87,8 +87,64 @@ const getSelectCountriesByUserId = async (user_id) => {
 
 }
 
+//Insere local no banco 
+const setInsertLocal = async (local) => {
+
+    try {
+        
+        sql = `
+            INSERT INTO tbl_local (
+                nome,
+                estado,
+                cidade,
+                pais_id
+            ) VALUES (
+                '${local.nome_local}',
+                '${local.estado}',
+                '${local.cidade}',
+                ${local.pais_id}
+            )
+        `
+
+        result = await prisma.$executeRawUnsafe(sql)
+        
+        if(result) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+//Retorna o último local registrado
+const getSelectLastLocal = async () => {
+
+    try {
+    
+        sql = `select * from tbl_local order by id desc limit 1`
+
+        result = await prisma.$queryRawUnsafe(sql)
+
+        if (Array.isArray(result)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 
 module.exports = {
     getSelectLocationsByUserId,
-    getSelectCountriesByUserId
+    getSelectCountriesByUserId,
+    getSelectLastLocal,
+    setInsertLocal
 }
