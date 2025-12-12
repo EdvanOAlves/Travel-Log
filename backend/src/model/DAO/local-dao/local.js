@@ -87,8 +87,46 @@ const getSelectCountriesByUserId = async (user_id) => {
 
 }
 
+//Insere local no banco 
+const setInsertLocal = async (local) => {
+
+    try {
+        
+        sql = `
+            INSERT INTO tbl_local (
+                nome,
+                estado,
+                cidade,
+                pais_id
+            ) VALUES (
+                '${local.nome_local}',
+                '${local.estado}',
+                '${local.cidade}',
+                ${pais_id}
+            )
+        `
+
+        result = await prisma.$executeRawUnsafe(sql)
+
+        if(result) {
+
+            return result
+
+        } else {
+
+            return false
+
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 
 module.exports = {
     getSelectLocationsByUserId,
-    getSelectCountriesByUserId
+    getSelectCountriesByUserId,
+    setInsertLocal
 }
