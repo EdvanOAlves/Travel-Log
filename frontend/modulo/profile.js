@@ -212,6 +212,7 @@ function createLogsTravel(log, id_viagem) {
 
 //Cria viagens
 function createTravel(travel) {
+    console.log(travel)
     const containerTravel = document.getElementById('container-de-viagens')
     let divTravel = document.createElement('div')
     let img = document.createElement('img')
