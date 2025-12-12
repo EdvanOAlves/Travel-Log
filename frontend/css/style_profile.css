@@ -45,6 +45,10 @@ html {
     overflow: hidden;
 }
 
+.display-none{
+    display: none;
+}
+
 /* Estilização para barra de rolagem */
 ::-webkit-scrollbar {
     width: 5px;

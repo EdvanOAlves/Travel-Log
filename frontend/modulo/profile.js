@@ -240,6 +240,12 @@ function setDataUser(user) {
 
 function loadVisitorContent(user) {
     const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
+    const newLog = document.querySelector('.logCreator')
+
+    console.log('inferno')
+    newLog.classList.add('display-none')
+
+    
 
     let containerFollowerUser = document.querySelector('.containerFollowerUser')
     const btnFollow = document.getElementById('followUser')
@@ -1128,10 +1134,12 @@ document.addEventListener('click', () => {
 // INTEGRAÇÃO
 async function getAllDatasProfile(inputFilters) {
     const params = new URLSearchParams(inputFilters)
+    console.log(userId, perfilId)
     let url = `http://localhost:8080/v1/travellog/user/profile/${userId}?${params.toString()}&perfil_id=${perfilId}`
     let response = await fetch(url)
 
     let data = await response.json()
+    console.log('oopa')
     console.log(data.items)
     data_user = data.items
 
