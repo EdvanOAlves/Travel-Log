@@ -22,7 +22,6 @@ const listarMidiasLogId = async (log_id) => {
         if (!isNaN(log_id) && log_id != '' && log_id != null && log_id != undefined && log_id > 0) {
 
             resultMidia = await midiaDAO.getSelectMediasByLogId(log_id)
-
             if (resultMidia) {
 
                 if (resultMidia.length > 0) {

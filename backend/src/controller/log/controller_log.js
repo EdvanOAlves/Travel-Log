@@ -67,7 +67,6 @@ const buscarLogsFeed = async (usuario_id, input_filtros) => {
         }
 
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -93,7 +92,7 @@ const buscarLogId = async (log_id) => {
                         resultMidia = await controllerMidia.listarMidiasLogId(log_id)
 
                         if (resultMidia.status_code == 200) {
-                            midias = resultMidia.items.midia
+                            midias = resultMidia.items.midias
                             log.midias = midias
                             delete MESSAGES.DEFAULT_HEADER.items.midias
                         }
@@ -171,7 +170,6 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
         }
 
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -365,7 +363,6 @@ const insereLog = async (log, contentType) => {
         }
 
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -390,41 +387,30 @@ const atualizaLog = async (log_id, log, contentType) => {
 
                     resultLog = await logDAO.setUpdateLog(log_id, log)
 
+                    logAtualizado = await buscarLogId(log_id)
+                    midiasLog = logAtualizado.items.log[0].midias
+
+                    for (midia of midiasLog) {
+
+                        idMidia = midia.midia_id
+                        resultDeleteMidia = await controllerMidia.deletaMidia(idMidia)
+                        
+                    }
+
+                    midias = log.midias
+
+                    for (midia of midias) {
+                        
+                        midiaInsert = {
+                            link: `${midia.link}`,
+                            log_id: log_id
+                        }
+
+                        midiaResult = await controllerMidia.insereMidia(midiaInsert, contentType)
+
+                    }
+
                     if (resultLog) {
-
-                        midiaResult = await controllerMidia.listarMidiasLogId(log_id)
-                        midias = midiaResult.items.midias
-
-                        for (midia of midias) {
-
-                            idMidia = midia.midia_id
-
-                            deleteMidia = await controllerMidia.deletaMidia(idMidia)
-
-                            if (deleteMidia.status_code != 200) {
-                                MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
-                                return MESSAGES.ERROR_RELATINAL_INSERTION
-                            }
-
-                        }
-
-                        novasMidias = log.midias
-
-                        for (midia of novasMidias) {
-
-                            midiaObject = { link: midia.link, log_id: log_id }
-
-                            resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
-
-                            if (resultMidia.status_code != 201) {
-
-                                MESSAGES.ERROR_RELATINAL_INSERTION += ' [MIDIA]'
-                                return MESSAGES.ERROR_RELATINAL_INSERTION
-
-                            }
-
-                        }
-
 
                         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATE_ITEM.status
                         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATE_ITEM.status_code

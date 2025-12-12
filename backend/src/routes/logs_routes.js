@@ -77,7 +77,7 @@ router.put('/log/', cors(), bodyParserJSON, async (req, res) => {
 
     const contentType = req.headers['content-type']
     const dadosBody   = req.body
-    const log_id      = req.query.log_id
+    const log_id      = Number(req.query.log_id)
 
     const log = await controllerLog.atualizaLog(log_id, dadosBody, contentType)
 
