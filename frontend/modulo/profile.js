@@ -239,7 +239,7 @@ function setDataUser(user) {
 }
 
 function loadVisitorContent(user) {
-    const followBody = { usuario_id: perfilId, seguidor_id: userId }
+    const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
 
     let containerFollowerUser = document.querySelector('.containerFollowerUser')
     const btnFollow = document.getElementById('followUser')
@@ -289,16 +289,18 @@ function loadVisitorContent(user) {
     })
 }
 async function addFollow(followBody) {
-    console.log('me diz no que dá')
     console.log(followBody)
-    const result = await fetch('http://localhost:8080/v1/travellog/follow', {
-        method: 'POST',
+    let url = `http://localhost:8080/v1/travellog/follow/`
+
+    const options = {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "content-type": "application/json"
         },
         body: JSON.stringify(followBody)
-    })
-    console.log(result)
+    }
+    let response = await fetch(url, options)
+    console.log(response)
 }
 
 async function removeFollow(followBody) {
