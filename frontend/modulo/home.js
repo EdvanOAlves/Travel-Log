@@ -194,26 +194,26 @@ function createFollower(follower) {
     console.log('seguidor')
     console.log(follower)
     const containerFollower = document.getElementById('containerFollowerList')
-    
+
     let divFollower = document.createElement('div')
     let divProfile = document.createElement('div')
     let imgProfile = document.createElement('img')
     let spanName = document.createElement('span')
-    
-    
+
+
     spanName.classList.add('nameFollower')
     divFollower.classList.add('follower')
     divProfile.classList.add('profileFollower')
-    
+
     divFollower.append(divProfile, spanName)
     divProfile.appendChild(imgProfile)
-    
+
     spanName.textContent = `@${follower.apelido}`
     imgProfile.src = follower.foto_perfil
-    
-    
+
+
     containerFollower.appendChild(divFollower)
-    
+
     const containerFollowerMobile = document.getElementById('resultFollower')
     let divFollowerMob = document.createElement('div')
     let divProfileMob = document.createElement('div')
@@ -224,16 +224,16 @@ function createFollower(follower) {
     spanNameMob.classList.add('nameFollower')
     divProfileMob.classList.add('profileFollower')
 
-    spanNameMob.textContent =`@${follower.apelido}`
+    spanNameMob.textContent = `@${follower.apelido}`
     imgProfileMob.src = follower.foto_perfil
 
     divFollowerMob.append(divProfileMob, spanNameMob)
     divProfileMob.appendChild(imgProfileMob)
 
-    if (follower.id){
+    if (follower.id) {
         divFollower.addEventListener('click', () => loadProfile(follower.id))
     }
-    else{
+    else {
         divFollower.addEventListener('click', () => loadProfile(follower.seguido_id))
     }
 
@@ -316,11 +316,6 @@ function showNewLog() {
     newLog.classList.toggle('showModal')
 
     elementHigh = 'newLog'
-}
-
-//Direciona o usuário ao perfil clicado
-function goProfileUser(id_use) {
-    alert('Direcionamento para perfil')
 }
 
 //Valida a data dos inputs do filtro de data
@@ -580,16 +575,6 @@ newLogDesk.addEventListener('click', showNewLog)
 //Destaca a aba de criação de Log para mobile
 newPostMobile.addEventListener('click', showNewLog)
 
-//Icone do perfil do usuário e direcionamento para ele para desktop
-iconProfileUser.addEventListener('click', () => {
-    goProfileUser()
-})
-
-//Icone do perfil do usuário e direcionamento para ele para mobile
-iconProfileMobile.addEventListener('click', () => {
-    goProfileUser()
-})
-
 //Mostra lista de viagens do usuário
 arrowNewLog.addEventListener('click', () => {
     const listTravel = document.getElementById('listTravel')
@@ -679,20 +664,6 @@ favoriteLogFull.addEventListener('click', () => {
     }
 })
 
-//Direciona para o perfil do usuário clicado
-allFollower.forEach(follower => {
-    follower.addEventListener('click', () => {
-        goProfileUser()
-    })
-})
-
-//Direcionamento para o perfil do usuário clicado no Log
-profilesName.forEach(userLog => {
-    userLog.addEventListener('click', () => {
-        goProfileUser()
-    })
-})
-
 //Adiciona event para os LI de tipo de viagem para mobile
 liListTravelMob.forEach(li => {
     li.addEventListener('click', () => {
@@ -715,6 +686,23 @@ liListTravelNewLog.forEach(li => {
         setTravel(li)
     })
 })
+
+async function setDataProfile() {
+    const nameUserDesk = document.getElementById('nameUserDesk')
+    const profileIconDesk = document.getElementById('imgProfileDesk')
+    const profileIcon = document.getElementById('profileHeader')
+
+    profileIcon.addEventListener('click', () => {
+        loadProfile(userId)
+    })
+
+    let dataUser = await getUserData()
+
+    profileIcon.src = dataUser.items.foto_perfil
+    profileIconDesk.src = dataUser.items.foto_perfil
+    nameUserDesk.innerHTML = dataUser.items.usuario.apelido
+}
+
 
 //Fecha alguns icones clicando no corpo do web-site
 document.addEventListener('click', () => {
@@ -764,7 +752,7 @@ document.getElementById("selectImgInput")
 const btnSaveLog = document.getElementById('saveLog')
 btnSaveLog.addEventListener("click", postLog)
 
-    // .addEventListener("click", uploadImageLog)
+// .addEventListener("click", uploadImageLog)
 
 
 //Google api
@@ -821,14 +809,14 @@ btnSaveLog.addEventListener("click", postLog)
 //              MÉTODOS DE INTEGRAÇÃO (Requisições)
 // ----------------------------------------------------------
 
-async function getFollowingList(id){
+async function getFollowingList(id) {
     const endPoint = `http://localhost:8080/v1/travellog/following/${id}`
     const response = await fetch(endPoint)
     const data = await response.json();
     return data
 }
 
-async function getToFollowList(){
+async function getToFollowList() {
     const endPoint = `http://localhost:8080/v1/travellog/user/`
     const response = await fetch(endPoint)
     const data = await response.json();
@@ -843,6 +831,14 @@ async function getHomeContent(id, inputFilters) {
     return data
 }
 
+async function getUserData() {
+    let url = `http://localhost:8080/v1/travellog/user/${userId}`
+    let response = await fetch(url)
+    let data = await response.json()
+
+    return data
+}
+
 
 async function getExploreContent(id, inputFilters) {
     const params = new URLSearchParams(inputFilters)
@@ -852,7 +848,7 @@ async function getExploreContent(id, inputFilters) {
     return data
 }
 
-async function getUserTravels(){
+async function getUserTravels() {
     const endPoint = `http://localhost:8080/v1/travellog/user/${userId}`
     const response = await fetch(endPoint)
     const data = await response.json()
@@ -864,26 +860,26 @@ async function getUserTravels(){
 //              MÉTODOS DE INTEGRAÇÃO (Carregamento)
 // ----------------------------------------------------------
 
-function initExplorar(){
+function initExplorar() {
     const btnExplorar = document.getElementById('mobLikes');
-    btnExplorar.addEventListener('click',() => loadExploreContent(userId))
+    btnExplorar.addEventListener('click', () => loadExploreContent(userId))
 }
 
 
 //Para carregar a lista de perfis seguindo
-async function loadFollowingTab(id){
-    
+async function loadFollowingTab(id) {
+
     let containerFollower = document.getElementById('containerFollowerList')
-    
-    
+
+
     clearChildren(containerFollower)
-    
+
     const followingList = await getFollowingList(id)
     console.log(followingList)
-    if (followingList.status_code == 404){
+    if (followingList.status_code == 404) {
         loadToFollowTab(containerLogs)
     }
-    else{
+    else {
         console.log('valido')
         console.log(followingList.items.seguindo)
         followingList.items.seguindo.forEach(createFollower)
@@ -892,34 +888,34 @@ async function loadFollowingTab(id){
 }
 
 // Para carregar todos os usuarios, é o discover de perfis
-async function loadToFollowTab(containerLogs){
-    
+async function loadToFollowTab(containerLogs) {
+
     const toFollowList = await getToFollowList()
     console.log(toFollowList)
     const searchInput = document.getElementById('inputFollowerDesk')
     searchInput.placeholder = "Usuários"
     toFollowList.items.usuario.forEach(createFollower)
-    
+
 }
 
 // carregando conteúdo da home
 async function loadHomeContent(id, inputFilters) {
     clearChildren(containerLogs)
-    
+
     const homeLogs = await getHomeContent(id, inputFilters)
-    
-    if (homeLogs.status_code == 404){
+
+    if (homeLogs.status_code == 404) {
         loadEmptyHome(containerLogs)
     }
-    else{
+    else {
         homeLogs.items.logs.forEach(createLogs)
     }
 }
 
-function loadEmptyHome(){
+function loadEmptyHome() {
     let emptyText = document.createElement('h2')
     emptyText.textContent = `"Opa! Nenhum conteúdo dos perfis que você segue, experimente a aba "Explorar"`
-    
+
     containerLogs.appendChild(emptyText)
 }
 
@@ -933,8 +929,8 @@ async function loadExploreContent(id, inputFilters) {
 //              MÉTODOS DE INTEGRAÇÃO (Funções tratativas)
 // ----------------------------------------------------------
 
-function clearChildren(container){
-    while (container.firstChild){
+function clearChildren(container) {
+    while (container.firstChild) {
         container.removeChild(container.firstChild)
     }
 }
@@ -942,7 +938,7 @@ function clearChildren(container){
 // ----------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO (Para abrir outra página)
 // ----------------------------------------------------------
-function loadProfile(perfil_id){
+function loadProfile(perfil_id) {
     localStorage.setItem('perfilId', perfil_id)
     window.location.href = `profile.html`
 
@@ -950,11 +946,11 @@ function loadProfile(perfil_id){
 // ----------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO (Para postagem)
 // ----------------------------------------------------------
-async function postLog(){
+async function postLog() {
     const inputDescription = document.getElementById('descriptionNewLog')
     const dadosViagem = getUserTravels()
     const locationInput = document.getElementById('locationNewLogInput')
-    
+
     const descricao = inputDescription.value
     const viagem_id = dadosViagem.items.viagens[0].id_viagem
 
@@ -963,7 +959,7 @@ async function postLog(){
     //TODO: Por enquanto ele só pega a primeira viagem do usuário, implementar depois a escolha
 
 
-    
+
 }
 
 // ----------------------------------------------------------
@@ -973,3 +969,4 @@ const userId = localStorage.getItem('userId')
 initExplorar()
 loadHomeContent(userId)
 loadFollowingTab(userId)
+setDataProfile()
