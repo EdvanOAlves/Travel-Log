@@ -353,7 +353,7 @@ const setInsertLog = async (log) => {
             ) VALUES (
              
                 '${log.descricao}',
-                '${log.data_publicacao}',
+                curdate(),
                 0,
                 0,
                 true,
@@ -362,7 +362,12 @@ const setInsertLog = async (log) => {
 
             )
         `
-        result = await prisma.$executeRawUnsafe(sql)
+
+        try {
+            result = await prisma.$executeRawUnsafe(sql)
+        } catch (error) {
+            console.log(error)
+        }
 
         if (result) {
             return result;

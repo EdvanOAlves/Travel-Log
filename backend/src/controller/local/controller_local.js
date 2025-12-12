@@ -96,7 +96,7 @@ const insereLocal = async (local, contentType) => {
             if(!validar) {
 
                 resultLocal = await localDAO.setInsertLocal(local)
-
+                
                 if(resultLocal) {
 
                     lastLocal = await localDAO.getSelectLastLocal()
@@ -104,7 +104,7 @@ const insereLocal = async (local, contentType) => {
                     MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_CREATED_ITEM.status
                     MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_CREATED_ITEM.message
-                    MESSAGES.DEFAULT_HEADER.items           = lastLocal
+                    MESSAGES.DEFAULT_HEADER.items.local     = lastLocal
 
                     return MESSAGES.DEFAULT_HEADER //201
 
@@ -126,7 +126,7 @@ const insereLocal = async (local, contentType) => {
 
 }
 
-const validaLocal = async (local) => {
+const validaLocal = (local) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 

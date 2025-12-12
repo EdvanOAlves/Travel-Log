@@ -90,7 +90,7 @@ const buscarMidiaId = async (midia_id) => {
 
 // Registra o caminho de uma midia no banco
 const insereMidia = async (midia, contentType) => {
-
+    
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
         
     try {
@@ -173,13 +173,8 @@ const deletaMidia = async (midia_id) => {
 const validarMidia = (midia) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-    
-    if (midia.indice == null || midia.indice == undefined || midia.indice == "" || typeof midia.indice !== "number") {
 
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [INDICE INCORRETO]'
-        return MESSAGES.ERROR_REQUIRED_FIELDS
-
-    } else if (midia.log_id == null || midia.log_id == undefined || midia.log_id == "" || typeof midia.log_id !== "number") {
+    if (midia.log_id == null || midia.log_id == undefined || midia.log_id == "" || typeof midia.log_id !== "number") {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [LOG ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS

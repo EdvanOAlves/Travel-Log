@@ -108,12 +108,11 @@ const setInsertMedia = async (media) => {
             link
         ) VALUES (
             ${media.log_id},
-            ${media.link}
+            '${media.link}'
         )
         `
-
         result = await prisma.$executeRawUnsafe(sql)
-        
+
         if(result) {
             return result
         } else {

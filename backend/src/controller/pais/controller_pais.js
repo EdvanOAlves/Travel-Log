@@ -50,3 +50,9 @@ const buscarPaisNome = async (pais_nome) => {
     }
 
 }
+
+module.exports = {
+
+    buscarPaisNome
+
+}

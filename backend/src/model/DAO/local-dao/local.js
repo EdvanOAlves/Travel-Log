@@ -102,20 +102,16 @@ const setInsertLocal = async (local) => {
                 '${local.nome_local}',
                 '${local.estado}',
                 '${local.cidade}',
-                ${pais_id}
+                ${local.pais_id}
             )
         `
 
         result = await prisma.$executeRawUnsafe(sql)
-
+        
         if(result) {
-
             return result
-
         } else {
-
             return false
-
         }
 
     } catch (error) {
@@ -131,9 +127,9 @@ const getSelectLastLocal = async () => {
     
         sql = `select * from tbl_local order by id desc limit 1`
 
-        result = await prisma.$executeRawUnsafe(sql)
+        result = await prisma.$queryRawUnsafe(sql)
 
-        if (result) {
+        if (Array.isArray(result)) {
             return result
         } else {
             return false
