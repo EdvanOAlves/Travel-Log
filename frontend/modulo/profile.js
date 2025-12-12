@@ -201,6 +201,20 @@ function setDataUser(user) {
     let seguindoSettings = document.querySelector('.followingSettings')
     let descricaoSettings = document.querySelector('.descriptionSettings')
 
+
+    // Caso o perfil não pertença ao usuário
+    if (perfilId != userId) {
+        loadVisitorContent(user)
+
+    } else {
+        loadOwnerContent(user)
+    }
+
+
+    // 
+
+
+
     imgSettings.src = user.foto_perfil
     nicknameSettings.innerHTML = user.apelido
     nameSettings.innerHTML = user.nome
@@ -222,6 +236,88 @@ function setDataUser(user) {
     followers.innerHTML = `Seguidores ${user.seguidores.length}`
     following.innerHTML = `Seguindo ${user.seguindo.length}`
     description.innerHTML = user.descricao
+}
+
+function loadVisitorContent(user) {
+    const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
+    const newLog = document.querySelector('.logCreator')
+
+    console.log('inferno')
+    newLog.classList.add('display-none')
+
+    
+
+    let containerFollowerUser = document.querySelector('.containerFollowerUser')
+    const btnFollow = document.getElementById('followUser')
+    const btnImg = document.createElement('img')
+    btnFollow.id = 'followUser'
+    containerFollowerUser.appendChild(btnFollow)
+
+    const perfilSeguidores = user.seguidores
+
+    let userSeguindo = false
+    for (let seguidor in perfilSeguidores) {
+        if (seguidor.id == userId) {
+            userSeguindo = true
+        }
+    }
+    if (userSeguindo) {
+        btnImg.src = './img/confirm.png'
+    } else {
+        btnImg.src = './img/plus.png'
+    }
+    btnFollow.appendChild(btnImg)
+
+    // Função de seguir
+    btnFollow.addEventListener('click', () => {
+        if (!userSeguindo) {
+            addFollow(followBody)
+            userSeguindo = true;
+            btnImg.style.animation = '3s rotateFollow linear'
+            setTimeout(() => {
+                btnImg.src = 'img/confirm.png'
+            }, 1000);
+        } else {
+            removeFollow(followBody)
+            userSeguindo = false;
+
+            btnImg.style.animation = '3s rotateFollow linear'
+            setTimeout(() => {
+                btnImg.src = 'img/plus.png'
+            }, 1000);
+
+        }
+
+        // let imgButton = document.querySelector('#followUser img')
+
+
+
+    })
+}
+async function addFollow(followBody) {
+    console.log(followBody)
+    let url = `http://localhost:8080/v1/travellog/follow/`
+
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(followBody)
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+}
+
+async function removeFollow(followBody) {
+    await fetch('http://localhost:8080/v1/travellog/follow/', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(followBody)
+
+    })
 }
 
 //Criar log
@@ -1036,15 +1132,17 @@ document.addEventListener('click', () => {
 
 
 // INTEGRAÇÃO
-async function getAllDatasProfile() {
-    let url = `http://localhost:8080/v1/travellog/user/profile/1?data_inicio=&data_fim=&local_pais=&local_estado=&local_cidade=&nome_local=&tipo_viagem_id=&perfil_id=1`
+async function getAllDatasProfile(inputFilters) {
+    const params = new URLSearchParams(inputFilters)
+    console.log(userId, perfilId)
+    let url = `http://localhost:8080/v1/travellog/user/profile/${userId}?${params.toString()}&perfil_id=${perfilId}`
     let response = await fetch(url)
 
     let data = await response.json()
+    console.log('oopa')
     console.log(data.items)
     data_user = data.items
 
-    id_user = data.items.perfil.id
 
     data.items.perfil.logs.forEach((log) => {
         createLogs(log)
@@ -1098,8 +1196,8 @@ async function getTypeTravel() {
     })
 }
 
-getTypeTravel()
-getAllDatasProfile()
+
+
 
 
 // -------------------------------------------------------------------------
@@ -1133,46 +1231,66 @@ document.getElementById("selectImgInput")
 //     .addEventListener("click", uploadImageLog)
 
 
-//Google api
-init()
 
-async function init() {
 
-    //Pega a input do HTML
-    const localizacao = document.getElementById("locationNewLogInput")
+// window.init = async function init() {
 
-    //Inicializa uma nova instância do widget de auto-complete.
-    let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+//     //Pega a input do HTML
+//     const localizacao = document.getElementById("locationNewLogInput")
 
-        fields: ["name", "address_components", "geometry"],
-        types: ["establishment", "geocode"]
+//     //Inicializa uma nova instância do widget de auto-complete.
+//     let autoComplete = new google.maps.places.Autocomplete(localizacao, {
 
-    })
+//         fields: ["name", "address_components", "geometry"],
+//         types: ["establishment", "geocode"]
 
-    autoComplete.addListener('place_changed', async () => {
-        let place = autoComplete.getPlace()
+//     })
 
-        localObject.push({ local_nome: place.name })
+//     autoComplete.addListener('place_changed', async () => {
+//         let place = autoComplete.getPlace()
 
-        let componentsAdress = place.address_components
+//         localObject.push({ local_nome: place.name })
 
-        for (let components of componentsAdress) {
+//         let componentsAdress = place.address_components
 
-            if (components.types[0] == 'country') {
-                localObject.push({ pais: components.long_name })
-            } else if (components.types[0] == 'administrative_area_level_1') {
-                localObject.push({ estado: components.long_name })
-            } else if (components.types[0] == 'administrative_area_level_2') {
-                localObject.push({ cidade: components.long_name })
-            } else if (components.types[0] == 'sublocality') {
-                localObject.push({ cidade: components.long_name })
-            } else if (components.types[0] == 'locality') {
-                localObject.push({ cidade: components.long_name })
-            }
+//         for (let components of componentsAdress) {
 
-        }
+//             if (components.types[0] == 'country') {
+//                 localObject.push({ pais: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_1') {
+//                 localObject.push({ estado: components.long_name })
+//             } else if (components.types[0] == 'administrative_area_level_2') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'sublocality') {
+//                 localObject.push({ cidade: components.long_name })
+//             } else if (components.types[0] == 'locality') {
+//                 localObject.push({ cidade: components.long_name })
+//             }
 
-        console.log(localObject)
-    })
+//         }
 
+//         console.log(localObject)
+//     })
+
+// }
+
+
+// ----------------------------------------------------------
+//              MÉTODOS DE INTEGRAÇÃO (Funções tratativas)
+// ----------------------------------------------------------
+
+function clearChildren(container) {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild)
+    }
 }
+
+// ----------------------------------------------------------
+//              Verdadeiro inicio (Chamando as funções)
+// ----------------------------------------------------------
+
+const userId = localStorage.getItem('userId')
+const perfilId = localStorage.getItem('perfilId')
+getTypeTravel()
+getAllDatasProfile()
+

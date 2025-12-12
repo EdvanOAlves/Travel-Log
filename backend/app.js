@@ -17,19 +17,22 @@ const swaggerUi         = require('swagger-ui-express')
 const swaggerDocument   = require('./doc/index.js')
 
 // Retorna a porta do servidor atual ou colocamos uma porta local
-const PORT = process.PORT || 8080
+const PORT = process.env.PORT || 8080
 
 // Criando instância da classe express
 const app = express()
 
 // Configuração de permissões de requisição
 app.use(cors({
-    origin: '*', // Libera para qualquer origem 
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'] // Resolve o erro de header bloqueado
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }))
 
-//Import da rota
+// Middleware para permitir JSON no body
+app.use(express.json());
+
+//Import das rotas
 const comentarioRoutes  = require("./src/routes/comentario_routes.js")
 const logsRoutes        = require("./src/routes/logs_routes")
 const usuarioRoutes     = require("./src/routes/usuario_routes.js")
@@ -51,4 +54,3 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.listen(PORT, () => {
     console.log("Está vivo...!!!")
 })
-

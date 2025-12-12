@@ -191,6 +191,7 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 
 //Cria e adiciona os seguidores
 function createFollower(follower) {
+    console.log('seguidor')
     console.log(follower)
     const containerFollower = document.getElementById('containerFollowerList')
     
@@ -229,7 +230,13 @@ function createFollower(follower) {
     divFollowerMob.append(divProfileMob, spanNameMob)
     divProfileMob.appendChild(imgProfileMob)
 
-    divFollower.addEventListener('click', () => loadProfile(follower.id))
+    if (follower.id){
+        divFollower.addEventListener('click', () => loadProfile(follower.id))
+    }
+    else{
+        divFollower.addEventListener('click', () => loadProfile(follower.seguido_id))
+    }
+
 
     containerFollowerMobile.appendChild(divFollowerMob)
 
@@ -865,21 +872,21 @@ function initExplorar(){
 
 //Para carregar a lista de perfis seguindo
 async function loadFollowingTab(id){
-    const userId = localStorage.getItem('userId');
     
     let containerFollower = document.getElementById('containerFollowerList')
     
     
     clearChildren(containerFollower)
     
-    const followingList = await getFollowingList(userId)
+    const followingList = await getFollowingList(id)
     console.log(followingList)
     if (followingList.status_code == 404){
         loadToFollowTab(containerLogs)
     }
     else{
-        // console.log(followingList.items.usuarios)
-        // followingList.items.logs.forEach(createLogs)
+        console.log('valido')
+        console.log(followingList.items.seguindo)
+        followingList.items.seguindo.forEach(createFollower)
     }
     // followingList.items.seguindo.forEach(createFollower)
 }
@@ -936,7 +943,7 @@ function clearChildren(container){
 //              MÉTODOS DE INTEGRAÇÃO (Para abrir outra página)
 // ----------------------------------------------------------
 function loadProfile(perfil_id){
-    localStorage.setItem('perfil_id', perfil_id)
+    localStorage.setItem('perfilId', perfil_id)
     window.location.href = `profile.html`
 
 }
