@@ -134,16 +134,16 @@ function createLogs(log) {
     logDiv.dataset.curtidas = log.curtidas
     logDiv.dataset.favoritos = log.favoritos
 
-    // let imgDataSet = log.midias[0].link
-    // for (let i = 1; i < log.midias.length; i++) {
-    //     imgDataSet += `,${log.midias[i].link}`
+    let imgDataSet = log.midias[0].link
+    for (let i = 1; i < log.midias.length; i++) {
+        imgDataSet += `,${log.midias[i].link}`
 
-    // }
+    }
 
-    // imgLog.dataset.img = imgDataSet
+    imgLog.dataset.img = imgDataSet
 
-    // let imgLogFirst = imgDataSet.split(',')
-    // imgLog.src = imgLogFirst[0]
+    let imgLogFirst = imgDataSet.split(',')
+    imgLog.src = imgLogFirst[0]
 
     logDiv.addEventListener('click', () => {
         console.log(logDiv.id)
@@ -391,7 +391,7 @@ async function postLog() {
     let des = document.getElementById('descriptionNewLog').value
     let via = Number(document.querySelector('.selectTravel span').dataset.id)
     let vis = document.getElementById('visibleTravel').textContent
-    console.log(via)
+
     if (vis == 'Público') {
         vis = true
 
@@ -1292,7 +1292,7 @@ async function uploadImageLog() {
 
     const midia = await uploadImageToAzure(uploadParams)
 
-    return JSON.stringify(midia)
+    return String(midia)
 
 }
 
@@ -1305,52 +1305,52 @@ function preview({ target }) {
 document.getElementById("selectImgInput")
     .addEventListener('change', preview)
 
-// document.getElementById("saveLog")
-//     .addEventListener("click", uploadImageLog)
+document.getElementById("saveLog")
+    .addEventListener("click", uploadImageLog)
 
 
 
+init()
+async function init() {
 
-// window.init = async function init() {
+    //Pega a input do HTML
+    const localizacao = document.getElementById("locationNewLogInput")
 
-//     //Pega a input do HTML
-//     const localizacao = document.getElementById("locationNewLogInput")
+    //Inicializa uma nova instância do widget de auto-complete.
+    let autoComplete = new google.maps.places.Autocomplete(localizacao, {
 
-//     //Inicializa uma nova instância do widget de auto-complete.
-//     let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+        fields: ["name", "address_components", "geometry"],
+        types: ["establishment", "geocode"]
 
-//         fields: ["name", "address_components", "geometry"],
-//         types: ["establishment", "geocode"]
+    })
 
-//     })
+    autoComplete.addListener('place_changed', async () => {
+        let place = autoComplete.getPlace()
 
-//     autoComplete.addListener('place_changed', async () => {
-//         let place = autoComplete.getPlace()
+        localObject.push({ local_nome: place.name })
 
-//         localObject.push({ local_nome: place.name })
+        let componentsAdress = place.address_components
 
-//         let componentsAdress = place.address_components
+        for (let components of componentsAdress) {
 
-//         for (let components of componentsAdress) {
+            if (components.types[0] == 'country') {
+                localObject.push({ pais: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_1') {
+                localObject.push({ estado: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_2') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'sublocality') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'locality') {
+                localObject.push({ cidade: components.long_name })
+            }
 
-//             if (components.types[0] == 'country') {
-//                 localObject.push({ pais: components.long_name })
-//             } else if (components.types[0] == 'administrative_area_level_1') {
-//                 localObject.push({ estado: components.long_name })
-//             } else if (components.types[0] == 'administrative_area_level_2') {
-//                 localObject.push({ cidade: components.long_name })
-//             } else if (components.types[0] == 'sublocality') {
-//                 localObject.push({ cidade: components.long_name })
-//             } else if (components.types[0] == 'locality') {
-//                 localObject.push({ cidade: components.long_name })
-//             }
+        }
 
-//         }
+        console.log(localObject)
+    })
 
-//         console.log(localObject)
-//     })
-
-// }
+}
 
 
 // ----------------------------------------------------------
