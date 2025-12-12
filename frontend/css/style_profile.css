@@ -355,7 +355,7 @@ main {
 }
 
 .logFooter span {
-    font-size: 8px;
+    font-size: 50%;
 }
 
 /* Log Creator */
@@ -398,7 +398,7 @@ main {
 }
 
 .viagemFooter .footerTxt {
-    font-size: 10px;
+    font-size: 50%;
 }
 
 .viagemData {
@@ -902,6 +902,10 @@ main {
     border-bottom-style: solid;
     border-color: var(--cinza_escuro);
     border-width: 2px;
+}
+
+.containerCommentsMain {
+    width: 100%;
 }
 
 .containerInputComment div {
@@ -2076,7 +2080,7 @@ main {
     }
 
     .viagemFooter .footerTxt {
-        font-size: 14px;
+        font-size: 50%;
     }
 
     .viagemData {

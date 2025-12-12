@@ -98,16 +98,9 @@ estatisticaNavButton.addEventListener('click', () => {
 });
 
 //Cria e adiciona os Logs a tela principal
-function createLogs(log, id_viagem, call_id) {
+function createLogs(log) {
 
-    let containerDeLogs
-    console.log(call_id)
-    if (call_id == 'Travel') {
-        containerDeLogs = document.querySelector('.containerTravelLogs')
-
-    } else {
-        containerDeLogs = document.getElementById('container-de-logs')
-    }
+    let containerDeLogs = document.getElementById('container-de-logs')
 
     let logDiv = document.createElement('div')
     let imgLog = document.createElement('img')
@@ -127,23 +120,33 @@ function createLogs(log, id_viagem, call_id) {
 
     logDiv.id = `log${log.log_id}`
     logDiv.dataset.id = log.log_id
-    console.log(log.midias)
     imgFooter.src = 'img/Location_Icon.svg'
 
     span.innerHTML = `${log.local[0].pais.pais}, ${log.local[0].estado}, ${log.local[0].estado} - ${log.local[0].nome_local}`
 
-    let imgDataSet = log.midias[0].link
-    for (let i = 1; i < log.midias.length; i++) {
-        imgDataSet += `,${log.midias[i].link}`
+    let dateFimChar = log.data_postagem.slice(0, 10)
+    let spliceDate = dateFimChar.split('-')
 
-    }
+    let dataFim = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
 
-    imgLog.dataset.img = imgDataSet
+    logDiv.dataset.date = dataFim
+    logDiv.dataset.descricao = log.descricao
+    logDiv.dataset.curtidas = log.curtidas
+    logDiv.dataset.favoritos = log.favoritos
 
-    let imgLogFirst = imgDataSet.split(',')
-    imgLog.src = imgLogFirst[0]
+    // let imgDataSet = log.midias[0].link
+    // for (let i = 1; i < log.midias.length; i++) {
+    //     imgDataSet += `,${log.midias[i].link}`
+
+    // }
+
+    // imgLog.dataset.img = imgDataSet
+
+    // let imgLogFirst = imgDataSet.split(',')
+    // imgLog.src = imgLogFirst[0]
 
     logDiv.addEventListener('click', () => {
+        console.log(logDiv.id)
         logFull(logDiv.id)
     })
 
@@ -153,6 +156,57 @@ function createLogs(log, id_viagem, call_id) {
     //     divArrow2.classList.add('hiddeArrowImg')
 
     // }
+
+}
+
+function createLogsTravel(log, id_viagem) {
+    if (log.viagem_id == id_viagem) {
+        let containerDeLogs = document.querySelector('.containerTravelLogs')
+
+        let logDiv = document.createElement('div')
+        let imgLog = document.createElement('img')
+        let footer = document.createElement('footer')
+        let imgFooter = document.createElement('img')
+        let span = document.createElement('span')
+
+        logDiv.classList.add('log')
+        imgLog.classList.add('logThumbnail')
+        imgFooter.classList.add('locationIcon')
+        footer.classList.add('logFooter')
+        span.classList.add('footerTxt')
+
+        logDiv.append(imgLog, footer)
+        footer.append(imgFooter, span)
+        containerDeLogs.append(logDiv)
+
+        logDiv.id = `log${log.log_id}`
+        logDiv.dataset.id = log.log_id
+        imgFooter.src = 'img/Location_Icon.svg'
+
+        span.innerHTML = `${log.local[0].pais.pais}, ${log.local[0].estado}, ${log.local[0].estado} - ${log.local[0].nome_local}`
+
+        // let imgDataSet = log.midias[0].link
+        // for (let i = 1; i < log.midias.length; i++) {
+        //     imgDataSet += `,${log.midias[i].link}`
+
+        // }
+
+        // imgLog.dataset.img = imgDataSet
+
+        // let imgLogFirst = imgDataSet.split(',')
+        // imgLog.src = imgLogFirst[0]
+
+        logDiv.addEventListener('click', () => {
+            logFull(logDiv.id)
+        })
+
+        //Validar quantidade Imgs
+        // if (log.midia.length == 0) {
+        //     divArrow1.classList.add('hiddeArrowImg')
+        //     divArrow2.classList.add('hiddeArrowImg')
+
+        // }
+    }
 
 }
 
@@ -178,6 +232,7 @@ function createTravel(travel) {
     spanTxt.innerHTML = travel.viagem_titulo
 
 
+    divTravel.id = `travel${travel.id_viagem}`
     divTravel.dataset.id = travel.id_viagem
     let dateFimChar = travel.data_inicio.slice(0, 10)
     let spliceDate = dateFimChar.split('-')
@@ -200,25 +255,33 @@ function setDataUser(user) {
     let seguidoresSettings = document.querySelector('.followerSettings')
     let seguindoSettings = document.querySelector('.followingSettings')
     let descricaoSettings = document.querySelector('.descriptionSettings')
+    let nameUserDesk = document.getElementById('nameUserDesk')
+    let profileIconDesk = document.getElementById('imgProfileDesk')
+    let profileIcon = document.getElementById('profileHeader')
 
+    // // Caso o perfil não pertença ao usuário
+    // if (perfilId != userId) {
+    //     loadVisitorContent(user)
 
-    // Caso o perfil não pertença ao usuário
-    if (perfilId != userId) {
-        loadVisitorContent(user)
-
-    } else {
-        loadOwnerContent(user)
-    }
+    // } else {
+    //     loadOwnerContent(user)
+    // }
 
 
     // 
 
 
-
+    profileIcon.src = user.foto_perfil
+    profileIconDesk.src = user.foto_perfil
+    nameUserDesk.innerHTML = user.apelido
     imgSettings.src = user.foto_perfil
     nicknameSettings.innerHTML = user.apelido
     nameSettings.innerHTML = user.nome
-    logsSettings.innerHTML = `Logs ${user.logs.length}`
+
+    if (user.logs) {
+        logsSettings.innerHTML = `Logs ${user.logs.length}`
+    }
+
     seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
     seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
     descricaoSettings.innerHTML = user.descricao
@@ -229,10 +292,14 @@ function setDataUser(user) {
     let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
     let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
     let description = document.querySelector('.profileDescription')
-    console.log(user)
+    
     imgProfile.src = user.foto_perfil
     name.innerHTML = user.apelido
-    logs.innerHTML = `Logs ${user.logs.length}`
+
+    if (user.logs) {
+        logs.innerHTML = `Logs ${user.logs.length}`
+    }
+
     followers.innerHTML = `Seguidores ${user.seguidores.length}`
     following.innerHTML = `Seguindo ${user.seguindo.length}`
     description.innerHTML = user.descricao
@@ -245,7 +312,6 @@ function loadVisitorContent(user) {
     console.log('inferno')
     newLog.classList.add('display-none')
 
-    
 
     let containerFollowerUser = document.querySelector('.containerFollowerUser')
     const btnFollow = document.getElementById('followUser')
@@ -344,7 +410,7 @@ async function postLog() {
         cidade: localObject[1].cidade,
         nome_local: localObject[0].local_nome,
         midias: [
-            { link: imgLink, indice: 1 }
+            { link: imgLink }
         ]
     }
 
@@ -478,13 +544,20 @@ function setTypeTravel(li) {
 
 //Exibe Logs relacionados com aquela viagem
 function showLogsTravel(travel_id) {
+    const nameTravel = document.querySelector(`#travel${travel_id} .footerTxt`)
     const sectionLogs = document.getElementById('logsOfTravel')
+    const titleTravel = document.getElementById('tittleTravelSelect')
 
     sectionLogs.classList.toggle('showLogsTravel')
     sectionLogs.style.animation = '1.5s showScaleLogs linear'
-    console.log(data_user)
+
+    titleTravel.innerHTML = nameTravel.textContent
+
+    const container = document.querySelector('.containerTravelLogs')
+    clearChildren(container)
+
     data_user.perfil.logs.forEach(log => {
-        createLogs(log, travel_id, 'Travel')
+        createLogsTravel(log, travel_id)
     })
 
 
@@ -493,7 +566,7 @@ function showLogsTravel(travel_id) {
 //Destaca o Log clicado
 async function logFull(id) {
     const logClickElement = document.getElementById(id)
-
+    const location = document.querySelector(`#${logClickElement.id} .footerTxt`)
     const logClick = logClickElement.querySelectorAll('*')
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
@@ -506,11 +579,20 @@ async function logFull(id) {
 
     logFull[12].dataset.img = logClick[0].dataset.img
 
+    logFull[8].innerHTML = location.textContent
+    logFull[18].innerHTML = logClickElement.dataset.curtidas
+    logFull[21].innerHTML = logClickElement.dataset.favoritos
+    logFull[23].innerHTML = logClickElement.dataset.date
+    logFull[25].innerHTML = logClickElement.dataset.descricao
+
+    console.log(logClickElement.dataset.id)
     let url = `http://localhost:8080/v1/travellog/comment/fromlog?log_id=${logClickElement.dataset.id}`
     let response = await fetch(url)
 
     let comments = await response.json()
-
+    console.log(comments)
+    const container = document.querySelector('.containerCommentsMain')
+    clearChildren(container)
     comments.items.comentario.forEach((comment) => {
         createComments(comment)
     })
@@ -518,7 +600,7 @@ async function logFull(id) {
 
 //Criar comentários
 function createComments(comment) {
-    const container = document.querySelector('.commentsLog')
+    const container = document.querySelector('.containerCommentsMain')
     let divComment = document.createElement('div')
     let header = document.createElement('div')
     let contaienrImg = document.createElement('div')
@@ -557,11 +639,6 @@ function showNewLog() {
     newLog.classList.toggle('showModal')
 
     elementHigh = 'newLog'
-}
-
-//Direciona o usuário ao perfil clicado
-function goProfileUser(id_use) {
-    alert('Direcionamento para perfil')
 }
 
 //Valida a data dos inputs do filtro de data
@@ -1134,7 +1211,6 @@ document.addEventListener('click', () => {
 // INTEGRAÇÃO
 async function getAllDatasProfile(inputFilters) {
     const params = new URLSearchParams(inputFilters)
-    console.log(userId, perfilId)
     let url = `http://localhost:8080/v1/travellog/user/profile/${userId}?${params.toString()}&perfil_id=${perfilId}`
     let response = await fetch(url)
 
@@ -1143,19 +1219,21 @@ async function getAllDatasProfile(inputFilters) {
     console.log(data.items)
     data_user = data.items
 
+    if (data.items.perfil.logs) {
+        data.items.perfil.logs.forEach((log) => {
+            createLogs(log)
+        })
+    }
 
-    data.items.perfil.logs.forEach((log) => {
-        createLogs(log)
-    })
+    if (data.items.perfil.viagens) {
+        data.items.perfil.viagens.forEach((travel) => {
+            createTravel(travel)
+        })
 
-    data.items.perfil.viagens.forEach((travel) => {
-        createTravel(travel)
-    })
-
-    data.items.perfil.viagens.forEach((travel) => {
-        getTravelLi(travel)
-    })
-
+        data.items.perfil.viagens.forEach((travel) => {
+            getTravelLi(travel)
+        })
+    }
     const liListTravelNewLog = document.querySelectorAll('#listTravel li')
     //Adiciona event para os LI de viagens
     liListTravelNewLog.forEach(li => {
@@ -1293,4 +1371,3 @@ const userId = localStorage.getItem('userId')
 const perfilId = localStorage.getItem('perfilId')
 getTypeTravel()
 getAllDatasProfile()
-
