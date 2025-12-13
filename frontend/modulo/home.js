@@ -225,7 +225,14 @@ function createFollower(follower) {
     divProfileMob.classList.add('profileFollower')
 
     spanNameMob.textContent = `@${follower.apelido}`
-    imgProfileMob.src = follower.foto_perfil
+    if (follower.foto_perfil == "null") {
+        imgProfile.src = 'img/emptyProfileUser.jpg'
+
+    } else {
+        imgProfileMob.src = follower.foto_perfil
+
+    }
+
 
     divFollowerMob.append(divProfileMob, spanNameMob)
     divProfileMob.appendChild(imgProfileMob)
@@ -301,6 +308,8 @@ function logFull(id) {
     logFull[12].src = logClick[7].src
     logFull[18].innerHTML = logClick[13].textContent
     logFull[21].innerHTML = logClick[14].textContent
+
+
 
     elementHigh = logFull1.id
     filterBlack.classList.toggle('showFilter')
@@ -698,8 +707,17 @@ async function setDataProfile() {
 
     let dataUser = await getUserData()
 
-    profileIcon.src = dataUser.items.foto_perfil
-    profileIconDesk.src = dataUser.items.foto_perfil
+    console.log(dataUser.items)
+    if (dataUser.items.usuario.foto_perfil == "null") {
+        profileIcon.src = 'img/emptyProfileUser.jpg'
+        profileIconDesk.src = 'img/emptyProfileUser.jpg'
+
+    } else {
+        profileIcon.src = dataUser.items.usuario.foto_perfil
+        profileIconDesk.src = dataUser.items.usuario.foto_perfil
+    }
+
+
     nameUserDesk.innerHTML = dataUser.items.usuario.apelido
 }
 
