@@ -222,6 +222,7 @@ function createLogsTravel(log, id_viagem) {
 
 //Cria viagens
 function createTravel(travel) {
+    console.log(travel)
     const containerTravel = document.getElementById('container-de-viagens')
     let divTravel = document.createElement('div')
     let img = document.createElement('img')
@@ -416,7 +417,7 @@ async function postLog() {
     let des = document.getElementById('descriptionNewLog').value
     let via = Number(document.querySelector('.selectTravel span').dataset.id)
     let vis = document.getElementById('visibleTravel').textContent
-    console.log(via)
+
     if (vis == 'Público') {
         vis = true
 
@@ -1454,7 +1455,7 @@ async function uploadImageLog() {
 
     const midia = await uploadImageToAzure(uploadParams)
 
-    return JSON.stringify(midia)
+    return String(midia)
 
 }
 
