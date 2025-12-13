@@ -415,7 +415,6 @@ const atualizaLog = async (log_id, log, contentType) => {
                     }
 
                     midias = log.midias
-                    console.log(midias)
 
                     for (midia of midias) {
                         

@@ -50,7 +50,6 @@ const listarUsuarios = async () => {
         }
         
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -64,7 +63,6 @@ const buscarUsuarioId = async (usuario_id) => {
     try {
 
         if (!isNaN(usuario_id) && usuario_id != '' && usuario_id != null && usuario_id != undefined && usuario_id > 0) {
-
 
             resultUsuario = await usuarioDAO.getSelectUserById(usuario_id)
 

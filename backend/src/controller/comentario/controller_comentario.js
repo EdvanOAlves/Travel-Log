@@ -9,6 +9,8 @@
 // Importando funções de dependência de dados do usuário
 const comentarioDAO = require("../../model/DAO/comentario-dao/comentario.js")
 
+const controllerUsuario = require("../usuario/controller_usuario.js")
+
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
 
@@ -27,9 +29,28 @@ const buscarComentariosLogId = async (log_id) => {
 
                 if(resultComentario.length > 0) {
 
+                    comentario = resultComentario[0]
+                    idUsuario = comentario.usuario_id
+
+                    resultUsuario = await controllerUsuario.buscarUsuarioId(idUsuario)
+                    usuario = resultUsuario.items.usuario
+
+                    comentarioObject = {
+
+                        usuario_id:      usuario.id,
+                        apelido:         usuario.apelido,
+                        foto_perfil:     usuario.foto_perfil,
+                        comentario_id:   comentario.id,
+                        conteudo:        comentario.conteudo,
+                        data_publicacao: comentario.data_publicacao
+
+                    }
+
+                    delete MESSAGES.DEFAULT_HEADER.items.seguidores
+
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.comentario    = resultComentario
+                    MESSAGES.DEFAULT_HEADER.items.comentario    = comentarioObject
                     
                     return MESSAGES.DEFAULT_HEADER //200
 
@@ -46,6 +67,7 @@ const buscarComentariosLogId = async (log_id) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
