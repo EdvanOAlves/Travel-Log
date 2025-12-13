@@ -45,7 +45,7 @@ html {
     overflow: hidden;
 }
 
-.display-none{
+.display-none {
     display: none;
 }
 
@@ -176,8 +176,10 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 220px;
-    height: 130px;
+    min-width: 70px;
+    min-height: 70px;
+    max-width: 100px;
+    max-height: 100px;
     border-radius: 100%;
     background-color: var(--cinza_escuro);
 }
@@ -359,6 +361,17 @@ main {
 }
 
 /* Log Creator */
+.logCreator {
+    width: 46%;
+    height: 20%;
+    min-height: 50%;
+    margin-top: 2%;
+    margin-left: 2%;
+    box-shadow: var(--default_shadow);
+    object-fit: contain;
+    background-color: var(--cor_web_post);
+}
+
 .logCreator-thumbnail {
     display: flex;
     flex-direction: column;
@@ -366,6 +379,15 @@ main {
     place-content: center;
     background-color: var(--cinza_default);
     height: 80%;
+}
+
+.viagemCreator {
+    width: 46%;
+    height: 20%;
+    min-height: 50%;
+    margin-top: 2%;
+    margin-left: 10px;
+    box-shadow: 5px 5px 15px #0004;
 }
 
 .viagemCreator .viagemFooter {
@@ -698,6 +720,266 @@ main {
     border-width: 1px;
 }
 
+/* Atualiza Log */
+#updateLog {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 95%;
+    height: 80%;
+    padding: 10px;
+    z-index: 60;
+    opacity: 0;
+    background-color: var(--cor_web_post);
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+#updateLog.showModal {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.imgUpdateLog {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    padding: 0px 5px 0px 5px;
+    background-color: var(--cinza_default);
+}
+
+#updateLogIcon {
+    width: auto;
+    height: 50px;
+}
+
+#selectImgUpdateInput {
+    display: none;
+}
+
+.imgUpdateLog div {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: var(--cinza_default);
+    border-radius: 100%;
+}
+
+.containerArrowRightUpdateLog {
+    right: 5px;
+}
+
+.containerArrowLeftUpdateLog {
+    left: 5px;
+}
+
+.arrowImgLogLeftFull {
+    width: auto;
+    height: 20px;
+}
+
+.arrowImgLogRightFull {
+    width: auto;
+    height: 20px;
+}
+
+.containerTravelUpdate {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 15%;
+    padding: 10px 0px 15px 0px;
+}
+
+.containerSelectTravelUpdate {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100%;
+    gap: 10px;
+}
+
+.selectTravelUpdate {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    z-index: 20;
+}
+
+.selectTravelUpdate span {
+    width: 90%;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+#arrowSelectTravelUpdate {
+    width: auto;
+    height: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#arrowSelectTravelUpdate.changeArrowUpdateLog {
+    transform: rotate(180deg);
+}
+
+#listTravelUpdate {
+    position: absolute;
+    top: 40px;
+    left: 1px;
+    width: 89%;
+    height: 20px;
+    background-color: var(--branco);
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    z-index: 10;
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    opacity: 0;
+    transition: 0.5s ease-in-out;
+}
+
+#listTravelUpdate.expandListTravelUpdateLog {
+    height: 150px;
+    opacity: 1;
+}
+
+#listTravelUpdate ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-top: 20px;
+    overflow: auto;
+}
+
+#listTravelUpdate li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 25px;
+    border-bottom-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 1px;
+    font-size: 14px;
+}
+
+#visibleTravelUpdate {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 30px;
+    background-color: var(--azul_default);
+    color: var(--azul_escuro);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 2px;
+    transition: 0.2s ease-in-out;
+}
+
+#visibleTravelUpdate.ocultVisible {
+    background-color: var(--cinza_default);
+    border-color: var(--cinza_escuro);
+    color: var(--cinza_escuro);
+}
+
+.containerLocationUpdateLog {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 10%;
+    gap: 10px;
+}
+
+.locationUpdateLog {
+    display: flex;
+    align-items: center;
+    width: 1005;
+    height: 100%;
+    gap: 5px;
+    padding-left: 10px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.locationUpdateLog img {
+    width: auto;
+    height: 20px;
+}
+
+#locationUpdateLogInput {
+    all: unset;
+    width: 100%;
+    height: 100%;
+    background-color: var(--branco);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+#descriptionUpdateLog {
+    all: unset;
+    width: 97%;
+    height: 20%;
+    padding: 5px;
+    margin-top: 5px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.contianerButtonUpdateLog {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    padding-top: 5px;
+}
+
+#updateLogButton {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    color: var(--azul_escuro);
+    background-color: var(--azul_default);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--azul_escuro);
+    border-width: 1px;
+}
+
 /* Log em destaque */
 #logFull {
     position: fixed;
@@ -763,6 +1045,20 @@ main {
 
 .nameTravel {
     font-size: 20px;
+}
+
+.containerSpanEdit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#editLogIcon {
+    width: auto;
+    height: 25px;
+    margin-top: 3px;
+    transition: 0.3s ease-in-out;
 }
 
 .containerLocationLogFull img {
@@ -1018,39 +1314,6 @@ main {
     display: none;
 }
 
-.imgNewTravel div {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    width: 25px;
-    height: 25px;
-    background-color: var(--cinza_escuro);
-    border-radius: 100%;
-}
-
-.containerArrowRightNewTravel {
-    right: 5px;
-}
-
-.containerArrowLeftNewTravel {
-    left: 5px;
-}
-
-.arrowImgTravelLeftFull {
-    width: auto;
-    height: 20px;
-    transform: rotate(180deg);
-}
-
-.arrowImgTravelRightFull {
-    width: auto;
-    height: 20px;
-}
-
 #inputNameTravel {
     all: unset;
     display: flex;
@@ -1059,6 +1322,49 @@ main {
     width: 95%;
     height: 45px;
     margin-top: 30px;
+    padding-left: 5px;
+    background-color: var(--branco);
+    border-radius: 20px;
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+}
+
+.containerAllDates {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 95%;
+}
+
+.containerInputDateTravel {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.containerInputDateTravel div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+    height: 60px;
+    gap: 5px;
+}
+
+.containerInputDateTravel span {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.dateInputTravel {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    height: 35px;
     padding-left: 5px;
     background-color: var(--branco);
     border-radius: 20px;
@@ -1536,6 +1842,7 @@ main {
 .containerDescription {
     position: relative;
     display: flex;
+    justify-content: center;
     gap: 10px;
     padding: 0px 15px 0px 15px;
 }
@@ -1543,7 +1850,7 @@ main {
 .descriptionSettings {
     display: flex;
     text-align: center;
-    font-size: 14px
+    font-size: 14px;
 }
 
 .containerButtonsSettings {
@@ -1810,15 +2117,28 @@ main {
     }
 
     .followerInfo {
-        margin-left: 250px;
+        margin-left: 190px;
     }
 
     .profileDescription {
-        margin-left: 250px;
+        margin-left: 190px;
     }
 
     .profileIdentifier {
-        margin-left: 235px;
+        margin-left: 175px;
+    }
+
+    .containerProfileImgMain {
+        width: 130px;
+        height: 130px;
+        max-width: none;
+        max-height: none;
+    }
+
+    .logCreator {
+        width: 31.5%;
+        height: 25%;
+        margin-left: 1%;
     }
 
     .log {
@@ -1828,11 +2148,16 @@ main {
     }
 
     .logFooter span {
-        font-size: 14px;
+        font-size: 70%;
     }
 
     .profileNavBar {
         justify-content: space-around;
+    }
+
+    .viagemCreator {
+        width: 31.5%;
+        height: 25%;
     }
 
     .viagem {
@@ -1846,6 +2171,10 @@ main {
     }
 
     #newLog {
+        width: 80%;
+    }
+
+    #updateLog {
         width: 80%;
     }
 
@@ -2041,11 +2370,11 @@ main {
     }
 
     .followerInfo {
-        margin-left: 260px;
+        margin-left: 200px;
     }
 
     .profileDescription {
-        margin-left: 260px;
+        margin-left: 200px;
     }
 
     .profileIdentifier {
@@ -2060,6 +2389,13 @@ main {
         margin-left: 10px;
     }
 
+    .containerProfileImgMain {
+        width: 150px;
+        height: 150px;
+        max-width: none;
+        max-height: none;
+    }
+
     .profileContent {
         height: 6%;
     }
@@ -2069,7 +2405,21 @@ main {
         overflow: auto;
     }
 
+    .logCreator {
+        width: 23.8%;
+        height: 60%;
+    }
+
     .log {
+        width: 23.8%;
+        height: 60%;
+    }
+
+    .logFooter span {
+        font-size: 80%;
+    }
+
+    .viagemCreator {
         width: 23.8%;
         height: 60%;
     }
@@ -2080,7 +2430,7 @@ main {
     }
 
     .viagemFooter .footerTxt {
-        font-size: 50%;
+        font-size: 80%;
     }
 
     .viagemData {
@@ -2102,6 +2452,15 @@ main {
     #newLog {
         width: 50%;
         left: calc(0px + 280px);
+    }
+
+    #updateLog {
+        width: 50%;
+        left: calc(0px + 280px);
+    }
+
+    #editLogIcon:hover {
+        transform: scale(1.05);
     }
 
     #newTravel {

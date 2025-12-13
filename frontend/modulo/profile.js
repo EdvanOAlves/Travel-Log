@@ -5,6 +5,8 @@ import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
 var id_user = null
 let localObject = []
 let data_user
+const updateLogIcon = document.getElementById('editLogIcon')
+const updateLogButton = document.getElementById('updateLogButton')
 const saveLog = document.getElementById('saveLog')
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
@@ -36,7 +38,9 @@ const arrowChangeImgLogRightLogFull = document.querySelector('.containerArrowImg
 const arrowTypeFilterDesk = document.getElementById('arrowType')
 const arrowTypeFilterMobile = document.getElementById('arrowTypeMob')
 const arrowNewLog = document.getElementById('arrowSelectTravel')
+const arrowUpdateLog = document.getElementById('arrowSelectTravelUpdate')
 const newPostMobile = document.getElementById('newPost')
+const buttonVisibleLogUpdate = document.getElementById('visibleTravelUpdate')
 const buttonVisibleLog = document.getElementById('visibleTravel')
 const buttonVisibleTravel = document.getElementById('visibleNewTravel')
 const filterMobile = document.getElementById('mobFilter')
@@ -98,7 +102,7 @@ estatisticaNavButton.addEventListener('click', () => {
 });
 
 //Cria e adiciona os Logs a tela principal
-function createLogs(log) {
+function createLogs(log, name_travel) {
 
     let containerDeLogs = document.getElementById('container-de-logs')
 
@@ -122,7 +126,7 @@ function createLogs(log) {
     logDiv.dataset.id = log.log_id
     imgFooter.src = 'img/Location_Icon.svg'
 
-    span.innerHTML = `${log.local[0].pais.pais}, ${log.local[0].estado}, ${log.local[0].estado} - ${log.local[0].nome_local}`
+    span.innerHTML = `${log.local[0].nome_local}, ${log.local[0].cidade} - ${log.local[0].estado}, ${log.local[0].pais.pais}`
 
     let dateFimChar = log.data_postagem.slice(0, 10)
     let spliceDate = dateFimChar.split('-')
@@ -133,20 +137,23 @@ function createLogs(log) {
     logDiv.dataset.descricao = log.descricao
     logDiv.dataset.curtidas = log.curtidas
     logDiv.dataset.favoritos = log.favoritos
+    logDiv.dataset.travel = name_travel
 
-    // let imgDataSet = log.midias[0].link
-    // for (let i = 1; i < log.midias.length; i++) {
-    //     imgDataSet += `,${log.midias[i].link}`
+    //Remove as aspas do link para colocar no src da img
+    let thumbnailLog = String(log.midias[0].link).replace(/"/g, '')
+    let imgDataSet = thumbnailLog
 
-    // }
+    for (let i = 1; i < log.midias.length; i++) {
+        imgDataSet += `,${log.midias[i].link}`
 
-    // imgLog.dataset.img = imgDataSet
+    }
 
-    // let imgLogFirst = imgDataSet.split(',')
-    // imgLog.src = imgLogFirst[0]
+    imgLog.dataset.img = imgDataSet
+
+    let imgLogFirst = imgDataSet.split(',')
+    imgLog.src = imgLogFirst[0]
 
     logDiv.addEventListener('click', () => {
-        console.log(logDiv.id)
         logFull(logDiv.id)
     })
 
@@ -183,18 +190,21 @@ function createLogsTravel(log, id_viagem) {
         logDiv.dataset.id = log.log_id
         imgFooter.src = 'img/Location_Icon.svg'
 
-        span.innerHTML = `${log.local[0].pais.pais}, ${log.local[0].estado}, ${log.local[0].estado} - ${log.local[0].nome_local}`
+        span.innerHTML = `${log.local[0].nome_local} - ${log.local[0].cidade}, ${log.local[0].estado}, ${log.local[0].pais.pais}`
 
-        // let imgDataSet = log.midias[0].link
-        // for (let i = 1; i < log.midias.length; i++) {
-        //     imgDataSet += `,${log.midias[i].link}`
+        //Remove as aspas do link para colocar no src da img
+        let thumbnailLog = String(log.midias[0].link).replace(/"/g, '')
+        let imgDataSet = thumbnailLog
 
-        // }
+        for (let i = 1; i < log.midias.length; i++) {
+            imgDataSet += `,${log.midias[i].link}`
 
-        // imgLog.dataset.img = imgDataSet
+        }
 
-        // let imgLogFirst = imgDataSet.split(',')
-        // imgLog.src = imgLogFirst[0]
+        imgLog.dataset.img = imgDataSet
+
+        let imgLogFirst = imgDataSet.split(',')
+        imgLog.src = imgLogFirst[0]
 
         logDiv.addEventListener('click', () => {
             logFull(logDiv.id)
@@ -232,6 +242,7 @@ function createTravel(travel) {
     spanTxt.innerHTML = travel.viagem_titulo
 
 
+    img.src = travel.thumbnail
     divTravel.id = `travel${travel.id_viagem}`
     divTravel.dataset.id = travel.id_viagem
     let dateFimChar = travel.data_inicio.slice(0, 10)
@@ -268,11 +279,6 @@ function setDataUser(user) {
     // }
 
 
-    // 
-
-
-    profileIcon.src = user.foto_perfil
-    profileIconDesk.src = user.foto_perfil
     nameUserDesk.innerHTML = user.apelido
     imgSettings.src = user.foto_perfil
     nicknameSettings.innerHTML = user.apelido
@@ -284,7 +290,6 @@ function setDataUser(user) {
 
     seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
     seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
-    descricaoSettings.innerHTML = user.descricao
 
     let imgProfile = document.getElementById('imgProfile')
     let name = document.querySelector('.profileNickname')
@@ -292,8 +297,7 @@ function setDataUser(user) {
     let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
     let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
     let description = document.querySelector('.profileDescription')
-    
-    imgProfile.src = user.foto_perfil
+
     name.innerHTML = user.apelido
 
     if (user.logs) {
@@ -302,7 +306,28 @@ function setDataUser(user) {
 
     followers.innerHTML = `Seguidores ${user.seguidores.length}`
     following.innerHTML = `Seguindo ${user.seguindo.length}`
-    description.innerHTML = user.descricao
+
+    if (user.foto_perfil == "null") {
+        profileIcon.src = 'img/emptyProfileUser.jpg'
+        profileIconDesk.src = 'img/emptyProfileUser.jpg'
+        imgProfile.src = 'img/emptyProfileUser.jpg'
+        imgSettings.src = 'img/emptyProfileUser.jpg'
+
+    } else {
+        profileIcon.src = user.foto_perfil
+        profileIconDesk.src = user.foto_perfil
+        imgProfile.src = user.foto_perfil
+        imgSettings.src = user.foto_perfil
+    }
+
+    if (user.descricao === "null") {
+        descricaoSettings.innerHTML = 'Que tal adicionar uma descrição?'
+        description.innerHTML = 'Que tal adicionar uma descrição?'
+
+    } else {
+        descricaoSettings.innerHTML = user.descricao
+        description.innerHTML = user.descricao
+    }
 }
 
 function loadVisitorContent(user) {
@@ -428,6 +453,50 @@ async function postLog() {
     localObject = []
 }
 
+//Atualiza um log
+async function updateLog() {
+    let id_log = updateLogIcon.dataset.id
+    let des = document.getElementById('descriptionUpdateLog').value
+    let via = Number(document.querySelector('.selectTravelUpdate span').dataset.id)
+    let vis = document.getElementById('visibleTravelUpdate').textContent
+
+    if (vis == 'Público') {
+        vis = true
+
+    } else {
+        vis = false
+    }
+
+    let imgLink = await uploadImageLogUpdate()
+
+    let newLog = {
+        descricao: des,
+        viagem_id: via,
+        visivel: true,
+        nome_pais: localObject[3].pais,
+        estado: localObject[2].estado,
+        cidade: localObject[1].cidade,
+        nome_local: localObject[0].local_nome,
+        midias: [
+            { link: imgLink }
+        ]
+    }
+
+    let bodyPost = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newLog),
+    }
+
+    let url = `http://localhost:8080/v1/travellog/log/${id_log}`
+    let response = await fetch(url, bodyPost)
+
+    localObject = []
+}
+
+
 //Altera a imagem do log para a esquerda
 function changeImgLeft(arrow) {
     let log = arrow.closest('.log')
@@ -491,13 +560,19 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 //Adiciona as viagens na lista
 function getTravelLi(li) {
     const listTravel = document.querySelector('#listTravel ul')
+    const listTravelUpdate = document.querySelector('#listTravelUpdate ul')
 
-
+    let createLiUpdate = document.createElement('li')
     let createLi = document.createElement('li')
+
     createLi.innerHTML = li.viagem_titulo
     createLi.dataset.id = li.id_viagem
 
+    createLiUpdate.innerHTML = li.viagem_titulo
+    createLiUpdate.dataset.id = li.id_viagem
+
     listTravel.appendChild(createLi)
+    listTravelUpdate.appendChild(createLiUpdate)
 }
 
 //Adiciona os tipos de viagens a lista
@@ -526,6 +601,17 @@ function setTravel(li) {
     listTravel.classList.remove('expandListTravelNewLog')
 }
 
+//Insere a vaigem no span de seleção para atualizar
+function setTravelUpdate(li) {
+    const textTravel = document.querySelector('.selectTravelUpdate span')
+    const listTravel = document.getElementById('listTravelUpdate')
+
+    textTravel.innerHTML = li.textContent
+    textTravel.dataset.id = li.dataset.id
+
+    listTravel.classList.remove('expandListTravelUpdateLog')
+}
+
 //Insere o tipo de viagem no span de seleção
 function setTypeTravel(li) {
     const textTravelDesk = document.querySelector('.containerListTypeLog span')
@@ -544,6 +630,7 @@ function setTypeTravel(li) {
 
 //Exibe Logs relacionados com aquela viagem
 function showLogsTravel(travel_id) {
+    console.log(travel_id)
     const nameTravel = document.querySelector(`#travel${travel_id} .footerTxt`)
     const sectionLogs = document.getElementById('logsOfTravel')
     const titleTravel = document.getElementById('tittleTravelSelect')
@@ -571,31 +658,40 @@ async function logFull(id) {
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
-    logFull[12].src = logClick[0].src
+    logFull[14].src = logClick[0].src
 
     elementHigh = logFull1.id
     filterBlack.classList.toggle('showFilter')
     logFull1.classList.toggle('showModal')
 
-    logFull[12].dataset.img = logClick[0].dataset.img
-
-    logFull[8].innerHTML = location.textContent
-    logFull[18].innerHTML = logClickElement.dataset.curtidas
-    logFull[21].innerHTML = logClickElement.dataset.favoritos
-    logFull[23].innerHTML = logClickElement.dataset.date
-    logFull[25].innerHTML = logClickElement.dataset.descricao
+    logFull[7].dataset.id = logClickElement.dataset.id
+    logFull[14].dataset.img = logClick[0].dataset.img
+    logFull[6].innerHTML = logClickElement.dataset.travel
+    logFull[10].innerHTML = location.textContent
+    logFull[20].innerHTML = logClickElement.dataset.curtidas
+    logFull[23].innerHTML = logClickElement.dataset.favoritos
+    logFull[25].innerHTML = logClickElement.dataset.date
+    logFull[27].innerHTML = logClickElement.dataset.descricao
 
     console.log(logClickElement.dataset.id)
     let url = `http://localhost:8080/v1/travellog/comment/fromlog?log_id=${logClickElement.dataset.id}`
+
     let response = await fetch(url)
 
     let comments = await response.json()
-    console.log(comments)
-    const container = document.querySelector('.containerCommentsMain')
-    clearChildren(container)
-    comments.items.comentario.forEach((comment) => {
-        createComments(comment)
-    })
+
+    if (comments.status_code == 404) {
+        logFull[33].innerHTML = 0
+
+    } else {
+        logFull[33].innerHTML = comments.length
+        const container = document.querySelector('.containerCommentsMain')
+        clearChildren(container)
+        comments.items.comentario.forEach((comment) => {
+            createComments(comment)
+        })
+    }
+
 }
 
 //Criar comentários
@@ -630,6 +726,24 @@ function createComments(comment) {
     let dateComment = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
     date.innerHTML = dateComment
 
+}
+
+//Destaca a aba de atualização de Log
+function showUpdateLog(id_log) {
+    let log = document.getElementById(`log${id_log}`)
+    let location = document.querySelector(`#log${id_log} .footerTxt`)
+    const updateLog = document.getElementById('updateLog')
+    const updateLogElement = updateLog.querySelectorAll('*')
+    const logFull = document.getElementById('logFull')
+
+    logFull.classList.remove('showModal')
+    updateLog.classList.add('showModal')
+
+    updateLogElement[12].innerHTML = log.dataset.travel
+    updateLogElement[21].value = location.textContent
+    updateLogElement[22].innerHTML = log.dataset.descricao
+
+    elementHigh = 'updateLog'
 }
 
 //Destaca a aba de criação de Log
@@ -981,6 +1095,16 @@ arrowChangeImgLogRightLogFull.addEventListener('click', () => {
     }
 })
 
+// Destaca a aba de atualização de Log para mobile
+updateLogIcon.addEventListener('click', () => {
+    showUpdateLog(event.currentTarget.dataset.id)
+})
+
+//Atualiza o Log
+updateLogButton.addEventListener('click', () => {
+    updateLog()
+})
+
 //Destaca a aba de criação de Log para mobile
 newPostMobile.addEventListener('click', showNewLog)
 
@@ -989,9 +1113,9 @@ newLog.addEventListener('click', showNewLog)
 
 //Exibe aba de criação de viagens
 newTravel.addEventListener('click', () => {
-    const newLog = document.getElementById('newTravel')
+    const newTravel = document.getElementById('newTravel')
     filterBlack.classList.toggle('showFilter')
-    newLog.classList.toggle('showModal')
+    newTravel.classList.toggle('showModal')
 
     elementHigh = 'newTravel'
 })
@@ -1001,13 +1125,32 @@ iconProfileMobile.addEventListener('click', () => {
     sectionSettings.classList.remove('showSection')
 })
 
-//Mostra lista de viagens do usuário
+//Mostra lista de viagens do usuário para a criação do Log
 arrowNewLog.addEventListener('click', () => {
     const listTravel = document.getElementById('listTravel')
 
     arrowNewLog.classList.toggle('changeArrowNewLog')
     listTravel.classList.toggle('expandListTravelNewLog')
 
+})
+
+//Mostra lista de viagens do usuário para atualizar o Log
+arrowUpdateLog.addEventListener('click', () => {
+    const listTravelUpdate = document.getElementById('listTravelUpdate')
+
+    arrowUpdateLog.classList.toggle('changeArrowUpdateLog')
+    listTravelUpdate.classList.toggle('expandListTravelUpdateLog')
+
+})
+
+//Troca a visibilidade do botão na atualização de Log
+buttonVisibleLogUpdate.addEventListener('click', () => {
+    buttonVisibleLogUpdate.classList.toggle('ocultVisible')
+    if (buttonVisibleLogUpdate.classList == 'ocultVisible') {
+        buttonVisibleLogUpdate.innerHTML = 'Privado'
+    } else {
+        buttonVisibleLogUpdate.innerHTML = 'Público'
+    }
 })
 
 //Troca a visibilidade do botão na criação de Log
@@ -1221,7 +1364,17 @@ async function getAllDatasProfile(inputFilters) {
 
     if (data.items.perfil.logs) {
         data.items.perfil.logs.forEach((log) => {
-            createLogs(log)
+
+            let nameTravel = null
+
+            for (let i = 0; i < data.items.perfil.logs.length; i++) {
+                if (log.viagem_id == data.items.perfil.viagens[i].id_viagem) {
+                    nameTravel = data.items.perfil.viagens[i].viagem_titulo
+                }
+
+            }
+
+            createLogs(log, nameTravel)
         })
     }
 
@@ -1235,10 +1388,19 @@ async function getAllDatasProfile(inputFilters) {
         })
     }
     const liListTravelNewLog = document.querySelectorAll('#listTravel li')
+    const liListTravelUpdateLog = document.querySelectorAll('#listTravelUpdate li')
+
     //Adiciona event para os LI de viagens
     liListTravelNewLog.forEach(li => {
         li.addEventListener('click', () => {
             setTravel(li)
+        })
+    })
+
+    //Adiciona event para os LI de viagens
+    liListTravelUpdateLog.forEach(li => {
+        li.addEventListener('click', () => {
+            setTravelUpdate(li)
         })
     })
 
@@ -1296,6 +1458,20 @@ async function uploadImageLog() {
 
 }
 
+async function uploadImageLogUpdate() {
+    const uploadParams = {
+        storageAccount: "travellog",
+        containerName: "logs",
+        file: document.getElementById("selectImgUpdateInput").files[0],
+        sasToken: 'sp=c&st=2025-12-11T00:37:42Z&se=2025-12-20T03:00:00Z&spr=https&sv=2024-11-04&sr=c&sig=iLcABEgTFCqBVhJ7FZNQhHieVnrL%2FBHgGEkqQvCoRQg%3D'
+    }
+
+    const midia = await uploadImageToAzure(uploadParams)
+
+    return JSON.stringify(midia)
+
+}
+
 function preview({ target }) {
 
     let blob = URL.createObjectURL(target.files[0])
@@ -1305,52 +1481,92 @@ function preview({ target }) {
 document.getElementById("selectImgInput")
     .addEventListener('change', preview)
 
+document.getElementById("selectImgUpdateInput")
+    .addEventListener('chenge', preview)
 // document.getElementById("saveLog")
 //     .addEventListener("click", uploadImageLog)
 
 
+init()
+initUpdate()
 
+async function init() {
 
-// window.init = async function init() {
+    //Pega a input do HTML
+    const localizacao = document.getElementById("locationNewLogInput")
 
-//     //Pega a input do HTML
-//     const localizacao = document.getElementById("locationNewLogInput")
+    //Inicializa uma nova instância do widget de auto-complete.
+    let autoComplete = new google.maps.places.Autocomplete(localizacao, {
 
-//     //Inicializa uma nova instância do widget de auto-complete.
-//     let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+        fields: ["name", "address_components", "geometry"],
+        types: ["establishment", "geocode"]
 
-//         fields: ["name", "address_components", "geometry"],
-//         types: ["establishment", "geocode"]
+    })
 
-//     })
+    autoComplete.addListener('place_changed', async () => {
+        let place = autoComplete.getPlace()
 
-//     autoComplete.addListener('place_changed', async () => {
-//         let place = autoComplete.getPlace()
+        localObject.push({ local_nome: place.name })
 
-//         localObject.push({ local_nome: place.name })
+        let componentsAdress = place.address_components
 
-//         let componentsAdress = place.address_components
+        for (let components of componentsAdress) {
 
-//         for (let components of componentsAdress) {
+            if (components.types[0] == 'country') {
+                localObject.push({ pais: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_1') {
+                localObject.push({ estado: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_2') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'sublocality') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'locality') {
+                localObject.push({ cidade: components.long_name })
+            }
 
-//             if (components.types[0] == 'country') {
-//                 localObject.push({ pais: components.long_name })
-//             } else if (components.types[0] == 'administrative_area_level_1') {
-//                 localObject.push({ estado: components.long_name })
-//             } else if (components.types[0] == 'administrative_area_level_2') {
-//                 localObject.push({ cidade: components.long_name })
-//             } else if (components.types[0] == 'sublocality') {
-//                 localObject.push({ cidade: components.long_name })
-//             } else if (components.types[0] == 'locality') {
-//                 localObject.push({ cidade: components.long_name })
-//             }
+        }
+    })
 
-//         }
+}
 
-//         console.log(localObject)
-//     })
+async function initUpdate() {
 
-// }
+    //Pega a input do HTML
+    const localizacao = document.getElementById("locationUpdateLogInput")
+
+    //Inicializa uma nova instância do widget de auto-complete.
+    let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+
+        fields: ["name", "address_components", "geometry"],
+        types: ["establishment", "geocode"]
+
+    })
+
+    autoComplete.addListener('place_changed', async () => {
+        let place = autoComplete.getPlace()
+
+        localObject.push({ local_nome: place.name })
+
+        let componentsAdress = place.address_components
+
+        for (let components of componentsAdress) {
+
+            if (components.types[0] == 'country') {
+                localObject.push({ pais: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_1') {
+                localObject.push({ estado: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_2') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'sublocality') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'locality') {
+                localObject.push({ cidade: components.long_name })
+            }
+
+        }
+    })
+
+}
 
 
 // ----------------------------------------------------------

@@ -40,7 +40,7 @@
     <nav id="navDesk">
         <h1>Travelog</h1>
         <div class="containerNav">
-            <span id="deskHome">Home</span>
+            <span id="deskHome"><a href="home.html">Home</a></span>
             <span id="deskLikes">Explorar</span>
             <span id="deskFav">Favoritos</span>
             <div class="containerFilter">
@@ -120,7 +120,7 @@
         <!-- CONTAINERS -->
         <div class="carrossel-conteudo carrossel-page_1" id="carrossel-de-conteudo">
             <div class="containerLogs" id="container-de-logs">
-                <div class="log logCreator">
+                <div class="logCreator">
                     <div class="logCreator-thumbnail">
                         <img src="./img/newLog_Icon.svg" alt="">
                         <span class="logCreatorTxt">Novo Log</span>
@@ -239,7 +239,7 @@
                     </div>
                 </div>
 
-                <div class="viagem viagemCreator">
+                <div class="viagemCreator">
                     <div class="logCreator-thumbnail">
                         <img src="./img/newViagem_Icon.svg" alt="">
                     </div>
@@ -314,7 +314,10 @@
                 <span class="nameProfileLogFull"></span>
             </div>
             <div class="containerLocationTitle">
-                <span class="nameTravel">Férias Bem Legais</span>
+                <div class="containerSpanEdit">
+                    <span class="nameTravel">Férias Bem Legais</span>
+                    <img id="editLogIcon" src="img/edit.png" alt="">
+                </div>
                 <div class="containerLocationLogFull">
                     <img src="img/location.png" alt="">
                     <span class="locationLogFull"></span>
@@ -415,21 +418,68 @@
             </div>
         </div>
 
+        <!-- Aba de atualização de Log -->
+        <div id="updateLog">
+            <div class="imgUpdateLog">
+                <div class="containerArrowLeftNewLog">
+                    <img class="arrowImgLogLeftFull" src="img/arrowWhite.png" alt="">
+                </div>
+                <label for="selectImgUpdateInput">
+                    <img id="updateLogIcon" src="./img/newLogIcon.png" alt="">
+                </label>
+                <input id="selectImgUpdateInput" type="file" accept=".jpg,.png,.jpeg,.webp" multiple>
+                <div class="containerArrowRightNewLog">
+                    <img class="arrowImgLogRightFull" src="img/arrowWhite.png" alt="">
+                </div>
+            </div>
+            <div class="containerTravelUpdate">
+                <div class="containerSelectTravelUpdate">
+                    <span>Viagem</span>
+                    <div class="selectTravelUpdate">
+                        <span>Selecione a Viagem</span>
+                        <img id="arrowSelectTravelUpdate" src="img/arrowBlackDown.png" alt="">
+                    </div>
+                    <div id="listTravelUpdate">
+                        <ul>
+                        </ul>
+                    </div>
+                </div>
+                <button id="visibleTravelUpdate">Público</button>
+            </div>
+            <div class="containerLocationUpdateLog">
+                <span>Localização</span>
+                <div class="locationUpdateLog">
+                    <img src="img/location.png" alt="">
+                    <input id="locationUpdateLogInput" type="text" placeholder="Digite a localização do Log">
+                </div>
+            </div>
+            <textarea id="descriptionUpdateLog" name="" autocomplete="off" placeholder="Descrição..."></textarea>
+            <div class="contianerButtonUpdateLog">
+                <button id="updateLogButton">Atualizar</button>
+            </div>
+        </div>
+
         <!-- Aba de criação e edição de viagens -->
         <div id="newTravel">
             <div class="imgNewTravel">
-                <div class="containerArrowLeftNewTravel">
-                    <img class="arrowImgTravelLeftFull" src="img/arrowWhite.png" alt="">
-                </div>
                 <label for="selectImgInputTravel">
                     <img id="newTravelIcon" src="./img/newLogIcon.png" alt="">
                 </label>
                 <input id="selectImgInputTravel" type="file" accept=".jpg,.png,.jpeg,.webp" multiple>
-                <div class="containerArrowRightNewTravel">
-                    <img class="arrowImgTravelRightFull" src="img/arrowWhite.png" alt="">
+            </div>
+            <div class="containerAllDates">
+                <input id="inputNameTravel" type="text" autocomplete="off" placeholder="Viagem...">
+                <div class="containerInputDateTravel">
+                    <div>
+                        <span>Início</span>
+                        <input id="dateTravelBegin" class="dateInputTravel" type="date">
+                    </div>
+                    <div>
+                        <span>Fim</span>
+                        <input id="dateTravelEnd" class="dateInputTravel" type="date">
+                    </div>
                 </div>
             </div>
-            <input id="inputNameTravel" type="text" autocomplete="off" placeholder="Viagem...">
             <div class="containerButtonVisible">
                 <button id="visibleNewTravel">Público</button>
             </div>
