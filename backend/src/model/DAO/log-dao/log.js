@@ -387,16 +387,13 @@ const setUpdateLog = async (log_id, log) => {
 
     try {
 
-        sql = `CALL AtualizaLog(
-        ${log_id},
-        '${log.descricao}',
-        ${log.viagem_id},
-        '${log.nome_pais}',
-        '${log.estado}',
-        '${log.cidade}',
-        '${log.nome_local}',
-        ${log.visivel}
-    )`
+        sql = `
+            UPDATE FROM tbl_log SET
+                descricao = '${log.descricao}',
+                visivel   =  ${log.visivel}
+                
+                WHERE id = ${log_id}
+                `
 
         result = await prisma.$executeRawUnsafe(sql)
 

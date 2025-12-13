@@ -87,6 +87,26 @@ const getSelectCountriesByUserId = async (user_id) => {
 
 }
 
+const getSelectLocalById = async (local_id) => {
+
+    try {
+        
+        sql = `SELECT * FROM tbl_local WHERE id = ${local_id}`
+
+        result = await prisma.$queryRawUnsafe(sql)
+
+        if(Array.isArray(result)) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 //Insere local no banco 
 const setInsertLocal = async (local) => {
 
@@ -108,6 +128,27 @@ const setInsertLocal = async (local) => {
 
         result = await prisma.$executeRawUnsafe(sql)
         
+        if(result) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+//Deleta um local
+const setDeleteLocal = async (local_id) => {
+
+    try {
+        
+        sql = `DELETE FROM tbl_local WHERE id = ${local_id}`
+
+        result = await prisma.$executeRawUnsafe(sql)
+
         if(result) {
             return result
         } else {
@@ -145,6 +186,8 @@ const getSelectLastLocal = async () => {
 module.exports = {
     getSelectLocationsByUserId,
     getSelectCountriesByUserId,
+    getSelectLocalById,
     getSelectLastLocal,
+    setDeleteLocal,
     setInsertLocal
 }
