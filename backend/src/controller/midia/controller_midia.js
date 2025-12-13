@@ -109,7 +109,7 @@ const insereMidia = async (midia, contentType) => {
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_CREATED_ITEM.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.message             = MESSAGES.SUCCESS_CREATED_ITEM.message
-                    MESSAGES.DEFAULT_HEADER.items.midia         = midiaRegistrada
+                    MESSAGES.DEFAULT_HEADER.items.midias        = midiaRegistrada
 
                     return MESSAGES.DEFAULT_HEADER //200
     

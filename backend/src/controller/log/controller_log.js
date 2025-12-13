@@ -385,9 +385,26 @@ const atualizaLog = async (log_id, log, contentType) => {
 
                 if (!valida) {
 
-                    resultLog = await logDAO.setUpdateLog(log_id, log)
+                    logObject = validarId.items.log[0]
+                    idLocal = logObject.local_id
 
+                    deleteLocal = await controllerLocal.deletaLocal(idLocal)
+
+                    resultPais = await controllerPais.buscarPaisNome(log.nome_pais)
+                    paisId = resultPais.items.pais[0].id
+
+                    localObject = {
+                        nome_local: `${log.nome_local}`,
+                        estado: `${log.estado}`,
+                        cidade: `${log.cidade}`,
+                        pais_id: paisId
+                    }
+
+                    resultLocal = await controllerLocal.insereLocal(localObject, contentType)
+
+                    resultLog = await logDAO.setUpdateLog(log_id, log)
                     logAtualizado = await buscarLogId(log_id)
+
                     midiasLog = logAtualizado.items.log[0].midias
 
                     for (midia of midiasLog) {
@@ -398,12 +415,13 @@ const atualizaLog = async (log_id, log, contentType) => {
                     }
 
                     midias = log.midias
+                    console.log(midias)
 
                     for (midia of midias) {
                         
                         midiaInsert = {
                             link: `${midia.link}`,
-                            log_id: log_id
+                            log_id: Number(log_id)
                         }
 
                         midiaResult = await controllerMidia.insereMidia(midiaInsert, contentType)
@@ -436,6 +454,7 @@ const atualizaLog = async (log_id, log, contentType) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 

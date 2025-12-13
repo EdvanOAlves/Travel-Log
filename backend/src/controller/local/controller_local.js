@@ -7,6 +7,7 @@
  *********************************************************************/
 
 // Importando funções de dependência de dados do usuário
+const { PrismaClientValidationError } = require("../../generated/prisma/runtime/library.js")
 const localDAO = require("../../model/DAO/local-dao/local.js")
 
 // Importando mensagens de retorno com status code
@@ -83,6 +84,44 @@ const buscarPaisesVisitadosUsuarioId = async (user_id) => {
     }
 }
 
+const buscarLocalId = async (local_id) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        
+        if(!isNaN(local_id) && local_id != '' && local_id != null && local_id != undefined && local_id > 0) {
+
+            resultLocal = await localDAO.getSelectLocalById(local_id)
+
+            if(resultLocal) {
+
+                if(resultLocal.length > 0) {
+                    
+                    MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.items       = resultLocal
+
+                    return MESSAGES.DEFAULT_HEADER
+
+                } else {
+                    return MESSAGES.ERROR_NOT_FOUND
+                }
+
+            } else {
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+            }
+
+        } else {
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+
+}
+
 const insereLocal = async (local, contentType) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -126,6 +165,42 @@ const insereLocal = async (local, contentType) => {
 
 }
 
+const deletaLocal = async (local_id) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        
+        validarId = await buscarLocalId(local_id)
+
+        if (validarId.status_code == 200) {
+
+            resultLocal = await localDAO.setDeleteLocal(local_id)
+
+            if(resultLocal) {
+
+                MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_DELETE.status
+                MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETE.status_code
+                MESSAGES.DEFAULT_HEADER.message     = MESSAGES.SECCESS_DELETE.message
+                delete MESSAGES.DEFAULT_HEADER.items
+
+                return MESSAGES.DEFAULT_HEADER
+
+            } else {
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+            }
+
+        } else {
+            return validarId
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+
+}
+
+
 const validaLocal = (local) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -152,5 +227,7 @@ const validaLocal = (local) => {
 module.exports = {
     buscarLocaisVisitadosUsuarioId,
     buscarPaisesVisitadosUsuarioId,
+    buscarLocalId,
+    deletaLocal,
     insereLocal
 }
