@@ -140,7 +140,7 @@ header {
 #profileHeader {
     border-radius: 100%;
     width: auto;
-    height: 70%;
+    height: 90%;
 }
 
 .containerSettings div {
@@ -829,63 +829,14 @@ main {
 }
 
 .selectTravelUpdate span {
-    width: 90%;
+    width: 93.5%;
     font-size: 14px;
     padding-left: 10px;
 }
 
-#arrowSelectTravelUpdate {
+#padlockTravel {
     width: auto;
-    height: 10px;
-    transition: 0.3s ease-in-out;
-}
-
-#arrowSelectTravelUpdate.changeArrowUpdateLog {
-    transform: rotate(180deg);
-}
-
-#listTravelUpdate {
-    position: absolute;
-    top: 40px;
-    left: 1px;
-    width: 89%;
-    height: 20px;
-    background-color: var(--branco);
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-    z-index: 10;
-    border-style: solid;
-    border-color: var(--cinza_default);
-    border-width: 2px;
-    opacity: 0;
-    transition: 0.5s ease-in-out;
-}
-
-#listTravelUpdate.expandListTravelUpdateLog {
-    height: 150px;
-    opacity: 1;
-}
-
-#listTravelUpdate ul {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding-top: 20px;
-    overflow: auto;
-}
-
-#listTravelUpdate li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 90%;
-    height: 25px;
-    border-bottom-style: solid;
-    border-color: var(--cinza_default);
-    border-width: 1px;
-    font-size: 14px;
+    height: 15px;
 }
 
 #visibleTravelUpdate {
@@ -2108,12 +2059,14 @@ main {
 
     .containerProfileImgMain {
         position: absolute;
-        width: auto;
-        height: 130px;
         margin: auto;
         top: 0;
         bottom: 0;
         left: 50px;
+        width: 130px;
+        height: 130px;
+        max-width: none;
+        max-height: none;
     }
 
     .followerInfo {
@@ -2126,13 +2079,6 @@ main {
 
     .profileIdentifier {
         margin-left: 175px;
-    }
-
-    .containerProfileImgMain {
-        width: 130px;
-        height: 130px;
-        max-width: none;
-        max-height: none;
     }
 
     .logCreator {

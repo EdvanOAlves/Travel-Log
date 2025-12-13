@@ -38,7 +38,6 @@ const arrowChangeImgLogRightLogFull = document.querySelector('.containerArrowImg
 const arrowTypeFilterDesk = document.getElementById('arrowType')
 const arrowTypeFilterMobile = document.getElementById('arrowTypeMob')
 const arrowNewLog = document.getElementById('arrowSelectTravel')
-const arrowUpdateLog = document.getElementById('arrowSelectTravelUpdate')
 const newPostMobile = document.getElementById('newPost')
 const buttonVisibleLogUpdate = document.getElementById('visibleTravelUpdate')
 const buttonVisibleLog = document.getElementById('visibleTravel')
@@ -138,6 +137,7 @@ function createLogs(log, name_travel) {
     logDiv.dataset.curtidas = log.curtidas
     logDiv.dataset.favoritos = log.favoritos
     logDiv.dataset.travel = name_travel
+    logDiv.dataset.idtravel = log.viagem_id
 
     //Remove as aspas do link para colocar no src da img
     let thumbnailLog = String(log.midias[0].link).replace(/"/g, '')
@@ -458,9 +458,9 @@ async function postLog() {
 async function updateLog() {
     let id_log = updateLogIcon.dataset.id
     let des = document.getElementById('descriptionUpdateLog').value
-    let via = Number(document.querySelector('.selectTravelUpdate span').dataset.id)
+    let via = Number(document.querySelector('.selectTravelUpdate span').dataset.idtravel)
     let vis = document.getElementById('visibleTravelUpdate').textContent
-
+    console.log(des)
     if (vis == 'Público') {
         vis = true
 
@@ -561,19 +561,13 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 //Adiciona as viagens na lista
 function getTravelLi(li) {
     const listTravel = document.querySelector('#listTravel ul')
-    const listTravelUpdate = document.querySelector('#listTravelUpdate ul')
 
-    let createLiUpdate = document.createElement('li')
     let createLi = document.createElement('li')
 
     createLi.innerHTML = li.viagem_titulo
     createLi.dataset.id = li.id_viagem
 
-    createLiUpdate.innerHTML = li.viagem_titulo
-    createLiUpdate.dataset.id = li.id_viagem
-
     listTravel.appendChild(createLi)
-    listTravelUpdate.appendChild(createLiUpdate)
 }
 
 //Adiciona os tipos de viagens a lista
@@ -600,17 +594,6 @@ function setTravel(li) {
     textTravel.dataset.id = li.dataset.id
 
     listTravel.classList.remove('expandListTravelNewLog')
-}
-
-//Insere a vaigem no span de seleção para atualizar
-function setTravelUpdate(li) {
-    const textTravel = document.querySelector('.selectTravelUpdate span')
-    const listTravel = document.getElementById('listTravelUpdate')
-
-    textTravel.innerHTML = li.textContent
-    textTravel.dataset.id = li.dataset.id
-
-    listTravel.classList.remove('expandListTravelUpdateLog')
 }
 
 //Insere o tipo de viagem no span de seleção
@@ -741,8 +724,9 @@ function showUpdateLog(id_log) {
     updateLog.classList.add('showModal')
 
     updateLogElement[12].innerHTML = log.dataset.travel
+    updateLogElement[12].dataset.idtravel = log.dataset.idtravel
     updateLogElement[21].value = location.textContent
-    updateLogElement[22].innerHTML = log.dataset.descricao
+    updateLogElement[20].innerHTML = log.dataset.descricao
 
     elementHigh = 'updateLog'
 }
@@ -1135,15 +1119,6 @@ arrowNewLog.addEventListener('click', () => {
 
 })
 
-//Mostra lista de viagens do usuário para atualizar o Log
-arrowUpdateLog.addEventListener('click', () => {
-    const listTravelUpdate = document.getElementById('listTravelUpdate')
-
-    arrowUpdateLog.classList.toggle('changeArrowUpdateLog')
-    listTravelUpdate.classList.toggle('expandListTravelUpdateLog')
-
-})
-
 //Troca a visibilidade do botão na atualização de Log
 buttonVisibleLogUpdate.addEventListener('click', () => {
     buttonVisibleLogUpdate.classList.toggle('ocultVisible')
@@ -1389,19 +1364,11 @@ async function getAllDatasProfile(inputFilters) {
         })
     }
     const liListTravelNewLog = document.querySelectorAll('#listTravel li')
-    const liListTravelUpdateLog = document.querySelectorAll('#listTravelUpdate li')
 
     //Adiciona event para os LI de viagens
     liListTravelNewLog.forEach(li => {
         li.addEventListener('click', () => {
             setTravel(li)
-        })
-    })
-
-    //Adiciona event para os LI de viagens
-    liListTravelUpdateLog.forEach(li => {
-        li.addEventListener('click', () => {
-            setTravelUpdate(li)
         })
     })
 
