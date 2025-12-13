@@ -25,42 +25,14 @@ const getSelectCommentsByLogId = async (log_id) => {
 
     try {
         
-        sql = `CALL BuscarComentariosLog(${log_id})`
+        sql = `select * from tbl_comentario where log_id = ${log_id} AND visivel = true`
         
         result = await prisma.$queryRawUnsafe(sql);
         
-        //Verifica se o array está vazio, pois precisa retornar
-        //um 404 se não houver viagens cadastradas
-        if (result.length == 0) {
+        if (Array.isArray(result)) {
             return result
-        }
-
-        //Se converte o resultado de verifica para String para passar na verificação
-        //do IF, pelo método includes apenas utilizar Strings e Arrays para fazer
-        //a verificação
-        verifica = result[0].f0.toString()
-
-        if (!verifica.includes('ERRO_404')) {
-            
-            formattedResult = result.map(item => {
-
-                return {
-
-                    usuario_id: item.f0,
-                    apelido: item.f1,
-                    foto_perfil: item.f2,
-                    comentario_id: item.f3,
-                    conteudo: item.f4,
-                    data: item.f5
-
-                }
-
-            })
-
-            return formattedResult
-
         } else {
-            return []
+            return false
         }
 
     } catch (error) {

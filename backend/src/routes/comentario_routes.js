@@ -13,25 +13,20 @@ const router = express.Router();
 const cors = require('cors');              // Responsável pelas permissões da API (APP)
 const bodyParser = require('body-parser');  // Responsável por gerenciar a chegada dos dados da API com o front
 
-
 const controllerComentario = require('../controller/comentario/controller_comentario');
 
-//Criando objeto especialista no formato JSON para recebimento de dados via POST e PUT
 const bodyParserJSON = bodyParser.json();
 
-// *********
-// ENDPOINTS
-// *********
 
-// Para buscar comentários em um log
-router.get('/comment/fromlog/', cors(), async function (request, response) {
-    // Recebe o ID encaminhado via parametro na requisição
-    const idLog = request.query.log_id;
- 
-    // Chamando a função para realizar a consulta no DB
-    let comentario = await controllerComentario.buscarComentariosLogId(idLog);
-    response.status = comentario.status_code;
-    response.json(comentario);
+router.get('/comment/:id', cors(), async function (req, res) {
+    
+   const idLog = req.params.id
+
+   let comentario = await controllerComentario.buscarComentariosLogId(idLog)
+
+   res.status(comentario.status_code)
+   res.json(comentario)
+    
  })
  
  // Chama a função para buscar um comentário por id (Usado apenas em debug, o front não precisa disso)
