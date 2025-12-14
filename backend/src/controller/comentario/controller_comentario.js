@@ -33,7 +33,7 @@ const buscarComentariosLogId = async (log_id) => {
 
                     for (comentario of resultComentario) {
 
-                        idUsuario = comentario.id
+                        idUsuario = comentario.usuario_id
                         usuarioResult = await controllerUsuario.buscarUsuarioId(idUsuario)
 
                         usuario = usuarioResult.items.usuario

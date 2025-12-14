@@ -699,19 +699,25 @@ async function logFull(id) {
     logFull[25].innerHTML = logClickElement.dataset.date
     logFull[27].innerHTML = logClickElement.dataset.descricao
 
+    logFull[18].classList.add('selectable')
+    logFull[21].classList.add('selectable')
 
+
+    console.log(logFull)
     //Carregando se foi favoritado ou curtido
-    console.log(logClickElement.dataset.id)
+    console.log(logClickElement.dataset)
     let dadosInteracoes = await getDataInteractions(logClickElement.dataset.id)
     console.log(dadosInteracoes)
 
-    if (dadosInteracoes.curtido == 1) {
+    if (dadosInteracoes[0].curtido == 1) {
+        console.log('detectei aqui brow')
         likeLogFull.src = 'img/likeEnable.png'
     } else {
+        console.log('detectei aqui brow')
         likeLogFull.src = 'img/likeDisable.png'
     }
 
-    if (dadosInteracoes.favorito) {
+    if (dadosInteracoes[0].favorito) {
         favoriteLogFull.src = 'img/favEnable.png'
     }
     else {
@@ -724,19 +730,23 @@ async function logFull(id) {
     if (comments.status_code == 404) {
         logFull[33].textContent = 0
     } else {
-        logFull[33].innerHTML = comments.length
+        console.log('aíi')
+        console.log(comments)
+        logFull[33].innerHTML = comments.items.comentarios.length
         const container = document.querySelector('.containerCommentsMain')
         clearChildren(container)
-        comments.items.comentario.forEach(comment => {
+        comments.items.comentarios.forEach(comment => {
             createComments(comment)
         })
     }
 
     // Evento de deixar curtida
-    console.log(logFull)
-    logFull[18].addEventListener('click', async () => {
-        await alternarCurtida(logClickElement.dataset.id)
-    })
+    console.log('Hmmmm')
+    logFull[18].onclick = async () => {
+        let alteracao = await alternarCurtida(logClickElement.dataset.id)
+        let oldContagem = logFull[20].textContent
+        logFull[20].textContent =  Number(oldContagem)+alteracao
+    }
 
 }
 
@@ -772,9 +782,11 @@ async function alternarCurtida(log_id) {
 
     if (String(likeLogFull.src).includes('img/likeEnable.png')) {
         likeLogFull.src = 'img/likeDisable.png'
+        return -1
 
     } else {
         likeLogFull.src = 'img/likeEnable.png'
+        return +1
     }
 }
 
@@ -804,7 +816,7 @@ function createComments(comment) {
     p.innerHTML = comment.conteudo
     imgProfile.src = comment.foto_perfil
 
-    let dateChar = comment.data.slice(0, 10)
+    let dateChar = comment.data_publicacao.slice(0, 10)
     let spliceDate = dateChar.split('-')
 
     let dateComment = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
@@ -1424,7 +1436,6 @@ async function getAllDatasProfile(inputFilters) {
     let response = await fetch(url)
 
     let data = await response.json()
-    console.log(data.items)
     data_user = data.items
 
     if (data.items.perfil.logs) {
