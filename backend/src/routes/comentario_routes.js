@@ -29,32 +29,20 @@ router.get('/comment/:id', cors(), async function (req, res) {
     
  })
  
- // Chama a função para buscar um comentário por id (Usado apenas em debug, o front não precisa disso)
- router.get('/comment/fromComment/', cors(), async function (request, response) {
-        // Recebe o ID encaminhado via parametro na requisição
-        const idLog = request.query.id;
- 
-        // Chamando a função para realizar a consulta no DB
-        let comentario = await controllerComentario.buscarComentarioId(id);
-        response.status = comentario.status_code;
-        response.json(comentario);
-
- })
- //Boa prática: Quando passamos primary Key é interessante colocar essa PK como parâmetro, itens de filtro são parâmetros de rota mesmo
- 
  //Insere um novo comentario
  router.post('/comment/', cors(), bodyParserJSON, async function (request, response) {
-    console.log('recebi algorrr')
-    //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-    let dadosBody = request.body;
- 
-    //Recebe o tipo de dados da requisição (JSON, XML, etc)
-    let contentType = request.headers['content-type']
- 
-    //Chama a função da controller para publicar o novo comentário, encaminhando o conteúdo, autor e destino
-    let comentario = await controllerComentario.inserirComentario(dadosBody, contentType);
-    response.status(comentario.status_code);
-    response.json(comentario);
+   
+   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type']
+
+   //Chama a função da controller para publicar o novo comentário, encaminhando o conteúdo, autor e destino
+   let comentario = await controllerComentario.insereComentario(dadosBody, contentType);
+   response.status(comentario.status_code);
+   response.json(comentario);
+
  })
  
  // Desativar um comentário (nosso delete)

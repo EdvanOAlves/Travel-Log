@@ -81,18 +81,6 @@ router.put('/user/:id', cors(), bodyParserJSON, async (req, res) => {
 
 })
 
-router.put('/user/', cors(), bodyParserJSON, async (req, res) => {
-
-    const dadosBody = req.body
-    const contentType = req.headers['content-type']
-
-    const usuario = await controllerUsuario.altenarStatusUsuario(dadosBody, contentType)
-
-    res.status(usuario.status_code)
-    res.json(usuario)
-
-})
-
 router.get('/login/', cors(), async (req, res) => {
 
     const email = req.query.email
