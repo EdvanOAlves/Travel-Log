@@ -90,12 +90,12 @@ const getSelectCountriesByUserId = async (user_id) => {
 const getSelectLocalById = async (local_id) => {
 
     try {
-        
+
         sql = `SELECT * FROM tbl_local WHERE id = ${local_id}`
 
         result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(result)) {
+        if (Array.isArray(result)) {
             return result
         } else {
             return false
@@ -107,11 +107,38 @@ const getSelectLocalById = async (local_id) => {
 
 }
 
+//Atualizar local (Funciona)
+const setUpdateLocal = async (local) => {
+    try {
+
+        sql = `
+            UPDATE tbl_local SET
+                pais_id = ${local.pais_id},
+                nome = '${local.nome_local}',
+                cidade = '${local.cidade}',
+                estado = '${local.estado}'
+
+            WHERE id = ${local.id_local}    
+        `
+
+        result = await prisma.$executeRawUnsafe(sql)
+
+        if (result) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+}
+
 //Insere local no banco 
 const setInsertLocal = async (local) => {
 
     try {
-        
+
         sql = `
             INSERT INTO tbl_local (
                 nome,
@@ -127,8 +154,8 @@ const setInsertLocal = async (local) => {
         `
 
         result = await prisma.$executeRawUnsafe(sql)
-        
-        if(result) {
+
+        if (result) {
             return result
         } else {
             return false
@@ -142,20 +169,21 @@ const setInsertLocal = async (local) => {
 
 //Deleta um local
 const setDeleteLocal = async (local_id) => {
-
+    console.log('entrou')
     try {
-        
-        sql = `DELETE FROM tbl_local WHERE id = ${local_id}`
 
+        sql = `DELETE FROM tbl_local WHERE id = ${local_id}`
+        console.log(sql)
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(result) {
+        if (result) {
             return result
         } else {
             return false
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 
@@ -165,7 +193,7 @@ const setDeleteLocal = async (local_id) => {
 const getSelectLastLocal = async () => {
 
     try {
-    
+
         sql = `select * from tbl_local order by id desc limit 1`
 
         result = await prisma.$queryRawUnsafe(sql)
@@ -189,5 +217,6 @@ module.exports = {
     getSelectLocalById,
     getSelectLastLocal,
     setDeleteLocal,
-    setInsertLocal
+    setInsertLocal,
+    setUpdateLocal
 }

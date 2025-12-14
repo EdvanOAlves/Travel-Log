@@ -177,6 +177,7 @@ BEGIN
 			tbl_log.visivel,
 			tbl_log.viagem_id,
 			tbl_log.local_id,
+            tbl_viagem.titulo,
             tbl_local.nome AS ponto_interesse,
 			tbl_local.cidade AS cidade,
 			tbl_local.estado AS estado,
