@@ -49,6 +49,7 @@ const getSelectCommentById = async (id) => {
         sql = `SELECT * FROM tbl_comentario WHERE id = ${id}`
 
         result = await prisma.$queryRawUnsafe(sql)
+        console.log(result)
 
         if(Array.isArray(result)) {
             return result
@@ -62,7 +63,7 @@ const getSelectCommentById = async (id) => {
 
 }
 
-const getSelectLastComment = async (id) => {
+const getSelectLastComment = async () => {
 
     try {
         
@@ -70,7 +71,7 @@ const getSelectLastComment = async (id) => {
 
         result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(sql)) {
+        if(Array.isArray(result)) {
             return result
         } else {
             return false

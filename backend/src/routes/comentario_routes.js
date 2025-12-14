@@ -29,33 +29,35 @@ router.get('/comment/:id', cors(), async function (req, res) {
     
  })
  
- //Insere um novo comentario
- router.post('/comment/', cors(), bodyParserJSON, async function (request, response) {
+//Insere um novo comentario
+router.post('/comment/', cors(), bodyParserJSON, async function (request, response) {
    
-   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-   let dadosBody = request.body;
+  //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
+  let dadosBody = request.body;
 
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type']
+  //Recebe o tipo de dados da requisição (JSON, XML, etc)
+  let contentType = request.headers['content-type']
 
-   //Chama a função da controller para publicar o novo comentário, encaminhando o conteúdo, autor e destino
-   let comentario = await controllerComentario.insereComentario(dadosBody, contentType);
-   response.status(comentario.status_code);
-   response.json(comentario);
+  //Chama a função da controller para publicar o novo comentário, encaminhando o conteúdo, autor e destino
+  let comentario = await controllerComentario.insereComentario(dadosBody, contentType);
+  response.status(comentario.status_code);
+  response.json(comentario);
 
- })
+})
  
- // Desativar um comentário (nosso delete)
- router.put('/comment/:id', cors(), bodyParserJSON, async function (request, response) {
-    //Recebe o ID do comentario
-    let idComentario = request.params.id;
+// Desativar um comentário
+router.put('/comment/:id', cors(), bodyParserJSON, async function (request, response) {
+  
+  //Recebe o ID do comentario
+  let idComentario = request.params.id
  
-    //Chamando função para atualizar o filme, encaminhando os dados, id e content type
-    let comentario = await controllerComentario.desativaComentario(idComentario);
+  //Chamando função para atualizar o filme, encaminhando os dados, id e content type
+  let comentario = await controllerComentario.desativaComentario(idComentario)
  
-    response.status(comentario.status_code);
-    response.json(comentario);
- })
+  response.status(comentario.status_code)
+  response.json(comentario)
+  
+})
 
 
 module.exports = router
