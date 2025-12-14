@@ -2,8 +2,8 @@ module.exports = {
     put: {
 
         tags: ["EndPoints [COMENTÁRIO]"],
-        description: 'Atualiza um comentário do sistema.',
-        operationId: 'atualizarComentario(id, comment, contentType)',
+        description: 'Desativa um comentário',
+        operationId: 'atualizarComentario',
         parameters: [{
             name: "id",
             in: "path",
@@ -14,15 +14,6 @@ module.exports = {
                 format: "int64"
             }
         }],
-        requestBody: {
-            content: {
-                "application/json": {
-                    schema: {
-                        $ref: '#/components/schemas/commentCreate'
-                    }
-                }
-            }
-        },
         responses: {
             200: {
                 description: "Requisição bem sucedida",
@@ -30,6 +21,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/success_update"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Não encontrado",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }
