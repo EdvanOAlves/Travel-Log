@@ -26,4 +26,18 @@ router.post('/like/', cors(), bodyParserJSON, async (req, res) => {
     res.json(curtida)
 
 })
+
+//Buscar Dados de interação (Curtidas e favoritos de um log)
+router.get('/interacoes/:id', cors(), async (req, res) => {
+    const userId = req.params.id
+    const logId = req.query.log_id
+
+    // Chama a função para buscar o conteudo
+    const interacao = await controllerCurtida.consultarInteracoesLog(userId, logId)
+
+    res.status(interacao.status_code)
+    res.json(interacao)
+})
+
+
 module.exports = router
