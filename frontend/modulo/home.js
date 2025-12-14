@@ -80,19 +80,30 @@ function createLogs(log) {
     imgFav.classList.add('favImg')
     numberFav.classList.add('numberFav')
     divLocation.classList.add('containerLocationLog')
-    spanLocation.classList.add('lcoationLog')
+    spanLocation.classList.add('locationLog')
 
     // Conteudo do log
-    imgProfile.src = log.foto_perfil;
+    logDiv.id = `log${log.log[0].log_id}`
+    imgLike.src = 'img/likeDisable.png'
+    imgFav.src = 'img/favDisable.png'
     spanName.textContent = log.apelido;
-    //imgLog a fazer
-    numberLikes.textContent = log.curtidas;
-    numberFav.textContent = log.favoritos;
+
+    let thumbnailLog = String(log.log[0].midias[0].link).replace(/"/g, '')
+    imgLog.src = thumbnailLog
+    numberLikes.textContent = log.log[0].curtidas;
+    numberFav.textContent = log.log[0].favoritos;
+    imgLocation.src = 'img/location.png'
+
+    if (log.foto_perfil == "null") {
+        imgProfile.src = 'img/emptyProfileUser.jpg'
+
+    } else {
+        imgProfile.src = log.foto_perfil;
+    }
 
     // Local precisa de uma tratativa
 
     const localJson = log.log[0].local[0];
-    console.log(localJson)
 
     const parts = [
         localJson.nome_local,
@@ -119,6 +130,23 @@ function createLogs(log) {
 
     containerLogs.appendChild(logDiv)
 
+
+    logDiv.addEventListener('click', () => {
+        logFull(logDiv.id)
+    })
+
+    console.log(log)
+    let dateFimChar = log.log[0].data_postagem.slice(0, 10)
+    let spliceDate = dateFimChar.split('-')
+
+    let dataFim = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
+
+    logDiv.dataset.date = dataFim
+    logDiv.dataset.descricao = log.log[0].descricao
+    logDiv.dataset.curtidas = log.log[0].curtidas
+    logDiv.dataset.favoritos = log.log[0].favoritos
+    logDiv.dataset.travel = log.log[0].viagem_titulo
+    logDiv.dataset.idtravel = log.log[0].viagem_id
 
     //Validar quantidade Imgs
     // if (log.midia.length == 0) {
@@ -191,8 +219,6 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 
 //Cria e adiciona os seguidores
 function createFollower(follower) {
-    console.log('seguidor')
-    console.log(follower)
     const containerFollower = document.getElementById('containerFollowerList')
 
     let divFollower = document.createElement('div')
@@ -297,25 +323,46 @@ function setTypeTravel(li) {
 }
 
 //Destaca o Log clicado
-function logFull(id) {
-    const logClick = document.getElementById(id).querySelectorAll('*')
+async function logFull(id) {
+    const logClickElement = document.getElementById(id)
+    const location = document.querySelector(`#${logClickElement.id} .locationLog`)
+    const logClick = logClickElement.querySelectorAll('*')
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
-    logFull[3].innerHTML = logClick[3].textContent
-    logFull[5].innerHTML = ''
-    logFull[8].innerHTML = logClick[19].textContent
-    logFull[12].src = logClick[7].src
-    logFull[18].innerHTML = logClick[13].textContent
-    logFull[21].innerHTML = logClick[14].textContent
-
-
+    logFull[14].src = logClick[0].src
 
     elementHigh = logFull1.id
     filterBlack.classList.toggle('showFilter')
     logFull1.classList.toggle('showModal')
 
-    logFull[12].dataset.img = logClick[7].dataset.img
+    logFull[7].dataset.id = logClickElement.dataset.id
+    logFull[14].dataset.img = logClick[0].dataset.img
+    logFull[6].innerHTML = logClickElement.dataset.travel
+    logFull[10].innerHTML = location.textContent
+    logFull[20].innerHTML = logClickElement.dataset.curtidas
+    logFull[23].innerHTML = logClickElement.dataset.favoritos
+    logFull[25].innerHTML = logClickElement.dataset.date
+    logFull[27].innerHTML = logClickElement.dataset.descricao
+
+    console.log(logClickElement.dataset.id)
+    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
+
+    let response = await fetch(url)
+
+    let comments = await response.json()
+
+    if (comments.status_code == 404) {
+        logFull[33].innerHTML = 0
+
+    } else {
+        logFull[33].innerHTML = comments.length
+        const container = document.querySelector('.containerCommentsMain')
+        clearChildren(container)
+        comments.items.comentario.forEach((comment) => {
+            createComments(comment)
+        })
+    }
 }
 
 //Destaca a aba de criação de Log
@@ -707,7 +754,6 @@ async function setDataProfile() {
 
     let dataUser = await getUserData()
 
-    console.log(dataUser.items)
     if (dataUser.items.usuario.foto_perfil == "null") {
         profileIcon.src = 'img/emptyProfileUser.jpg'
         profileIconDesk.src = 'img/emptyProfileUser.jpg'
@@ -753,8 +799,6 @@ async function uploadImageLog() {
     }
 
     const midia = await uploadImageToAzure(uploadParams)
-
-    console.log(JSON.stringify(midia))
 
 }
 
@@ -893,13 +937,11 @@ async function loadFollowingTab(id) {
     clearChildren(containerFollower)
 
     const followingList = await getFollowingList(id)
-    console.log(followingList)
+
     if (followingList.status_code == 404) {
         loadToFollowTab(containerLogs)
     }
     else {
-        console.log('valido')
-        console.log(followingList.items.seguindo)
         followingList.items.seguindo.forEach(createFollower)
     }
     // followingList.items.seguindo.forEach(createFollower)
@@ -909,7 +951,7 @@ async function loadFollowingTab(id) {
 async function loadToFollowTab(containerLogs) {
 
     const toFollowList = await getToFollowList()
-    console.log(toFollowList)
+
     const searchInput = document.getElementById('inputFollowerDesk')
     searchInput.placeholder = "Usuários"
     toFollowList.items.usuario.forEach(createFollower)

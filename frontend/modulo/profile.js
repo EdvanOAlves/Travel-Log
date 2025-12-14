@@ -1382,8 +1382,6 @@ async function getAllDatasProfile(inputFilters) {
     if (data.items.perfil.logs) {
         data.items.perfil.logs.forEach((log) => {
 
-            let nameTravel = null
-
             createLogs(log)
         })
     }

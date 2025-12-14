@@ -394,7 +394,7 @@ main {
     display: flex;
     justify-content: end;
     width: 80%;
-    height: 70%;
+    height: 100%;
     padding-top: 13px;
     gap: 5px;
     padding-right: 5px;
@@ -406,7 +406,7 @@ main {
 }
 
 .locationLog {
-    font-size: 14px;
+    font-size: 70%;
     padding-top: 4px;
 }
 
@@ -689,6 +689,20 @@ main {
 
 .nameTravel {
     font-size: 20px;
+}
+
+.containerSpanEdit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#editLogIcon {
+    width: auto;
+    height: 25px;
+    margin-top: 3px;
+    transition: 0.3s ease-in-out;
 }
 
 .containerLocationLogFull img {
