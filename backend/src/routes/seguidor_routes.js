@@ -23,6 +23,19 @@ router.get('/following/:id', cors(), async (req, res) =>{
     res.json(seguidor)
 })
 
+//Busca os seguidores de um usuário
+router.get('/followers/:id', cors(), async (req, res) => {
+
+    const userId = req.params.id
+    
+    const seguidores = await controllerSeguidor.buscarSeguidores(userId)
+
+    res.status(seguidores.status_code)
+    res.json(seguidores)
+
+})
+
+//Insere uma relação
 router.post('/follow/', cors(), bodyParserJSON, async (req, res) => {
 
     const dadosBody     = req.body
@@ -35,6 +48,7 @@ router.post('/follow/', cors(), bodyParserJSON, async (req, res) => {
 
 })
 
+//Deleta uma relação
 router.delete('/follow', cors(), bodyParserJSON, async (req, res) => {
 
     const dadosBody     = req.body
