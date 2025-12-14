@@ -335,7 +335,6 @@ function loadVisitorContent(user) {
     const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
     const newLog = document.querySelector('.logCreator')
 
-    console.log('inferno')
     newLog.classList.add('display-none')
 
 
@@ -683,6 +682,8 @@ async function logFull(id) {
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
+    console.log(logFull)
+
     logFull[14].src = logClick[0].src
 
     elementHigh = logFull1.id
@@ -698,25 +699,83 @@ async function logFull(id) {
     logFull[25].innerHTML = logClickElement.dataset.date
     logFull[27].innerHTML = logClickElement.dataset.descricao
 
+
+    //Carregando se foi favoritado ou curtido
     console.log(logClickElement.dataset.id)
+    let dadosInteracoes = await getDataInteractions(logClickElement.dataset.id)
+    console.log(dadosInteracoes)
+
+    if (dadosInteracoes.curtido == 1) {
+        likeLogFull.src = 'img/likeEnable.png'
+    } else {
+        likeLogFull.src = 'img/likeDisable.png'
+    }
+
+    if (dadosInteracoes.favorito) {
+        favoriteLogFull.src = 'img/favEnable.png'
+    }
+    else {
+        favoriteLogFull.src = 'img/favDisable.png'
+    }
+
     let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
-
     let response = await fetch(url)
-
     let comments = await response.json()
-
     if (comments.status_code == 404) {
-        logFull[33].innerHTML = 0
-
+        logFull[33].textContent = 0
     } else {
         logFull[33].innerHTML = comments.length
         const container = document.querySelector('.containerCommentsMain')
         clearChildren(container)
-        comments.items.comentario.forEach((comment) => {
+        comments.items.comentario.forEach(comment => {
             createComments(comment)
         })
     }
 
+    // Evento de deixar curtida
+    console.log(logFull)
+    logFull[18].addEventListener('click', async () => {
+        await alternarCurtida(logClickElement.dataset.id)
+    })
+
+}
+
+//Puxando informações sobre interação
+async function getDataInteractions(log_id) {
+    let url = `http://localhost:8080/v1/travellog/interacoes/${userId}?log_id=${log_id}`
+
+    let response = await fetch(url)
+
+    let interacoes = await response.json()
+    return interacoes.items.interacoes
+}
+
+// Quando der click em curtir
+async function alternarCurtida(log_id) {
+    //Rota
+    const url = `http://localhost:8080/v1/travellog/like/`
+
+    //configurando
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+
+        //conteúdo
+        body: JSON.stringify({
+            log_id: log_id, usuario_id: userId
+        })
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+
+    if (String(likeLogFull.src).includes('img/likeEnable.png')) {
+        likeLogFull.src = 'img/likeDisable.png'
+
+    } else {
+        likeLogFull.src = 'img/likeEnable.png'
+    }
 }
 
 //Criar comentários
@@ -1213,16 +1272,6 @@ logs.forEach(log => {
     })
 });
 
-//Event do clique da curtida no Log em destaque
-likeLogFull.addEventListener('click', () => {
-    if (String(likeLogFull.src).includes('img/likeEnable.png')) {
-        likeLogFull.src = 'img/likeDisable.png'
-
-    } else {
-        likeLogFull.src = 'img/likeEnable.png'
-    }
-})
-
 //Event do clique do favorito no Log em destaque
 favoriteLogFull.addEventListener('click', () => {
     if (String(favoriteLogFull.src).includes('img/favEnable.png')) {
@@ -1375,7 +1424,6 @@ async function getAllDatasProfile(inputFilters) {
     let response = await fetch(url)
 
     let data = await response.json()
-    console.log('oopa')
     console.log(data.items)
     data_user = data.items
 
