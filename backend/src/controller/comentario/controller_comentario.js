@@ -162,6 +162,7 @@ const desativaComentario = async (id) => {
     try {
 
         validarId = await buscarComentarioId(id)
+        console.log(validarId)
 
         if (validarId.status_code == 200) {
 
@@ -195,17 +196,17 @@ const validarComentario = (comentario) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
-    if (comentario.conteudo == null || comentario.conteudo == undefined || comentario.conteudo == "" || typeof comentario.conteudo !== "string" || comentario.conteudo.length > 255) {
+    if (comentario.conteudo == null || comentario.conteudo == undefined || comentario.conteudo == "" || typeof comentario.conteudo != "string" || comentario.conteudo.length > 255) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [CONTEUDO INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (comentario.usuario_id == null || comentario.usuario_id == undefined || comentario.usuario_id == "" || typeof comentario.usuario_id !== "number") {
+    } else if (comentario.usuario_id == null || comentario.usuario_id == undefined || comentario.usuario_id == "" || typeof comentario.usuario_id != "number") {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [USUARIO ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (comentario.log_id == null || comentario.log_id == undefined || comentario.log_id == "" || typeof comentario.log_id !== "number") {
+    } else if (comentario.log_id == null || comentario.log_id == undefined || comentario.log_id == "" || typeof comentario.log_id != "number") {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [LOG ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
