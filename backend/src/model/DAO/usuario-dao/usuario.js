@@ -135,16 +135,15 @@ const setUpdateUser = async (id, user) => {
 
     try {
         
-        sql = `CALL AtualizaUsuario(
-            ${id},
-            ${user.nome},
-            ${user.apelido},
-            ${user.email},
-            ${user.senha},
-            ${user.foto_perfil},
-            ${user.descricao},
-            ${user.status}
-        )`
+        sql = `UPDATE tbl_usuario SET
+            nome        = '${user.nome}',
+            apelido     = '${user.apelido}',
+            email       = '${user.email}',
+            senha       = '${user.senha}',
+            foto_perfil = '${user.foto_perfil}',
+            descricao   = '${user.descricao}',
+            ativo       = ${user.status}
+        `
 
         result = await prisma.$executeRawUnsafe(sql)
 
