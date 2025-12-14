@@ -710,14 +710,14 @@ async function logFull(id) {
     console.log(dadosInteracoes)
 
     if (dadosInteracoes[0].curtido == 1) {
-        console.log('detectei aqui brow')
+        likeLogFull.classList.add('enabled')
         likeLogFull.src = 'img/likeEnable.png'
     } else {
-        console.log('detectei aqui brow')
         likeLogFull.src = 'img/likeDisable.png'
     }
-
+    
     if (dadosInteracoes[0].favorito) {
+        favoriteLogFull.classList.add('enabled')
         favoriteLogFull.src = 'img/favEnable.png'
     }
     else {
@@ -741,12 +741,19 @@ async function logFull(id) {
     }
 
     // Evento de deixar curtida
-    console.log('Hmmmm')
     logFull[18].onclick = async () => {
         let alteracao = await alternarCurtida(logClickElement.dataset.id)
         let oldContagem = logFull[20].textContent
         logFull[20].textContent =  Number(oldContagem)+alteracao
     }
+
+    //Evento de favoritar
+    logFull[21].onclick = async () => {
+        let alteracao = await alternarFavorito(logClickElement.dataset.id)
+        let oldContagem = logFull[23].textContent
+        logFull[23].textContent =  Number(oldContagem)+alteracao
+    }
+    
 
 }
 
@@ -780,12 +787,45 @@ async function alternarCurtida(log_id) {
     let response = await fetch(url, options)
     console.log(response)
 
-    if (String(likeLogFull.src).includes('img/likeEnable.png')) {
+    if (likeLogFull.classList.contains('enabled')) {
+        likeLogFull.classList.remove('enabled')
         likeLogFull.src = 'img/likeDisable.png'
         return -1
 
     } else {
+        likeLogFull.classList.add('enabled')
         likeLogFull.src = 'img/likeEnable.png'
+        return +1
+    }
+}
+// Quando der click em favorito
+async function alternarFavorito(log_id) {
+    //Rota
+    const url = `http://localhost:8080/v1/travellog/favorite/`
+
+    //configurando
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+
+        //conteúdo
+        body: JSON.stringify({
+            log_id: log_id, usuario_id: userId
+        })
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+
+    if (favoriteLogFull.classList.contains('enabled')) {
+        favoriteLogFull.classList.remove('enabled')
+        favoriteLogFull.src = 'img/favDisable.png'
+        return -1
+
+    } else {
+        favoriteLogFull.classList.add('enabled')
+        favoriteLogFull.src = 'img/favEnable.png'
         return +1
     }
 }

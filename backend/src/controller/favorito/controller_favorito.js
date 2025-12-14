@@ -56,12 +56,12 @@ const validarFavorito = (favorito) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
     
-    if (favorito.log_id == null || favorito.log_id == undefined || favorito.log_id == "" || typeof favorito.log_id !== "number") {
+    if (favorito.log_id == null || favorito.log_id == undefined || favorito.log_id == "" || isNaN(favorito.log_id)) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [LOG ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (favorito.usuario_id == null || favorito.usuario_id == undefined || favorito.usuario_id == "" || typeof favorito.usuario_id !== "number") {
+    } else if (favorito.usuario_id == null || favorito.usuario_id == undefined || favorito.usuario_id == "" || isNaN(favorito.usuario_id)) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [USUARIO ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
