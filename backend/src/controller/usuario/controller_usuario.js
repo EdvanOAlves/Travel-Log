@@ -283,21 +283,22 @@ const atualizarUsuario = async (id, usuario, contentType) => {
 
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
-            validarId = await usuarioDAO.getSelectUserById(id)
+            validarId = await buscarUsuarioId(id)
 
             if (validarId) {
 
                 validaUsuario = validarUsuario(usuario)
-
+                
                 if (!validaUsuario) {
 
                     resultUsuario = await usuarioDAO.setUpdateUser(id, usuario)
+                    
 
                     if (resultUsuario) {
 
-                        MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATE_ITEM.status
-                        MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATE_ITEM.status_code
-                        MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_UPDATE_ITEM.message
+                        MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_UPDATE_ITEM.status
+                        MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_UPDATE_ITEM.status_code
+                        MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_UPDATE_ITEM.message
                         delete MESSAGES.DEFAULT_HEADER.items
 
                         return MESSAGES.DEFAULT_HEADER //200
@@ -307,7 +308,7 @@ const atualizarUsuario = async (id, usuario, contentType) => {
                     }
 
                 } else {
-                    return validarUsuario // 400
+                    return validaUsuario // 400
                 }
 
             } else {
@@ -319,84 +320,55 @@ const atualizarUsuario = async (id, usuario, contentType) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
 }
 
-//Desativar ou ativar usuário
-const altenarStatusUsuario = async (status, contentType) => {
-
-    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
-    try {
-
-        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
-
-            usuarioId = status.id
-
-            validarId = await buscarUsuarioId(usuarioId)
-
-            if (validarId.status_code == 200) {
-
-                resultUsuario = await usuarioDAO.setToggleUser(usuarioId, status)
-
-                if (resultUsuario) {
-
-                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATE_ITEM.status
-                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATE_ITEM.status_code
-                    MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_UPDATE_ITEM.message
-                    delete MESSAGES.DEFAULT_HEADER.items
-
-                    return MESSAGES.DEFAULT_HEADER // 200
-
-                } else {
-                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-                }
-
-            } else {
-                return validarId //400, 404, 500
-            }
-
-        } else {
-            return MESSAGES.ERROR_CONTENT_TYPE //415
-        }
-
-    } catch (error) {
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
-    }
-
-}
-
-//Validar dados da requisição
 const validarUsuario = (usuario) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
-    if (usuario.nome == null || usuario.nome == undefined || usuario.nome == "" || typeof usuario.nome !== "string" || usuario.nome.length > 100) {
-
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [NOME INCORRETO]'
+    if(!isNaN(usuario.nome) || usuario.nome == null || usuario.nome == undefined || usuario.nome == "" || usuario.nome.length > 100) {
+        
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [USUARIO INVALIDO]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.apelido == null || usuario.apelido == undefined || usuario.apelido == "" || typeof usuario.apelido !== "string" || usuario.apelido.length > 25) {
+    } else if(!isNaN(usuario.apelido) || usuario.apelido == null || usuario.apelido == undefined || usuario.apelido == "" || usuario.apelido.length > 25){
 
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [APELIDO INCORRETO]'
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [APELIDO INVALIDO]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.email == null || usuario.email == undefined || usuario.email == "" || typeof usuario.email !== "string" || usuario.email.length > 255) {
+    } else if (!isNaN(usuario.email) || usuario.email == null || usuario.email == undefined || usuario.email == "" || usuario.email.length > 255) {
 
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [EMAIL INCORRETO]'
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [EMAIL INCORRETO]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.telefone == null || usuario.telefone == undefined || usuario.telefone == "" || typeof usuario.telefone !== "string" || usuario.telefone.length > 20) {
-
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [TELEFONE INCORRETO]'
+    } else if (usuario.telefone == null || usuario.telefone == undefined || usuario.telefone == "" || usuario.telefone.length > 20) {
+        
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [TELEFONE INCORRETO]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.senha == null || usuario.senha == undefined || usuario.senha == "" || typeof usuario.senha !== "string" || usuario.senha.length > 25) {
+    } else if (!isNaN(usuario.senha) || usuario.senha == null || usuario.senha == undefined || usuario.senha == "" || usuario.senha.length > 60) {
 
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [SENHA INCORRETO]'
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [SENHA INVALIDA]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
+
+    } else if (usuario.foto_perfil == undefined || usuario.foto_perfil.length > 255){
+
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [FOTO PERFIL INVALIDA]"
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+
+    } else if (usuario.descricao == undefined || usuario.descricao.length > 250) {
+
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [DESCRICAO INVALIDA]"
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+
+    } else if (typeof usuario.status != "boolean" || usuario.status == null || usuario.status == undefined || usuario.status == "" || usuario.status.length > 100) {
+
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [STATUS INCORRETO]"
+        return MESSAGES.DEFAULT_HEADER
 
     } else {
         return false
@@ -410,6 +382,5 @@ module.exports = {
     buscarUsuarioPerfilId,
     buscarLogin,
     inserirUsuario,
-    atualizarUsuario,
-    altenarStatusUsuario
+    atualizarUsuario
 }
