@@ -355,20 +355,15 @@ const validarUsuario = (usuario) => {
         MESSAGES.ERROR_REQUIRED_FIELDS.message += " [SENHA INVALIDA]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.foto_perfil == undefined || usuario.foto_perfil.length > 255){
+    } else if (typeof usuario.foto_perfil != "string" && usuario.foto_perfil != null){
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += " [FOTO PERFIL INVALIDA]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (usuario.descricao == undefined || usuario.descricao.length > 250) {
+    } else if (typeof usuario.descricao != "string" && usuario.descricao != null) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += " [DESCRICAO INVALIDA]"
         return MESSAGES.ERROR_REQUIRED_FIELDS
-
-    } else if (typeof usuario.status != "boolean" || usuario.status == null || usuario.status == undefined || usuario.status == "" || usuario.status.length > 100) {
-
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [STATUS INCORRETO]"
-        return MESSAGES.DEFAULT_HEADER
 
     } else {
         return false
