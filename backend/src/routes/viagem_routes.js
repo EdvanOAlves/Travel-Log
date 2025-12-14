@@ -33,16 +33,16 @@ router.post("/travel", cors(), bodyParserJSON, async (req, res) => {
     const contentType = req.headers['content-type']
 
     viagem = await controllerViagem.insereViagem(dadosBody, contentType)
-    console.log(viagem)
+
     res.status(viagem.status_code)
     res.json(viagem)
 
 })
 
 //Atualiza uma viagem
-router.put("/travel", cors(), bodyParserJSON, async (req, res) => {
+router.put("/travel/:id", cors(), bodyParserJSON, async (req, res) => {
 
-    const viagemId = req.query.travel_id    
+    const viagemId = req.params.id
     const dadosBody = req.body
     const contentType = req.headers['content-type']
 
@@ -54,9 +54,9 @@ router.put("/travel", cors(), bodyParserJSON, async (req, res) => {
 })
 
 //Deleta uma viagem
-router.delete("/travel", cors(), async (req, res) => {
+router.delete("/travel/:id", cors(), async (req, res) => {
 
-    const viagemId = req.query.travel_id
+    const viagemId = req.params.id
 
     viagem = await controllerViagem.deletaViagem(viagemId)
 
