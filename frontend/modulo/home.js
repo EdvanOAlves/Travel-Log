@@ -2,6 +2,7 @@
 
 import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
 
+let localObject = []
 const filterBlack = document.getElementById('filterBlack')
 const closeFilter = document.getElementById('closeFilter')
 const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
@@ -9,7 +10,6 @@ const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
 const liListTravelNewLog = document.querySelectorAll('#listTravel li')
 const allFollower = document.querySelectorAll('.follower')
 const iconProfileUser = document.getElementById('profileNav')
-const iconProfileMobile = document.querySelector('.containerSettings div')
 const inputDateContainer = document.querySelector('.containerFilterDate')
 const inputContainerDateMob = document.querySelector('.containerFilterDateMob')
 const inputDateBegin = document.getElementById('filterDateBegin')
@@ -41,6 +41,7 @@ var elementHigh = null
 
 //Cria e adiciona os Logs a tela principal
 function createLogs(log) {
+    console.log(log)
     const containerLogs = document.getElementById('containerLogs')
     let logDiv = document.createElement('div')
     let headerLog = document.createElement('div')
@@ -80,19 +81,30 @@ function createLogs(log) {
     imgFav.classList.add('favImg')
     numberFav.classList.add('numberFav')
     divLocation.classList.add('containerLocationLog')
-    spanLocation.classList.add('lcoationLog')
+    spanLocation.classList.add('locationLog')
 
     // Conteudo do log
-    imgProfile.src = log.foto_perfil;
+    logDiv.id = `log${log.log[0].log_id}`
+    imgLike.src = 'img/likeDisable.png'
+    imgFav.src = 'img/favDisable.png'
     spanName.textContent = log.apelido;
-    //imgLog a fazer
-    numberLikes.textContent = log.curtidas;
-    numberFav.textContent = log.favoritos;
+
+    let thumbnailLog = String(log.log[0].midias[0].link).replace(/"/g, '')
+    imgLog.src = thumbnailLog
+    numberLikes.textContent = log.log[0].curtidas;
+    numberFav.textContent = log.log[0].favoritos;
+    imgLocation.src = 'img/location.png'
+
+    if (log.foto_perfil == "null") {
+        imgProfile.src = 'img/emptyProfileUser.jpg'
+
+    } else {
+        imgProfile.src = log.foto_perfil;
+    }
 
     // Local precisa de uma tratativa
 
     const localJson = log.log[0].local[0];
-    console.log(localJson)
 
     const parts = [
         localJson.nome_local,
@@ -119,6 +131,24 @@ function createLogs(log) {
 
     containerLogs.appendChild(logDiv)
 
+
+    logDiv.addEventListener('click', () => {
+        logFull(logDiv.id)
+    })
+
+
+    let dateFimChar = log.log[0].data_postagem.slice(0, 10)
+    let spliceDate = dateFimChar.split('-')
+
+    let dataFim = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
+
+    logDiv.dataset.id = log.log[0].log_id
+    logDiv.dataset.date = dataFim
+    logDiv.dataset.descricao = log.log[0].descricao
+    logDiv.dataset.curtidas = log.log[0].curtidas
+    logDiv.dataset.favoritos = log.log[0].favoritos
+    logDiv.dataset.travel = log.viagem[0].titulo
+    logDiv.dataset.idtravel = log.viagem[0].viagem_id
 
     //Validar quantidade Imgs
     // if (log.midia.length == 0) {
@@ -191,8 +221,6 @@ function validePositionImgLog(dataImg, positionImg, arrow) {
 
 //Cria e adiciona os seguidores
 function createFollower(follower) {
-    console.log('seguidor')
-    console.log(follower)
     const containerFollower = document.getElementById('containerFollowerList')
 
     let divFollower = document.createElement('div')
@@ -251,9 +279,12 @@ function createFollower(follower) {
 
 //Adiciona as viagens na lista
 function getTravelLi(li) {
+    console.log(li)
     const listTravel = document.querySelector('#listTravel ul')
 
     let createLi = document.createElement('li')
+    createLi.innerHTML = li.viagem_titulo
+    createLi.dataset.id = li.id_viagem
 
     listTravel.appendChild(createLi)
 }
@@ -276,6 +307,7 @@ function setTravel(li) {
     const listTravel = document.getElementById('listTravel')
 
     textTravel.innerHTML = li.textContent
+    textTravel.dataset.id = li.dataset.id
 
     listTravel.classList.remove('expandListTravelNewLog')
 }
@@ -297,25 +329,45 @@ function setTypeTravel(li) {
 }
 
 //Destaca o Log clicado
-function logFull(id) {
-    const logClick = document.getElementById(id).querySelectorAll('*')
+async function logFull(id) {
+    const logClickElement = document.getElementById(id)
+    const location = document.querySelector(`#${logClickElement.id} .locationLog`)
+    const logClick = logClickElement.querySelectorAll('*')
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
-    logFull[3].innerHTML = logClick[3].textContent
-    logFull[5].innerHTML = ''
-    logFull[8].innerHTML = logClick[19].textContent
-    logFull[12].src = logClick[7].src
-    logFull[18].innerHTML = logClick[13].textContent
-    logFull[21].innerHTML = logClick[14].textContent
-
-
+    logFull[12].src = logClick[9].src
 
     elementHigh = logFull1.id
     filterBlack.classList.toggle('showFilter')
     logFull1.classList.toggle('showModal')
+    console.log(logFull)
+    logFull[5].dataset.id = logClickElement.dataset.id
+    logFull[12].dataset.img = logClick[0].dataset.img
+    logFull[5].innerHTML = logClickElement.dataset.travel
+    logFull[8].innerHTML = location.textContent
+    logFull[18].innerHTML = logClickElement.dataset.curtidas
+    logFull[21].innerHTML = logClickElement.dataset.favoritos
+    logFull[23].innerHTML = logClickElement.dataset.date
+    logFull[25].innerHTML = logClickElement.dataset.descricao
 
-    logFull[12].dataset.img = logClick[7].dataset.img
+    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
+
+    let response = await fetch(url)
+
+    let comments = await response.json()
+
+    if (comments.status_code == 404) {
+        logFull[31].innerHTML = 0
+
+    } else {
+        logFull[31].innerHTML = comments.length
+        const container = document.querySelector('.containerCommentsMain')
+        clearChildren(container)
+        comments.items.comentario.forEach((comment) => {
+            createComments(comment)
+        })
+    }
 }
 
 //Destaca a aba de criação de Log
@@ -584,6 +636,10 @@ newLogDesk.addEventListener('click', showNewLog)
 //Destaca a aba de criação de Log para mobile
 newPostMobile.addEventListener('click', showNewLog)
 
+iconProfileUser.addEventListener('click', () => {
+    loadProfile(userId)
+})
+
 //Mostra lista de viagens do usuário
 arrowNewLog.addEventListener('click', () => {
     const listTravel = document.getElementById('listTravel')
@@ -707,7 +763,6 @@ async function setDataProfile() {
 
     let dataUser = await getUserData()
 
-    console.log(dataUser.items)
     if (dataUser.items.usuario.foto_perfil == "null") {
         profileIcon.src = 'img/emptyProfileUser.jpg'
         profileIconDesk.src = 'img/emptyProfileUser.jpg'
@@ -754,8 +809,7 @@ async function uploadImageLog() {
 
     const midia = await uploadImageToAzure(uploadParams)
 
-    console.log(JSON.stringify(midia))
-
+    return String(midia)
 }
 
 function preview({ target }) {
@@ -770,58 +824,51 @@ document.getElementById("selectImgInput")
 const btnSaveLog = document.getElementById('saveLog')
 btnSaveLog.addEventListener("click", postLog)
 
-// .addEventListener("click", uploadImageLog)
 
+init()
 
 //Google api
-// window.init = async function init() {
+async function init() {
+    //Pega a input do HTML
+    const localizacao = document.getElementById("locationNewLogInput")
 
-//     //Pega a input do HTML
-//     const localizacao = document.getElementById("locationNewLogInput")
+    //Inicializa uma nova instância do widget de auto-complete.
+    let autoComplete = new google.maps.places.Autocomplete(localizacao, {
 
-//     //Inicializa uma nova instância do widget de auto-complete.
-//     let autoComplete = new google.maps.places.Autocomplete(localizacao, {
+        // Não definimos nenhum valor para o campo types, para ser possível
+        //buscar estabelecimentos
 
-//         // Não definimos nenhum valor para o campo types, para ser possível
-//         //buscar estabelecimentos
+        fields: ["name", "address_components", "geometry"],
+        types: ["establishment", "geocode"]
 
-//         fields: ["name", "address_components", "geometry"],
-//         types: ["establishment", "geocode"]
+    })
 
-//     })
+    autoComplete.addListener('place_changed', async () => {
+        let place = autoComplete.getPlace()
 
-//     let localObject = []
+        localObject.push({ local_nome: place.name })
 
-//     autoComplete.addListener('place_changed', async () => {
-//         let place = autoComplete.getPlace()
+        let componentsAdress = place.address_components
 
-//         localObject.push({ local_nome: place.name })
+        for (let components of componentsAdress) {
 
-//         let componentsAdress = place.address_components
+            if (components.types[0] == 'country') {
+                localObject.push({ pais: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_1') {
+                localObject.push({ estado: components.long_name })
+            } else if (components.types[0] == 'administrative_area_level_2') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'sublocality') {
+                localObject.push({ cidade: components.long_name })
+            } else if (components.types[0] == 'locality') {
+                localObject.push({ cidade: components.long_name })
+            }
 
-//         for (let components of componentsAdress) {
+        }
 
-//             if (components.types[0] == 'country') {
-//                 localObject.push({ pais: components.long_name })
-//             } else if (components.types[0] == 'administrative_area_level_1') {
-//                 localObject.push({ estado: components.long_name })
-//             } else if (components.types[0] == 'administrative_area_level_2') {
-//                 localObject.push({ cidade: components.long_name })
-//             } else if (components.types[0] == 'sublocality') {
-//                 localObject.push({ cidade: components.long_name })
-//             } else if (components.types[0] == 'locality') {
-//                 localObject.push({ cidade: components.long_name })
-//             }
+    })
 
-//         }
-
-//         console.log(localObject)
-
-//         localObject = []
-
-//     })
-
-// }
+}
 
 // ----------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO (Requisições)
@@ -867,9 +914,10 @@ async function getExploreContent(id, inputFilters) {
 }
 
 async function getUserTravels() {
-    const endPoint = `http://localhost:8080/v1/travellog/user/${userId}`
+    const endPoint = `http://localhost:8080/v1/travellog/travel/${userId}`
     const response = await fetch(endPoint)
     const data = await response.json()
+
     return data
 }
 
@@ -883,6 +931,27 @@ function initExplorar() {
     btnExplorar.addEventListener('click', () => loadExploreContent(userId))
 }
 
+function initExplorarDesk() {
+    const btnExplorar = document.getElementById('deskLikes');
+    btnExplorar.addEventListener('click', () => loadExploreContent(userId))
+}
+
+async function getTravels() {
+    let data = await getUserTravels()
+
+    data.items.viagens.forEach((travel) => {
+        getTravelLi(travel)
+
+        const liListTravelNewLog = document.querySelectorAll('#listTravel li')
+
+        //Adiciona event para os LI de viagens
+        liListTravelNewLog.forEach(li => {
+            li.addEventListener('click', () => {
+                setTravel(li)
+            })
+        })
+    })
+}
 
 //Para carregar a lista de perfis seguindo
 async function loadFollowingTab(id) {
@@ -893,13 +962,11 @@ async function loadFollowingTab(id) {
     clearChildren(containerFollower)
 
     const followingList = await getFollowingList(id)
-    console.log(followingList)
+
     if (followingList.status_code == 404) {
         loadToFollowTab(containerLogs)
     }
     else {
-        console.log('valido')
-        console.log(followingList.items.seguindo)
         followingList.items.seguindo.forEach(createFollower)
     }
     // followingList.items.seguindo.forEach(createFollower)
@@ -909,7 +976,7 @@ async function loadFollowingTab(id) {
 async function loadToFollowTab(containerLogs) {
 
     const toFollowList = await getToFollowList()
-    console.log(toFollowList)
+
     const searchInput = document.getElementById('inputFollowerDesk')
     searchInput.placeholder = "Usuários"
     toFollowList.items.usuario.forEach(createFollower)
@@ -962,22 +1029,110 @@ function loadProfile(perfil_id) {
 
 }
 // ----------------------------------------------------------
-//              MÉTODOS DE INTEGRAÇÃO (Para postagem)
+//              MÉTODOS DE INTEGRAÇÃO (Para postagem e atualização)
 // ----------------------------------------------------------
+function validarDateLog(log) {
+    if (log.descricao == null || log.descricao == '' || log.descricao == undefined || log.descricao.length > 1500) {
+        return 'Descrição inválida!'
+
+    } else if (log.viagem_id == null || log.viagem_id == '' || log.viagem_id == undefined || isNaN(log.viagem_id)) {
+        return 'ID da viagem inválida!'
+
+    } else if (log.visivel == null || log.visivel == '' || log.visivel == undefined) {
+        return 'Visibilidade do Log inválida!'
+
+    } else if (log.nome_pais == null || log.nome_pais == '' || log.nome_pais == undefined || log.nome_pais.length > 255) {
+        return 'País inválido!'
+
+    } else if (log.estado == null || log.estado == '' || log.estado == undefined || log.estado.length > 75) {
+        return 'Estado inválido!'
+
+    } else if (log.cidade == null || log.cidade == '' || log.cidade == undefined || log.cidade.length > 75) {
+        return 'Cidade inválida!'
+
+    } else if (log.nome_local == null || log.nome_local == '' || log.nome_local == undefined || log.nome_local.length > 255) {
+        return 'Nome do local inválid0!'
+
+    } else if (log.midias[0].link == null || log.midias[0].link == '' || log.midias[0].link == undefined || log.midias[0].link.length > 255) {
+        return 'Foto inválida!'
+
+    } else {
+        return false
+
+    }
+}
+
+//Criar log
 async function postLog() {
-    const inputDescription = document.getElementById('descriptionNewLog')
-    const dadosViagem = getUserTravels()
-    const locationInput = document.getElementById('locationNewLogInput')
+    let des = document.getElementById('descriptionNewLog')
+    let via = document.querySelector('.selectTravel span')
+    let vis = document.getElementById('visibleTravel')
 
-    const descricao = inputDescription.value
-    const viagem_id = dadosViagem.items.viagens[0].id_viagem
+    if (vis.textContent == 'Público') {
+        vis = true
 
-    // const stringLocal = 
+    } else {
+        vis = false
+    }
 
-    //TODO: Por enquanto ele só pega a primeira viagem do usuário, implementar depois a escolha
+    let imgLink = await uploadImageLog()
 
+    let newLog = {
+        descricao: des.value,
+        viagem_id: Number(via.dataset.id),
+        visivel: true,
+        nome_pais: localObject[3].pais,
+        estado: localObject[2].estado,
+        cidade: localObject[1].cidade,
+        nome_local: localObject[0].local_nome,
+        midias: [
+            { link: imgLink }
+        ]
+    }
 
+    let resultValidar = validarDateLog(newLog)
 
+    if (resultValidar != false) {
+        console.log(resultValidar)
+
+    } else {
+        let bodyPost = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newLog),
+        }
+
+        let url = `http://localhost:8080/v1/travellog/log/`
+        let response = await fetch(url, bodyPost)
+
+        let containerMessageMain = document.getElementById('containerMessageMain')
+        let plane = document.querySelector('.planeAnimation')
+        let hiddeSpan = document.querySelector('.converSpan')
+
+        containerMessageMain.style.animation = 'showMessage 5.2s linear'
+        plane.style.animation = 'movePlane 4.6s linear'
+        hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+
+        setTimeout(() => {
+            containerMessageMain.style.animation = 'none'
+            plane.style.animation = 'none'
+            hiddeSpan.style.animation = 'none'
+        }, 6000);
+
+        filterBlack.classList.toggle('showFilter')
+        const elementHide = document.getElementById(elementHigh)
+
+        elementHide.classList.toggle('showModal')
+    }
+
+    let input = document.getElementById('locationNewLogInput')
+
+    input.value = ''
+    des.value = ''
+    via.innerHTML = 'Selecione a Viagem'
+    localObject = []
 }
 
 // ----------------------------------------------------------
@@ -985,6 +1140,8 @@ async function postLog() {
 // ----------------------------------------------------------
 const userId = localStorage.getItem('userId')
 initExplorar()
+initExplorarDesk()
 loadHomeContent(userId)
 loadFollowingTab(userId)
 setDataProfile()
+getTravels()    

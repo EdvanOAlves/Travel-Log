@@ -1011,7 +1011,7 @@ main {
 
 #editLogIcon {
     width: auto;
-    height: 25px;
+    height: 20px;
     margin-top: 3px;
     transition: 0.3s ease-in-out;
 }
@@ -2126,14 +2126,12 @@ main {
     .carrossel-conteudo {
         width: 300vw;
         height: 65dvh;
-        background-color: red;
         overflow-x: hidden;
     }
 
     .containerLogs {
         width: 100%;
         overflow: auto;
-        background-color: orange;
     }
 
     #logFull {
