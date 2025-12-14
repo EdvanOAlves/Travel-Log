@@ -699,19 +699,25 @@ async function logFull(id) {
     logFull[25].innerHTML = logClickElement.dataset.date
     logFull[27].innerHTML = logClickElement.dataset.descricao
 
+    logFull[18].classList.add('selectable')
+    logFull[21].classList.add('selectable')
 
+
+    console.log(logFull)
     //Carregando se foi favoritado ou curtido
-    console.log(logClickElement.dataset.id)
+    console.log(logClickElement.dataset)
     let dadosInteracoes = await getDataInteractions(logClickElement.dataset.id)
     console.log(dadosInteracoes)
 
-    if (dadosInteracoes.curtido == 1) {
+    if (dadosInteracoes[0].curtido == 1) {
+        likeLogFull.classList.add('enabled')
         likeLogFull.src = 'img/likeEnable.png'
     } else {
         likeLogFull.src = 'img/likeDisable.png'
     }
-
-    if (dadosInteracoes.favorito) {
+    
+    if (dadosInteracoes[0].favorito) {
+        favoriteLogFull.classList.add('enabled')
         favoriteLogFull.src = 'img/favEnable.png'
     }
     else {
@@ -724,19 +730,30 @@ async function logFull(id) {
     if (comments.status_code == 404) {
         logFull[33].textContent = 0
     } else {
-        logFull[33].innerHTML = comments.length
+        console.log('aíi')
+        console.log(comments)
+        logFull[33].innerHTML = comments.items.comentarios.length
         const container = document.querySelector('.containerCommentsMain')
         clearChildren(container)
-        comments.items.comentario.forEach(comment => {
+        comments.items.comentarios.forEach(comment => {
             createComments(comment)
         })
     }
 
     // Evento de deixar curtida
-    console.log(logFull)
-    logFull[18].addEventListener('click', async () => {
-        await alternarCurtida(logClickElement.dataset.id)
-    })
+    logFull[18].onclick = async () => {
+        let alteracao = await alternarCurtida(logClickElement.dataset.id)
+        let oldContagem = logFull[20].textContent
+        logFull[20].textContent =  Number(oldContagem)+alteracao
+    }
+
+    //Evento de favoritar
+    logFull[21].onclick = async () => {
+        let alteracao = await alternarFavorito(logClickElement.dataset.id)
+        let oldContagem = logFull[23].textContent
+        logFull[23].textContent =  Number(oldContagem)+alteracao
+    }
+    
 
 }
 
@@ -770,11 +787,46 @@ async function alternarCurtida(log_id) {
     let response = await fetch(url, options)
     console.log(response)
 
-    if (String(likeLogFull.src).includes('img/likeEnable.png')) {
+    if (likeLogFull.classList.contains('enabled')) {
+        likeLogFull.classList.remove('enabled')
         likeLogFull.src = 'img/likeDisable.png'
+        return -1
 
     } else {
+        likeLogFull.classList.add('enabled')
         likeLogFull.src = 'img/likeEnable.png'
+        return +1
+    }
+}
+// Quando der click em favorito
+async function alternarFavorito(log_id) {
+    //Rota
+    const url = `http://localhost:8080/v1/travellog/favorite/`
+
+    //configurando
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+
+        //conteúdo
+        body: JSON.stringify({
+            log_id: log_id, usuario_id: userId
+        })
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+
+    if (favoriteLogFull.classList.contains('enabled')) {
+        favoriteLogFull.classList.remove('enabled')
+        favoriteLogFull.src = 'img/favDisable.png'
+        return -1
+
+    } else {
+        favoriteLogFull.classList.add('enabled')
+        favoriteLogFull.src = 'img/favEnable.png'
+        return +1
     }
 }
 
@@ -804,7 +856,7 @@ function createComments(comment) {
     p.innerHTML = comment.conteudo
     imgProfile.src = comment.foto_perfil
 
-    let dateChar = comment.data.slice(0, 10)
+    let dateChar = comment.data_publicacao.slice(0, 10)
     let spliceDate = dateChar.split('-')
 
     let dateComment = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
@@ -1424,7 +1476,6 @@ async function getAllDatasProfile(inputFilters) {
     let response = await fetch(url)
 
     let data = await response.json()
-    console.log(data.items)
     data_user = data.items
 
     if (data.items.perfil.logs) {
