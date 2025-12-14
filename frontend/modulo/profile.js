@@ -101,7 +101,7 @@ estatisticaNavButton.addEventListener('click', () => {
 });
 
 //Cria e adiciona os Logs a tela principal
-function createLogs(log, name_travel) {
+function createLogs(log) {
 
     let containerDeLogs = document.getElementById('container-de-logs')
 
@@ -136,7 +136,7 @@ function createLogs(log, name_travel) {
     logDiv.dataset.descricao = log.descricao
     logDiv.dataset.curtidas = log.curtidas
     logDiv.dataset.favoritos = log.favoritos
-    logDiv.dataset.travel = name_travel
+    logDiv.dataset.travel = log.viagem_titulo
     logDiv.dataset.idtravel = log.viagem_id
 
     //Remove as aspas do link para colocar no src da img
@@ -412,6 +412,37 @@ async function removeFollow(followBody) {
     })
 }
 
+function validarDateLog(log) {
+    if (log.descricao == null || log.descricao == '' || log.descricao == undefined || log.descricao.length > 1500) {
+        return 'Descrição inválida!'
+
+    } else if (log.viagem_id == null || log.viagem_id == '' || log.viagem_id == undefined || isNaN(log.viagem_id)) {
+        return 'ID da viagem inválida!'
+
+    } else if (log.visivel == null || log.visivel == '' || log.visivel == undefined) {
+        return 'Visibilidade do Log inválida!'
+
+    } else if (log.nome_pais == null || log.nome_pais == '' || log.nome_pais == undefined || log.nome_pais.length > 255) {
+        return 'País inválido!'
+
+    } else if (log.estado == null || log.estado == '' || log.estado == undefined || log.estado.length > 75) {
+        return 'Estado inválido!'
+
+    } else if (log.cidade == null || log.cidade == '' || log.cidade == undefined || log.cidade.length > 75) {
+        return 'Cidade inválida!'
+
+    } else if (log.nome_local == null || log.nome_local == '' || log.nome_local == undefined || log.nome_local.length > 255) {
+        return 'Nome do local inválid0!'
+
+    } else if (log.midias[0].link == null || log.midias[0].link == '' || log.midias[0].link == undefined || log.midias[0].link.length > 255) {
+        return 'Foto inválida!'
+
+    } else {
+        return false
+
+    }
+}
+
 //Criar log
 async function postLog() {
     let des = document.getElementById('descriptionNewLog').value
@@ -440,16 +471,26 @@ async function postLog() {
         ]
     }
 
-    let bodyPost = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newLog),
-    }
+    console.log(imgLink.length)
+    let resultValidar = validarDateLog(newLog)
 
-    let url = `http://localhost:8080/v1/travellog/log/`
-    let response = await fetch(url, bodyPost)
+    if (resultValidar != false) {
+        console.log(resultValidar)
+
+    } else {
+        let bodyPost = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newLog),
+        }
+
+        let url = `http://localhost:8080/v1/travellog/log/`
+        let response = await fetch(url, bodyPost)
+        console.log(response)
+        alert('POST realizado com sucesso!!')
+    }
 
     localObject = []
 }
@@ -460,7 +501,7 @@ async function updateLog() {
     let des = document.getElementById('descriptionUpdateLog').value
     let via = Number(document.querySelector('.selectTravelUpdate span').dataset.idtravel)
     let vis = document.getElementById('visibleTravelUpdate').textContent
-    console.log(des)
+
     if (vis == 'Público') {
         vis = true
 
@@ -658,7 +699,7 @@ async function logFull(id) {
     logFull[27].innerHTML = logClickElement.dataset.descricao
 
     console.log(logClickElement.dataset.id)
-    let url = `http://localhost:8080/v1/travellog/comment/fromlog?log_id=${logClickElement.dataset.id}`
+    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
 
     let response = await fetch(url)
 
@@ -1343,14 +1384,7 @@ async function getAllDatasProfile(inputFilters) {
 
             let nameTravel = null
 
-            for (let i = 0; i < data.items.perfil.logs.length; i++) {
-                if (log.viagem_id == data.items.perfil.viagens[i].id_viagem) {
-                    nameTravel = data.items.perfil.viagens[i].viagem_titulo
-                }
-
-            }
-
-            createLogs(log, nameTravel)
+            createLogs(log)
         })
     }
 

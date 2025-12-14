@@ -135,15 +135,16 @@ const getSelectAllLogsUserId = async (user_id, filtros) => {
                     favoritos: item.f4,
                     visivel: item.f5,
                     viagem_id: item.f6,
+                    viagem_titulo: item.f8,
                     local: [
                         {
                             local_id: item.f7,
-                            nome_local: item.f8,
-                            cidade: item.f9,
-                            estado: item.f10,
+                            nome_local: item.f9,
+                            cidade: item.f10,
+                            estado: item.f11,
                             pais: {
-                                pais_id: item.f11,
-                                pais: item.f12
+                                pais_id: item.f12,
+                                pais: item.f13
                             }
                         }
                     ]
@@ -388,7 +389,7 @@ const setUpdateLog = async (log_id, log) => {
     try {
 
         sql = `
-            UPDATE FROM tbl_log SET
+            UPDATE tbl_log SET
                 descricao = '${log.descricao}',
                 visivel   =  ${log.visivel}
                 

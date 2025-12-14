@@ -12,7 +12,7 @@ const logDAO = require("../../model/DAO/log-dao/log.js")
 // Importa controller de midia para fazer inserção das imagens do log no banco de dados
 const controllerMidia = require("../midia/controller_midia.js")
 const controllerLocal = require("../local/controller_local.js")
-const controllerPais  = require("../pais/controller_pais.js")
+const controllerPais = require("../pais/controller_pais.js")
 
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
@@ -140,9 +140,9 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
             }
 
             resultLog = await logDAO.getSelectAllLogsUserId(usuario_id, filtros)
-            
 
-            
+
+
             if (!resultLog) {
                 return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
@@ -150,15 +150,15 @@ const listarLogsUserId = async (usuario_id, input_filtros) => {
                 return MESSAGES.ERROR_NOT_FOUND //404
             }
             for (item of resultLog) {
-                
+
                 logId = item.log_id
                 resultMidia = await controllerMidia.listarMidiasLogId(logId)
-                
+
                 if (resultMidia.status_code == 200) {
                     item.midias = resultMidia.items.midias
                 }
             }
-            
+
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
             MESSAGES.DEFAULT_HEADER.items.logs = resultLog
@@ -231,7 +231,7 @@ const listarFeedSeguindo = async (usuario_id, input_filtros) => {
                 nome_local: normalizar(input_filtros.nome_local),
                 tipo_viagem_id: normalizar(input_filtros.tipo_viagem_id)
             }
-            
+
 
             resultLog = await logDAO.getSelectLogsFollowing(usuario_id, filtros)
 
@@ -333,7 +333,7 @@ const insereLog = async (log, contentType) => {
                         }
 
                         resultMidia = await controllerMidia.insereMidia(midiaObject, contentType)
-                        midia = resultMidia.items.midia[0]
+                        midia = resultMidia.items.midias[0]
                         arrayMidias.push(midia)
 
                     }
@@ -342,10 +342,10 @@ const insereLog = async (log, contentType) => {
 
                     delete MESSAGES.DEFAULT_HEADER.items.midia
 
-                    MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_REQUEST.status
-                    MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_CREATED_ITEM.status_code
-                    MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_CREATED_ITEM.message
-                    MESSAGES.DEFAULT_HEADER.items.log       = logRegistrado
+                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message
+                    MESSAGES.DEFAULT_HEADER.items.log = logRegistrado
 
 
                     return MESSAGES.DEFAULT_HEADER //200
@@ -368,13 +368,12 @@ const insereLog = async (log, contentType) => {
 
 }
 
-//Atualiza um log
+//Atualiza um log (Funciona)
 const atualizaLog = async (log_id, log, contentType) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
             validarId = await buscarLogId(log_id)
@@ -388,10 +387,11 @@ const atualizaLog = async (log_id, log, contentType) => {
                     logObject = validarId.items.log[0]
                     idLocal = logObject.local_id
 
-                    deleteLocal = await controllerLocal.deletaLocal(idLocal)
-
                     resultPais = await controllerPais.buscarPaisNome(log.nome_pais)
                     paisId = resultPais.items.pais[0].id
+
+                    log.id_pais = paisId
+                    updateLocal = await controllerLocal.updateLocal(log, idLocal)
 
                     localObject = {
                         nome_local: `${log.nome_local}`,
@@ -399,8 +399,6 @@ const atualizaLog = async (log_id, log, contentType) => {
                         cidade: `${log.cidade}`,
                         pais_id: paisId
                     }
-
-                    resultLocal = await controllerLocal.insereLocal(localObject, contentType)
 
                     resultLog = await logDAO.setUpdateLog(log_id, log)
                     logAtualizado = await buscarLogId(log_id)
@@ -411,13 +409,13 @@ const atualizaLog = async (log_id, log, contentType) => {
 
                         idMidia = midia.midia_id
                         resultDeleteMidia = await controllerMidia.deletaMidia(idMidia)
-                        
+
                     }
 
                     midias = log.midias
 
                     for (midia of midias) {
-                        
+
                         midiaInsert = {
                             link: `${midia.link}`,
                             log_id: Number(log_id)
@@ -453,7 +451,6 @@ const atualizaLog = async (log_id, log, contentType) => {
         }
 
     } catch (error) {
-        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
@@ -521,18 +518,18 @@ const validarLog = (log) => {
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [PAÍS NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if ( log.estado.length > 75) {
+    } else if (log.estado.length > 75) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ESTADO NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if ( log.cidade.length > 75) {
+    } else if (log.cidade.length > 75) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [CIDADE NOME INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
 
-    } else if ( log.nome_local.length > 255) {
+    } else if (log.nome_local.length > 255) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [NOME LOCAL INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS

@@ -26,7 +26,7 @@ const buscarLocaisVisitadosUsuarioId = async (user_id) => {
         resultLocal = await localDAO.getSelectLocationsByUserId(user_id);
 
         // length 1 é a mensagem de notfound
-        if (resultLocal.length == 1 && resultLocal.includes("ERRO_404")){
+        if (resultLocal.length == 1 && resultLocal.includes("ERRO_404")) {
             return MESSAGES.ERROR_NOT_FOUND //404;
         }
 
@@ -62,7 +62,7 @@ const buscarPaisesVisitadosUsuarioId = async (user_id) => {
         resultPais = await localDAO.getSelectCountriesByUserId(user_id);
 
         // length 1 é a mensagem de notfound
-        if (resultPais.length == 1 && resultPais.includes("ERRO_404")){
+        if (resultPais.length == 1 && resultPais.includes("ERRO_404")) {
             return MESSAGES.ERROR_NOT_FOUND //404;
         }
 
@@ -89,18 +89,18 @@ const buscarLocalId = async (local_id) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        
-        if(!isNaN(local_id) && local_id != '' && local_id != null && local_id != undefined && local_id > 0) {
+
+        if (!isNaN(local_id) && local_id != '' && local_id != null && local_id != undefined && local_id > 0) {
 
             resultLocal = await localDAO.getSelectLocalById(local_id)
 
-            if(resultLocal) {
+            if (resultLocal) {
 
-                if(resultLocal.length > 0) {
-                    
-                    MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_REQUEST.status
+                if (resultLocal.length > 0) {
+
+                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items       = resultLocal
+                    MESSAGES.DEFAULT_HEADER.items = resultLocal
 
                     return MESSAGES.DEFAULT_HEADER
 
@@ -127,23 +127,23 @@ const insereLocal = async (local, contentType) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        
+
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
             validar = validaLocal(local)
 
-            if(!validar) {
+            if (!validar) {
 
                 resultLocal = await localDAO.setInsertLocal(local)
-                
-                if(resultLocal) {
+
+                if (resultLocal) {
 
                     lastLocal = await localDAO.getSelectLastLocal()
 
-                    MESSAGES.DEFAULT_HEADER.status          = MESSAGES.SUCCESS_CREATED_ITEM.status
-                    MESSAGES.DEFAULT_HEADER.status_code     = MESSAGES.SUCCESS_CREATED_ITEM.status_code
-                    MESSAGES.DEFAULT_HEADER.message         = MESSAGES.SUCCESS_CREATED_ITEM.message
-                    MESSAGES.DEFAULT_HEADER.items.local     = lastLocal
+                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status
+                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message
+                    MESSAGES.DEFAULT_HEADER.items.local = lastLocal
 
                     return MESSAGES.DEFAULT_HEADER //201
 
@@ -165,29 +165,46 @@ const insereLocal = async (local, contentType) => {
 
 }
 
-const deletaLocal = async (local_id) => {
+//Atualiza Local do Log (Funciona)
+const updateLocal = async (log, local_id) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        
+
         validarId = await buscarLocalId(local_id)
 
         if (validarId.status_code == 200) {
 
-            resultLocal = await localDAO.setDeleteLocal(local_id)
+            local = {
+                id_local: local_id,
+                estado: log.estado,
+                cidade: log.cidade,
+                pais_id: log.id_pais,
+                nome_local: log.nome_local,
+            }
 
-            if(resultLocal) {
+            resultValidarLocal = validaLocal(local)
 
-                MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_DELETE.status
-                MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETE.status_code
-                MESSAGES.DEFAULT_HEADER.message     = MESSAGES.SECCESS_DELETE.message
-                delete MESSAGES.DEFAULT_HEADER.items
-
-                return MESSAGES.DEFAULT_HEADER
+            if (resultValidarLocal != false) {
+                return resultValidarLocal
 
             } else {
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                resultLocal = await localDAO.setUpdateLocal(local)
+
+                if (resultLocal) {
+
+                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_REQUEST.message
+
+
+                    return MESSAGES.DEFAULT_HEADER
+
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                }
+
             }
 
         } else {
@@ -199,7 +216,6 @@ const deletaLocal = async (local_id) => {
     }
 
 }
-
 
 const validaLocal = (local) => {
 
@@ -214,11 +230,11 @@ const validaLocal = (local) => {
     } else if (local.cidade == null || !isNaN(local.cidade) || local.cidade == "" || local.cidade == undefined) {
         MESSAGES.ERROR_REQUIRED_FIELDS += ' [CIDADE INVALIDO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
-    } else if(isNaN(local.pais_id) || local.pais_id == "" || local.pais_id == undefined || local.pais_id == null) {
+    } else if (isNaN(local.pais_id) || local.pais_id == "" || local.pais_id == undefined || local.pais_id == null) {
         MESSAGES.ERROR_REQUIRED_FIELDS += ' [PAIS ID INVALIDO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
     } else {
-        return false 
+        return false
     }
 
 }
@@ -228,6 +244,6 @@ module.exports = {
     buscarLocaisVisitadosUsuarioId,
     buscarPaisesVisitadosUsuarioId,
     buscarLocalId,
-    deletaLocal,
+    updateLocal,
     insereLocal
 }
