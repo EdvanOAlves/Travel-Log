@@ -82,14 +82,29 @@ function createLogs(log) {
     divLocation.classList.add('containerLocationLog')
     spanLocation.classList.add('locationLog')
 
+    //Header do log (identificador do autor)
+    spanName.classList.add('selectable')
+    divProfile.classList.add('selectable')
+
+    spanName.onclick = async () => {
+        loadProfile(log.usuario_id)
+    }
+    divProfile.onclick = async () => {
+        loadProfile(log.usuario_id)
+    }
+
+
     // Conteudo do log
     logDiv.id = `log${log.log[0].log_id}`
     imgLike.src = 'img/likeDisable.png'
     imgFav.src = 'img/favDisable.png'
     spanName.textContent = log.apelido;
 
-    let thumbnailLog = String(log.log[0].midias[0].link).replace(/"/g, '')
-    imgLog.src = thumbnailLog
+    //Coloquei essa tratativa para conseguir acessar com banco de dados sem imagens
+    if (log.log[0].midias != undefined) {
+        let thumbnailLog = String(log.log[0].midias[0].link).replace(/"/g, '')
+        imgLog.src = thumbnailLog
+    }
     numberLikes.textContent = log.log[0].curtidas;
     numberFav.textContent = log.log[0].favoritos;
     imgLocation.src = 'img/location.png'
@@ -229,6 +244,7 @@ function createFollower(follower) {
 
     spanName.classList.add('nameFollower')
     divFollower.classList.add('follower')
+    divFollower.classList.add('selectable')
     divProfile.classList.add('profileFollower')
 
     divFollower.append(divProfile, spanName)
@@ -922,9 +938,26 @@ async function getUserTravels() {
 //              MÉTODOS DE INTEGRAÇÃO (Carregamento)
 // ----------------------------------------------------------
 
+function initHome() {
+    const btnHome = document.getElementById('mobHome')
+    const btnHomePc = document.getElementById('deskHome')
+    btnHome.addEventListener('click', () => loadFollowingTab(userId))
+    btnHomePc.addEventListener('click', () => loadFollowingTab(userId))
+}
+
 function initExplorar() {
-    const btnExplorar = document.getElementById('mobLikes');
+    const btnExplorar = document.getElementById('mobLikes')
+    const btnExplorarPc = document.getElementById('deskLikes')
     btnExplorar.addEventListener('click', () => loadExploreContent(userId))
+    btnExplorarPc.addEventListener('click', () => loadExploreContent(userId))
+}
+
+function initFavoritos(){
+    const btnFavoritos = document.getElementById('mobFav')
+    const btnFavoritsPc = document.getElementById('deskFav')
+    btnFavoritos.addEventListener('click', () => loadFavoriteContent(userId))
+    btnFavoritsPc.addEventListener('click', () => loadFavoriteContent(userId))
+
 }
 
 
@@ -972,6 +1005,23 @@ async function loadHomeContent(id, inputFilters) {
     }
 }
 
+// favoritos provisório, fazer um endpoint no backend para maior eficiência
+async function loadFavoriteContent(id) {
+    clearChildren(containerLogs)
+    const exploreLogs = await getExploreContent(id)
+    const logArray = exploreLogs.items.logs
+    let favoriteLogs = []
+    
+    for (let i = logArray.length -1; i >=0 ; i--) {
+        const log = logArray[i] 
+        if(log.favoritado){
+            favoriteLogs.push(log)
+        }
+    }
+
+    favoriteLogs.forEach(createLogs)
+}
+
 function loadEmptyHome() {
     let emptyText = document.createElement('h2')
     emptyText.textContent = `"Opa! Nenhum conteúdo dos perfis que você segue, experimente a aba "Explorar"`
@@ -983,6 +1033,7 @@ async function loadExploreContent(id, inputFilters) {
     clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
     exploreLogs.items.logs.forEach(createLogs);
+    console.log(exploreLogs)
 }
 
 // ----------------------------------------------------------
@@ -1027,6 +1078,8 @@ async function postLog() {
 // ----------------------------------------------------------
 const userId = localStorage.getItem('userId')
 initExplorar()
+initHome()
+initFavoritos()
 loadHomeContent(userId)
 loadFollowingTab(userId)
 setDataProfile()
