@@ -1,19 +1,17 @@
-const filter          = require('./filter')
 const users           = require('./users')
 const travel          = require('./travel')
-const midia           = require('./midia')
 const log             = require('./log')
-const country         = require("./country")
-const local           = require("./local")
 const comment         = require("./comment")
+const follow          = require("./follow")
+const like            = require("./like")
+const favorite        = require("./favorite")
 
 module.exports = {
     ...users,
+    ...follow,
     ...log,
     ...comment,
-    ...local,
     ...travel,
-    ...country,
-    ...midia,
-    ...filter
+    ...like,
+    ...favorite
 }

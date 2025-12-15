@@ -2,7 +2,7 @@ module.exports = {
 
     post: {
 
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Cadastra um post no sistema.',
         operationId: 'inserirPost',
         requestBody: {
@@ -21,6 +21,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/logInsert"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

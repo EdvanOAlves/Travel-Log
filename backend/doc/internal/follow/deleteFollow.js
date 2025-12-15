@@ -1,18 +1,17 @@
 module.exports = {
     delete: {
-        tags: ["EndPoints [FILTRO VIAGEM]"],
-        description: 'Deleta um filtro de viagem do sistema.',
-        operationId: 'deletarFiltro(id)',
-        parameters: [{
-            name: "id",
-            in: "path",
-            description: "ID do filtro",
-            required: true,
-            schema: {
-                type: "int",
-                format: "int64"
+        tags: ["EndPoints [FOLLOW]"],
+        description: 'Deleta uma relação entre seguidor e usuário',
+        operationId: 'deletarFollow',
+        requestBody: {
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: '#/components/schemas/followCreate'
+                    }
+                }
             }
-        }],
+        },
         responses: {
             200: {
                 description: "Requisição bem sucedida",
@@ -24,12 +23,32 @@ module.exports = {
                     }
                 }
             },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
+                        }
+                    }
+                }
+            },
             404: {
                 description: "Não encontrado",
                 content: {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/error404"
+                        }
+                    }
+                }
+            },
+            415: {
+                description: "Tipos de dados invalidos.",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error415"
                         }
                     }
                 }

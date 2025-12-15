@@ -4,7 +4,7 @@ module.exports = {
 
         tags: ["EndPoints [USUÁRIOS]"],
         description: 'Cadastra um usuário no sistema.',
-        operationId: 'inserirUsuario(user_data, contentType)',
+        operationId: 'inserirUsuario',
         requestBody: {
             content: {
                 "application/json": {
@@ -21,6 +21,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/users"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 module.exports = {
     get: {
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Retorna os logs dos usuários que ele segue',
         operationId: 'buscarLogsSeguidores',
         parameters: [{
@@ -20,6 +20,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/logExplore"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

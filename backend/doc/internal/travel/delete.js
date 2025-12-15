@@ -2,7 +2,7 @@ module.exports = {
     delete: {
         tags: ["EndPoints [VIAGEM]"],
         description: 'Deleta uma viagem pelo id',
-        operationId: 'deletarColecao(id)',
+        operationId: 'deletarViagem',
         parameters: [{
             name: "id",
             in: "path",
@@ -20,6 +20,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/success_delete"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

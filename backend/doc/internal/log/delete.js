@@ -1,6 +1,6 @@
 module.exports = {
     delete: {
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Deleta um post do usuário',
         operationId: 'deletarLog',
         parameters: [{
@@ -20,6 +20,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/success_delete"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

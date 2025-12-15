@@ -6,6 +6,9 @@ const log       = require("./log.js")
 const country   = require("./country.js")
 const local     = require("./local.js")
 const comment   = require("./comment.js")
+const follow    = require('./follow.js')
+const like      = require('./like.js')
+const favorite = require('./favorite.js')
 
 module.exports = {
     components: {
@@ -18,6 +21,9 @@ module.exports = {
             ...comment,
             ...country,
             ...local,
+            ...follow,
+            ...like,
+            ...favorite,
 
             success_delete: {
                 type: "object",
@@ -59,7 +65,26 @@ module.exports = {
                     }       
                 }
             },
-
+            success_insert: {
+                type: "object",
+                properties: {
+                    status: {
+                        type: "boolean",
+                        description: "true",
+                        example: "true"
+                    },
+                    status_code: {
+                        type: "integer",
+                        description: "201",
+                        example: "201"
+                    },
+                    message: {
+                        type: "string",
+                        description: "Item criado com sucesso!!!",
+                        example: "Item criado com sucesso!!!"
+                    }       
+                }
+            },
             error404: {
                 type: "object",
                 properties: {

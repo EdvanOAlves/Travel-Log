@@ -1,35 +1,34 @@
 module.exports = {
-    put: {
-
-        tags: ["EndPoints [FILTRO VIAGEM]"],
-        description: 'Atualiza um filtro de viagem do sistema.',
-        operationId: 'atualizarFiltro(id, filter, contentType)',
-        parameters: [{
-            name: "id",
-            in: "path",
-            description: "ID do filtro",
-            required: true,
-            schema: {
-                type: "int",
-                format: "int64"
-            }
-        }],
+    post: {
+        tags: ["EndPoints [FOLLOW]"],
+        description: 'Insere uma relação entre um usuário e outro (seguir)',
+        operationId: 'insereSeguidor',
         requestBody: {
             content: {
                 "application/json": {
                     schema: {
-                        $ref: '#/components/schemas/filterCreate'
+                        $ref: '#/components/schemas/followCreate'
                     }
                 }
             }
         },
         responses: {
-            200: {
+            201: {
                 description: "Requisição bem sucedida",
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/success_update"
+                            $ref: "#/components/schemas/success_insert"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

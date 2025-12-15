@@ -12,9 +12,9 @@ module.exports = {
                 "description": "name",
                 "example": "Mercury"
             },
-            "usuario": {
+            "apelido": {
                 "type": "string",
-                "description": "user",
+                "description": "apelido",
                 "example": "mercury.cxs"
             },
             "email": {
@@ -31,56 +31,11 @@ module.exports = {
                 "type": "string",
                 "description": "senha",
                 "example": "1234@Mer"
-            },
-            "foto_perfil": {
-                "type": "string",
-                "description": "profile_photo",
-                "example": "user_photo.png"
-            },
-            "biografia": {
-                "type": "string",
-                "description": "biography",
-                "example": "Hi, i'm Mercury! Nice to meet you. "
             },
             "data_entrada": {
                 "type": "string",
                 "description": "entry_date",
                 "example": "2025-11-20"
-            },
-            "status": {
-                "type": "boolean",
-                "description": "status",
-                "example": "true"
-            }
-        }
-    },
-    userCreate: {
-        type: 'object',
-        properties: {
-            "nome": {
-                "type": "string",
-                "description": "name",
-                "example": "Mercury"
-            },
-            "usuario": {
-                "type": "string",
-                "description": "user",
-                "example": "mercury.cxs"
-            },
-            "email": {
-                "type": "string",
-                "description": "email",
-                "example": "mercury@email.com"
-            },
-            "telefone": {
-                "type": "string",
-                "description": "telefone",
-                "example": "(11) 91234-2099"
-            },
-            "senha": {
-                "type": "string",
-                "description": "senha",
-                "example": "1234@Mer"
             },
             "foto_perfil": {
                 "type": "string",
@@ -112,9 +67,9 @@ module.exports = {
                 "description": "name",
                 "example": "Mercury"
             },
-            "usuario": {
+            "apelido": {
                 "type": "string",
-                "description": "user",
+                "description": "apelido",
                 "example": "mercury.cxs"
             },
             "email": {
@@ -132,6 +87,11 @@ module.exports = {
                 "description": "senha",
                 "example": "1234@Mer"
             },
+            "data_entrada": {
+                "type": "string",
+                "description": "entry_date",
+                "example": "2025-11-20"
+            },
             "foto_perfil": {
                 "type": "string",
                 "description": "profile_photo",
@@ -142,21 +102,87 @@ module.exports = {
                 "description": "biography",
                 "example": "Hi, i'm Mercury! Nice to meet you. "
             },
-            "data_entrada": {
-                "type": "string",
-                "description": "entry_date",
-                "example": "2025-11-20"
-            },
             "status": {
                 "type": "boolean",
                 "description": "status",
                 "example": "true"
             },
-            "seguidores": {
-                
+            "qtd_seguidores": {
+                "type": "int",
+                "description": "qtd",
+                "example": 30
             },
-            "viagens": {
-                $ref: "#/components/schemas/userGetTravel"
+            "qtd_seguindo": {
+                "type": "int",
+                "description": "qtd",
+                "example": 30
+            },
+            "seguidores": {
+                "type": "array",
+                "items": {
+                    $ref: "#/components/schemas/followers"
+                }
+            },
+            "seguindo": {
+                "type": "array",
+                "items": {
+                    $ref: "#/components/schemas/following"
+                }
+            }
+        }
+    },
+    login: {
+        type: 'object',
+        properties: {
+            "id_usuario": {
+                "type": "int",
+                "description": "id",
+                "example": 1
+            }
+        }
+    },
+    userCreate: {
+        type: 'object',
+        properties: {
+            "nome": {
+                "type": "string",
+                "description": "name",
+                "example": "Mercury"
+            },
+            "apelido": {
+                "type": "string",
+                "description": "apelido",
+                "example": "mercury.cxs"
+            },
+            "email": {
+                "type": "string",
+                "description": "email",
+                "example": "mercury@email.com"
+            },
+            "senha": {
+                "type": "string",
+                "description": "senha",
+                "example": "1234@Mer"
+            },
+            "telefone": {
+                "type": "string",
+                "description": "telefone",
+                "example": "(11) 91234-2099"
+            },
+            "foto_perfil": {
+                "type": "string",
+                "description": "profile_photo",
+                "example": null
+            },
+            "descricao": {
+                "type": "string",
+                "description": "descricao",
+                "example": null
+            },
+            "ativo": {
+                "type": "boolean",
+                "description": "status",
+                "example": true
             }
         }
     },

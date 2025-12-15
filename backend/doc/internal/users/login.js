@@ -1,12 +1,22 @@
 module.exports = {
     get: {
-        tags: ["EndPoints [PAÍS]"],
-        description: 'Retorna um país do sistema pelo id.',
-        operationId: 'listarPaisId(id)',
+        tags: ["EndPoints [USUÁRIOS]"],
+        description: 'Busca o usuário no sistema para executar o login',
+        operationId: 'login',
         parameters: [{
-            name: "id",
-            in: "path",
-            description: "ID do país",
+            name: "email",
+            in: "query",
+            description: "Email do usuário",
+            required: true,
+            schema: {
+                type: "int",
+                format: "int64"
+            }
+        },
+        {
+            name: "senha",
+            in: "query",
+            description: "Senha do usuário",
             required: true,
             schema: {
                 type: "int",
@@ -19,7 +29,17 @@ module.exports = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/pais"
+                            $ref: "#/components/schemas/login"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

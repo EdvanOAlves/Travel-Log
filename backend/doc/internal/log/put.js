@@ -1,7 +1,7 @@
 module.exports = {
     put: {
 
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Atualiza um post do sistema.',
         operationId: 'atualizarPost',
         parameters: [{
@@ -30,6 +30,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/success_update"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }
