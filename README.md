@@ -81,7 +81,7 @@ O projeto segue a **arquitetura MVC (Model-View-Controller)**, separando respons
 
 ## 🗄 Banco de Dados
 
-![Diagrama lógico](./database/TraveLog%20Modelo%20Logico.png)
+<img width="2000" height="1120" alt="Travellog Modelo Logico" src="https://github.com/user-attachments/assets/d7ac3963-57e0-4046-87a7-5edf8513b434" />
 
 - **Tecnologia:** SQL
 - **Ferramenta:** MySQL Workbench
