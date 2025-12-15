@@ -5,6 +5,7 @@ import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
 var id_user = null
 let localObject = []
 let data_user
+const iconDeleteLog = document.getElementById('deleteLogIcon')
 const buttonSaveTravel = document.getElementById('saveNewTravel')
 const updateLogIcon = document.getElementById('editLogIcon')
 const updateLogButton = document.getElementById('updateLogButton')
@@ -613,11 +614,22 @@ async function deleteLog(id_log) {
     let url = `http://localhost:8080/v1/travellog/log/${id_log}`
     let response = await fetch(url, bodyPost)
 
+    if (response.ok) {
+        alert('Log deletado com sucesso')
+
+    } else {
+        alert('Erro ao deletar Log')
+    }
+
     filterBlack.classList.toggle('showFilter')
     const elementHide = document.getElementById(elementHigh)
 
     elementHide.classList.toggle('showModal')
 }
+
+iconDeleteLog.addEventListener('click', () => {
+    deleteLog(iconDeleteLog.dataset.id)
+})
 
 function validarDateTravel(travel) {
     if (travel.titulo == null || travel.titulo == '' || travel.titulo == undefined || travel.titulo.length > 50) {
@@ -874,6 +886,7 @@ async function logFull(id) {
     logFull1.classList.toggle('showModal')
 
     logFull[7].dataset.id = logClickElement.dataset.id
+    logFull[8].dataset.id = logClickElement.dataset.id
     logFull[15].dataset.img = logClick[0].dataset.img
     logFull[6].innerHTML = logClickElement.dataset.travel
     logFull[11].innerHTML = location.textContent
