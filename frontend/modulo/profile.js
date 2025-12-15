@@ -258,7 +258,7 @@ function createTravel(travel) {
     })
 }
 
-//Adiciona dados do usuério
+//Adiciona dados do usuário
 function setDataUser(user) {
     let imgSettings = document.querySelector('.profileImgSettings')
     let nicknameSettings = document.querySelector('.nickNameSettings')
@@ -271,13 +271,13 @@ function setDataUser(user) {
     let profileIconDesk = document.getElementById('imgProfileDesk')
     let profileIcon = document.getElementById('profileHeader')
 
-    // // Caso o perfil não pertença ao usuário
-    // if (perfilId != userId) {
-    //     loadVisitorContent(user)
+    // Caso o perfil não pertença ao usuário
+    if (perfilId != userId) {
+        loadVisitorContent(user)
 
-    // } else {
-    //     loadOwnerContent(user)
-    // }
+    } else {
+        // loadOwnerContent(user)
+    }
 
 
     nameUserDesk.innerHTML = user.apelido
@@ -337,54 +337,58 @@ function loadVisitorContent(user) {
 
     newLog.classList.add('display-none')
 
-
-    let containerFollowerUser = document.querySelector('.containerFollowerUser')
     const btnFollow = document.getElementById('followUser')
-    const btnImg = document.createElement('img')
-    btnFollow.id = 'followUser'
-    containerFollowerUser.appendChild(btnFollow)
+    
 
     const perfilSeguidores = user.seguidores
 
-    let userSeguindo = false
-    for (let seguidor in perfilSeguidores) {
-        if (seguidor.id == userId) {
-            userSeguindo = true
+    console.log(perfilSeguidores)
+    for (let seguidor of perfilSeguidores) {
+        if (seguidor.seguidor_id == userId) {
+            btnFollow.classList.add('enabled')
         }
     }
-    if (userSeguindo) {
-        btnImg.src = './img/confirm.png'
+    if (btnFollow.classList.contains('enabled')) {
+        btnFollow.textContent = 'Seguindo'
     } else {
-        btnImg.src = './img/plus.png'
+        btnFollow.textContent = 'Seguir'
     }
-    btnFollow.appendChild(btnImg)
 
     // Função de seguir
-    btnFollow.addEventListener('click', () => {
-        if (!userSeguindo) {
-            addFollow(followBody)
-            userSeguindo = true;
-            btnImg.style.animation = '3s rotateFollow linear'
-            setTimeout(() => {
-                btnImg.src = 'img/confirm.png'
-            }, 1000);
-        } else {
-            removeFollow(followBody)
-            userSeguindo = false;
-
-            btnImg.style.animation = '3s rotateFollow linear'
-            setTimeout(() => {
-                btnImg.src = 'img/plus.png'
-            }, 1000);
-
-        }
-
-        // let imgButton = document.querySelector('#followUser img')
-
-
-
-    })
+    btnFollow.onclick = async () => {
+        const seguidoresSettings = document.querySelector('.followerSettings')
+        const seguidoresContagem = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
+        let alteracao = await alternarSeguindo(user.id, btnFollow)
+        let oldContagem = seguidoresSettings.textContent.split(' ')[1]
+        let newContagem = Number(oldContagem) + alteracao
+        seguidoresSettings.textContent = `Seguidores ${newContagem}`
+        seguidoresContagem.textContent = `Seguidores ${newContagem}`
+    }
 }
+
+// Quando der click no botão de seguir
+async function alternarSeguindo(perfil_id, btnFollow) {
+    const body = {
+        usuario_id: Number(perfil_id),
+        seguidor_id: Number(userId)
+    }
+
+    console.log(btnFollow)
+    if (btnFollow.classList.contains('enabled')) {
+        removeFollow(body)
+        btnFollow.classList.remove('enabled')
+        btnFollow.textContent = 'Seguir'
+        return -1
+
+    } else {
+        addFollow(body)
+        btnFollow.classList.add('enabled')
+        btnFollow.textContent = 'Seguindo'
+        return +1
+    }
+}
+
+
 async function addFollow(followBody) {
     console.log(followBody)
     let url = `http://localhost:8080/v1/travellog/follow/`
@@ -946,15 +950,6 @@ function valideDateValueMob() {
     }
 }
 
-//Botão para seguir
-buttonFollower.addEventListener('click', () => {
-    let imgButton = document.querySelector('#followUser img')
-    imgButton.style.animation = '3s rotateFollow linear'
-
-    setTimeout(() => {
-        imgButton.src = 'img/confirm.png'
-    }, 1500);
-})
 
 //Ícone para voltar a tela do perfil
 iconProfileUser.addEventListener('click', () => {
