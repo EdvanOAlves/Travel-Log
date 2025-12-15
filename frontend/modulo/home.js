@@ -1164,7 +1164,7 @@ async function loadToFollowTab(containerLogs) {
 
 // carregando conteúdo da home
 async function loadHomeContent(id, inputFilters) {
-    currentPage ='home'
+    currentPage = 'home'
     clearChildren(containerLogs)
 
     const homeLogs = await getHomeContent(id, inputFilters)
@@ -1206,14 +1206,14 @@ async function loadExploreContent(id, inputFilters) {
     currentPage = 'explore'
     clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
-    if (exploreLogs.status_code == 404){
+    if (exploreLogs.status_code == 404) {
         let emptyText = document.createElement('h2')
         emptyText.textContent = "Nenhum conteudo encontrado"
-    
+
         containerLogs.appendChild(emptyText)
     }
 
-    if (exploreLogs.items.logs){
+    if (exploreLogs.items.logs) {
         exploreLogs.items.logs.forEach(createLogs);
     }
 
