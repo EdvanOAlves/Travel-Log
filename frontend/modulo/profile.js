@@ -1798,7 +1798,8 @@ async function init() {
         localObject.push({ local_nome: place.name })
 
         let componentsAdress = place.address_components
-
+        
+        let cidade
         for (let components of componentsAdress) {
 
             if (components.types[0] == 'country') {
@@ -1806,14 +1807,15 @@ async function init() {
             } else if (components.types[0] == 'administrative_area_level_1') {
                 localObject.push({ estado: components.long_name })
             } else if (components.types[0] == 'administrative_area_level_2') {
-                localObject.push({ cidade: components.long_name })
+                cidade = components.long_name
             } else if (components.types[0] == 'sublocality') {
-                localObject.push({ cidade: components.long_name })
+                cidade = components.long_name
             } else if (components.types[0] == 'locality') {
-                localObject.push({ cidade: components.long_name })
+                cidade = components.long_name
             }
 
         }
+        localObject.push({cidade: cidade})
     })
 
 }
@@ -1839,6 +1841,7 @@ async function initUpdate() {
         let componentsAdress = place.address_components
 
         for (let components of componentsAdress) {
+            let extractCidade
 
             if (components.types[0] == 'country') {
                 localObject.push({ pais: components.long_name })
