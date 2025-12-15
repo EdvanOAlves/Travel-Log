@@ -424,7 +424,7 @@ main {
 .log {
     width: 46%;
     height: 20%;
-    max-height: 60px;
+    max-height: 20px;
     min-height: 50%;
     margin-top: 2%;
     margin-left: 2%;
@@ -1107,7 +1107,13 @@ main {
     width: auto;
     height: 20px;
     margin-top: 3px;
+    margin-left: 110px;
     transition: 0.3s ease-in-out;
+}
+
+#deleteLogIcon {
+    width: auto;
+    height: 20px;
 }
 
 .containerLocationLogFull img {
@@ -1767,36 +1773,13 @@ main {
     transform: scale(1);
     animation-delay: 0.7s;
     opacity: 0;
+    transition: 0.5s ease-in-out;
     pointer-events: none;
 }
 
 #logsOfTravel.showLogsTravel {
     opacity: 1;
     pointer-events: all;
-}
-
-@keyframes showScaleLogs {
-    0% {
-        transform: scale(0);
-    }
-
-    70% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes hiddeScaleLogs {
-    0% {
-        transform: scale(1);
-    }
-
-    100% {
-        transform: scale(0);
-    }
 }
 
 .containerLogs:nth-child(2) {
