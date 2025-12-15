@@ -103,6 +103,100 @@ body {
     pointer-events: none;
 }
 
+/* Contianer de mensagem */
+#containerMessageMain {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    width: 70%;
+    height: 65px;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: -100px;
+    padding-left: 20px;
+    background-color: var(--cinza_default);
+    box-shadow: var(--default_shadow);
+    transition: 0.4s ease-in-out;
+    z-index: 99;
+}
+
+@keyframes showMessage {
+    0% {
+        top: -100px;
+    }
+
+    15%,
+    80% {
+        top: 0px;
+    }
+
+    100% {
+        top: -100px;
+    }
+}
+
+.planeAnimation {
+    width: auto;
+    height: 25px;
+    animation-delay: 2.3s;
+    z-index: 99;
+}
+
+@keyframes movePlane {
+    0% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(55dvw));
+    }
+}
+
+.containerSpanAnimation {
+    position: relative;
+    display: flex;
+    width: 90%;
+    overflow: hidden;
+}
+
+.converSpan {
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    background-color: var(--cinza_default);
+    animation-delay: 2.4s;
+    z-index: 50;
+}
+
+@keyframes moveSpan {
+
+    0% {
+        width: 0%;
+    }
+
+    50% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+.messageMainSpan {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    font-size: 0.8rem;
+}
+
 /* Header */
 header {
     display: flex;
@@ -1237,7 +1331,7 @@ main {
     right: 0;
     padding: 15px 10px 5px 10px;
     width: 95%;
-    height: 50%;
+    height: 65%;
     opacity: 0;
     background-color: var(--cor_web_post);
     z-index: 60;
@@ -1275,7 +1369,7 @@ main {
     justify-content: center;
     align-items: center;
     width: 95%;
-    height: 45px;
+    height: 40px;
     margin-top: 30px;
     padding-left: 5px;
     background-color: var(--branco);
@@ -1288,8 +1382,90 @@ main {
 .containerAllDates {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
     width: 95%;
+}
+
+.containerSelectTypeTravel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 35%;
+    gap: 10px;
+}
+
+.selectTypeTravel {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    height: 35px;
+    border-radius: 20px;
+    background-color: var(--branco);
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    z-index: 20;
+}
+
+.selectTypeTravel span {
+    width: 90%;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+#arrowSelectTypeTravel {
+    width: auto;
+    height: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+#arrowSelectTypeTravel.changeArrowNewTravel {
+    transform: rotate(180deg);
+}
+
+#listTypeTravel {
+    position: absolute;
+    top: 40px;
+    left: 1px;
+    width: 89%;
+    height: 20px;
+    background-color: var(--branco);
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    z-index: 10;
+    border-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 2px;
+    opacity: 0;
+    transition: 0.5s ease-in-out;
+}
+
+#listTypeTravel.expandListTravelNewTravel {
+    height: 150px;
+    opacity: 1;
+}
+
+#listTypeTravel ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-top: 20px;
+    overflow: auto;
+}
+
+#listTypeTravel li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 25px;
+    border-bottom-style: solid;
+    border-color: var(--cinza_default);
+    border-width: 1px;
+    font-size: 14px;
 }
 
 .containerInputDateTravel {
@@ -2057,6 +2233,10 @@ main {
 }
 
 @media (min-width: 768px) {
+    #containerMessageMain {
+        width: 50%;
+    }
+
     .userProfileHeader {
         position: relative;
     }
@@ -2148,7 +2328,7 @@ main {
     }
 
     #newTravel {
-        width: 60%;
+        width: 65%;
     }
 
     #containerFilterMob {
@@ -2301,6 +2481,10 @@ main {
         width: 15px;
         height: 15px;
         margin: 20px 20px 0px 0px;
+    }
+
+    #containerMessageMain {
+        width: 40%;
     }
 
     header {

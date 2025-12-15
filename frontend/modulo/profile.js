@@ -5,6 +5,7 @@ import { uploadImageToAzure } from "../js/uploadImageToAzure.js"
 var id_user = null
 let localObject = []
 let data_user
+const buttonSaveTravel = document.getElementById('saveNewTravel')
 const updateLogIcon = document.getElementById('editLogIcon')
 const updateLogButton = document.getElementById('updateLogButton')
 const saveLog = document.getElementById('saveLog')
@@ -38,6 +39,7 @@ const arrowChangeImgLogRightLogFull = document.querySelector('.containerArrowImg
 const arrowTypeFilterDesk = document.getElementById('arrowType')
 const arrowTypeFilterMobile = document.getElementById('arrowTypeMob')
 const arrowNewLog = document.getElementById('arrowSelectTravel')
+const arrowNewTravel = document.getElementById('arrowSelectTypeTravel')
 const newPostMobile = document.getElementById('newPost')
 const buttonVisibleLogUpdate = document.getElementById('visibleTravelUpdate')
 const buttonVisibleLog = document.getElementById('visibleTravel')
@@ -299,11 +301,11 @@ function setDataUser(user) {
     let description = document.querySelector('.profileDescription')
 
     name.innerHTML = user.apelido
-        if (user.logs) {
+    if (user.logs) {
         logs.textContent = `Logs ${user.logs.length}`
         logsSettings.textContent = `Logs ${user.logs.length}`
     }
-    else{
+    else {
         logsSettings.textContent = `Logs 0`
         logs.textContent = `Logs 0`
     }
@@ -336,8 +338,8 @@ function setDataUser(user) {
     }
 }
 
-function loadOwnerContent(){
-    
+function loadOwnerContent() {
+
     const btnFollow = document.getElementById('followUser')
     btnFollow.remove()
 
@@ -350,7 +352,7 @@ function loadVisitorContent(user) {
     newLog.classList.add('display-none')
 
     const btnFollow = document.getElementById('followUser')
-    
+
 
     const perfilSeguidores = user.seguidores
 
@@ -482,11 +484,14 @@ async function postLog() {
         ]
     }
 
-    console.log(imgLink.length)
     let resultValidar = validarDateLog(newLog)
 
+    localObject = []
+
+    let message = document.querySelector('.messageMainSpan')
+
     if (resultValidar != false) {
-        console.log(resultValidar)
+        message.innerHTML = resultValidar
 
     } else {
         let bodyPost = {
@@ -499,9 +504,27 @@ async function postLog() {
 
         let url = `http://localhost:8080/v1/travellog/log/`
         let response = await fetch(url, bodyPost)
-        console.log(response)
-        alert('POST realizado com sucesso!!')
+
+        filterBlack.classList.toggle('showFilter')
+        const elementHide = document.getElementById(elementHigh)
+
+        elementHide.classList.toggle('showModal')
     }
+
+    let containerMessageMain = document.getElementById('containerMessageMain')
+    let plane = document.querySelector('.planeAnimation')
+    let hiddeSpan = document.querySelector('.converSpan')
+
+    message.innerHTML = 'Log criado com sucesso!'
+    containerMessageMain.style.animation = 'showMessage 5.2s linear'
+    plane.style.animation = 'movePlane 4.6s linear'
+    hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+
+    setTimeout(() => {
+        containerMessageMain.style.animation = 'none'
+        plane.style.animation = 'none'
+        hiddeSpan.style.animation = 'none'
+    }, 6000);
 
     localObject = []
 }
@@ -535,20 +558,147 @@ async function updateLog() {
         ]
     }
 
-    let bodyPost = {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newLog),
-    }
-
-    let url = `http://localhost:8080/v1/travellog/log/${id_log}`
-    let response = await fetch(url, bodyPost)
+    let resultValidar = validarDateLog(newLog)
 
     localObject = []
+    
+    let message = document.querySelector('.messageMainSpan')
+
+    if (resultValidar != false) {
+        message.innerHTML = resultValidar
+
+    } else {
+        let bodyPost = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newLog),
+        }
+
+        let url = `http://localhost:8080/v1/travellog/log/${id_log}`
+        let response = await fetch(url, bodyPost)
+
+        filterBlack.classList.toggle('showFilter')
+        const elementHide = document.getElementById(elementHigh)
+
+        elementHide.classList.toggle('showModal')
+    }
+
+    let containerMessageMain = document.getElementById('containerMessageMain')
+    let plane = document.querySelector('.planeAnimation')
+    let hiddeSpan = document.querySelector('.converSpan')
+
+    message.innerHTML = 'Log atualizado com sucesso!'
+    containerMessageMain.style.animation = 'showMessage 5.2s linear'
+    plane.style.animation = 'movePlane 4.6s linear'
+    hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+
+    setTimeout(() => {
+        containerMessageMain.style.animation = 'none'
+        plane.style.animation = 'none'
+        hiddeSpan.style.animation = 'none'
+    }, 6000);
 }
 
+function validarDateTravel(travel) {
+    if (travel.titulo == null || travel.titulo == '' || travel.titulo == undefined || travel.titulo.length > 50) {
+        return 'Nome inválido!'
+
+    } else if (travel.usuario_id == null || travel.usuario_id == '' || travel.usuario_id == undefined || isNaN(travel.usuario_id)) {
+        return 'ID da usuário inválido!'
+
+    } else if (travel.tipo_viagem_id == null || travel.tipo_viagem_id == '' || travel.tipo_viagem_id == undefined || isNaN(travel.tipo_viagem_id)) {
+        return 'ID da viagem inválida!'
+
+    } else if (travel.visivel == null || travel.visivel == '' || travel.visivel == undefined) {
+        return 'Visibilidade do Log inválida!'
+
+    } else if (travel.thumbnail == null || travel.thumbnail == '' || travel.thumbnail == undefined || travel.thumbnail.length > 255) {
+        return 'Foto inválida!'
+
+    } else if (travel.data_inicio == null || travel.data_inicio == '' || travel.data_inicio == undefined) {
+        return 'Data início inválida!'
+
+    } else if (travel.data_fim == null || travel.data_fim == '' || travel.data_fim == undefined) {
+        return 'Data fim inválida!'
+
+    } else {
+        return false
+
+    }
+}
+
+//Cria uma viagem
+async function postTravel() {
+    let name = document.getElementById('inputNameTravel').value
+    let data_inicio = document.getElementById('dateTravelBegin').value
+    let data_fim = document.getElementById('dateTravelEnd').value
+    let visivel = document.getElementById('visibleNewTravel').textContent
+    let tipo_viagem = document.querySelector('.selectTypeTravel span')
+
+    if (visivel == 'Público') {
+        visivel = true
+
+    } else {
+        visivel = false
+    }
+
+    let imgLink = await uploadImageTravel()
+
+    let newTravel = {
+        usuario_id: Number(userId),
+        titulo: name,
+        data_inicio: data_inicio,
+        data_fim: data_fim,
+        visivel: true,
+        tipo_viagem_id: Number(tipo_viagem.dataset.id),
+        thumbnail: imgLink
+    }
+
+    let resultValidar = validarDateTravel(newTravel)
+
+    localObject = []
+
+    let message = document.querySelector('.messageMainSpan')
+
+    if (resultValidar != false) {
+        message.innerHTML = resultValidar
+
+    } else {
+        let bodyPost = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newTravel),
+        }
+
+        let url = `http://localhost:8080/v1/travellog/travel`
+        let response = await fetch(url, bodyPost)
+
+        filterBlack.classList.toggle('showFilter')
+        const elementHide = document.getElementById(elementHigh)
+
+        elementHide.classList.toggle('showModal')
+
+    }
+
+    let containerMessageMain = document.getElementById('containerMessageMain')
+    let plane = document.querySelector('.planeAnimation')
+    let hiddeSpan = document.querySelector('.converSpan')
+
+    message.innerHTML = 'Viagem criada com sucesso!'
+    containerMessageMain.style.animation = 'showMessage 5.2s linear'
+    plane.style.animation = 'movePlane 4.6s linear'
+    hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+
+    setTimeout(() => {
+        containerMessageMain.style.animation = 'none'
+        plane.style.animation = 'none'
+        hiddeSpan.style.animation = 'none'
+    }, 6000);
+}
 
 //Altera a imagem do log para a esquerda
 function changeImgLeft(arrow) {
@@ -626,15 +776,21 @@ function getTravelLi(li) {
 function getTypeTravelDefault(li) {
     const listTravelDesk = document.querySelector('#listTypeLog ul')
     const listTravelMob = document.querySelector('#listTypeLogMob ul')
+    const listTravelNewTravel = document.querySelector('#listTypeTravel ul')
 
     let liDesk = document.createElement('li')
     let liMob = document.createElement('li')
+    let liTravel = document.createElement('li')
 
     liDesk.innerHTML = li.nome
     liMob.innerHTML = li.nome
+    liTravel.innerHTML = li.nome
+
+    liTravel.dataset.id = li.id
 
     listTravelDesk.appendChild(liDesk)
     listTravelMob.appendChild(liMob)
+    listTravelNewTravel.appendChild(liTravel)
 }
 
 //Insere a viagem no span de seleção
@@ -655,8 +811,10 @@ function setTypeTravel(li) {
     const listTypeTravelDesk = document.getElementById('listTypeLog')
     const listTypeTravelMob = document.getElementById('listTypeLogMob')
 
+
     textTravelDesk.innerHTML = li.textContent
     textTravelMob.innerHTML = li.textContent
+
 
     listTypeTravelMob.classList.remove('expandirListMob')
     listTypeTravelDesk.classList.remove('expandirListDesk')
@@ -723,7 +881,7 @@ async function logFull(id) {
     } else {
         likeLogFull.src = 'img/likeDisable.png'
     }
-    
+
     if (dadosInteracoes[0].favorito) {
         favoriteLogFull.classList.add('enabled')
         favoriteLogFull.src = 'img/favEnable.png'
@@ -750,16 +908,16 @@ async function logFull(id) {
     logFull[18].onclick = async () => {
         let alteracao = await alternarCurtida(logClickElement.dataset.id)
         let oldContagem = logFull[20].textContent
-        logFull[20].textContent =  Number(oldContagem)+alteracao
+        logFull[20].textContent = Number(oldContagem) + alteracao
     }
 
     //Evento de favoritar
     logFull[21].onclick = async () => {
         let alteracao = await alternarFavorito(logClickElement.dataset.id)
         let oldContagem = logFull[23].textContent
-        logFull[23].textContent =  Number(oldContagem)+alteracao
+        logFull[23].textContent = Number(oldContagem) + alteracao
     }
-    
+
 
 }
 
@@ -1268,6 +1426,19 @@ arrowNewLog.addEventListener('click', () => {
 
 })
 
+//Mostra lista de tipos de viagens do usuário para a criação da viagem
+arrowNewTravel.addEventListener('click', () => {
+    const listTravel = document.getElementById('listTypeTravel')
+
+    arrowNewTravel.classList.toggle('changeArrowNewTravel')
+    listTravel.classList.toggle('expandListTravelNewTravel')
+
+})
+
+buttonSaveTravel.addEventListener('click', () => {
+    postTravel()
+})
+
 //Troca a visibilidade do botão na atualização de Log
 buttonVisibleLogUpdate.addEventListener('click', () => {
     buttonVisibleLogUpdate.classList.toggle('ocultVisible')
@@ -1514,6 +1685,7 @@ async function getTypeTravel() {
 
     const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
     const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
+    const liListNewTravel = document.querySelectorAll('#listTypeTravel li')
 
     //Adiciona event para os LI de tipo de viagem para mobile
     liListTravelMob.forEach((li) => {
@@ -1530,15 +1702,36 @@ async function getTypeTravel() {
 
         })
     })
+
+    liListNewTravel.forEach(li => {
+        li.addEventListener('click', () => {
+            const textNewTravel = document.querySelector('.selectTypeTravel span')
+            const listNewTravel = document.getElementById('listTypeTravel')
+
+            listNewTravel.classList.remove('expandListTravelNewTravel')
+            textNewTravel.innerHTML = li.textContent
+            textNewTravel.dataset.id = li.dataset.id
+        })
+    })
 }
-
-
-
 
 
 // -------------------------------------------------------------------------
 //              MÉTODOS DE INTEGRAÇÃO COM GOOGLE E AZURE
 // -------------------------------------------------------------------------
+async function uploadImageTravel() {
+    const uploadParams = {
+        storageAccount: "travellog",
+        containerName: "logs",
+        file: document.getElementById("selectImgInputTravel").files[0],
+        sasToken: 'sp=c&st=2025-12-11T00:37:42Z&se=2025-12-20T03:00:00Z&spr=https&sv=2024-11-04&sr=c&sig=iLcABEgTFCqBVhJ7FZNQhHieVnrL%2FBHgGEkqQvCoRQg%3D'
+    }
+
+    const midia = await uploadImageToAzure(uploadParams)
+
+    return String(midia)
+
+}
 
 async function uploadImageLog() {
     const uploadParams = {

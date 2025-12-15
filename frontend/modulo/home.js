@@ -180,7 +180,7 @@ async function createLogs(log) {
     logDiv.dataset.travel = log.log[0].viagem_titulo
     logDiv.dataset.idtravel = log.log[0].viagem_id
 
-    
+
 
     //Validar quantidade Imgs
     // if (log.midia.length == 0) {
@@ -478,35 +478,35 @@ async function logFull(id) {
     if (comments.status_code == 404) {
         logFull[31].innerHTML = 0
 
-    logFull[7].dataset.id = logClickElement.dataset.id
-    logFull[14].dataset.img = logClick[0].dataset.img
-    logFull[6].innerHTML = logClickElement.dataset.travel
-    logFull[10].innerHTML = location.textContent
-    logFull[20].innerHTML = logClickElement.dataset.curtidas
-    logFull[23].innerHTML = logClickElement.dataset.favoritos
-    logFull[25].innerHTML = logClickElement.dataset.date
-    logFull[27].innerHTML = logClickElement.dataset.descricao
+        logFull[7].dataset.id = logClickElement.dataset.id
+        logFull[14].dataset.img = logClick[0].dataset.img
+        logFull[6].innerHTML = logClickElement.dataset.travel
+        logFull[10].innerHTML = location.textContent
+        logFull[20].innerHTML = logClickElement.dataset.curtidas
+        logFull[23].innerHTML = logClickElement.dataset.favoritos
+        logFull[25].innerHTML = logClickElement.dataset.date
+        logFull[27].innerHTML = logClickElement.dataset.descricao
 
-    console.log(logClickElement.dataset.id)
-    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
+        console.log(logClickElement.dataset.id)
+        let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
 
-    let response = await fetch(url)
+        let response = await fetch(url)
 
-    let comments = await response.json()
+        let comments = await response.json()
 
-    if (comments.status_code == 404) {
-        logFull[33].innerHTML = 0
+        if (comments.status_code == 404) {
+            logFull[33].innerHTML = 0
 
-    } else {
-        logFull[33].innerHTML = comments.length
-        const container = document.querySelector('.containerCommentsMain')
-        clearChildren(container)
-        comments.items.comentario.forEach((comment) => {
-            createComments(comment)
-        })
+        } else {
+            logFull[33].innerHTML = comments.length
+            const container = document.querySelector('.containerCommentsMain')
+            clearChildren(container)
+            comments.items.comentario.forEach((comment) => {
+                createComments(comment)
+            })
+        }
     }
 }
-
 //Destaca a aba de criação de Log
 function showNewLog() {
     const newLog = document.getElementById('newLog')
