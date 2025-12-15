@@ -2302,6 +2302,10 @@ main {
         height: 80%;
     }
 
+    #editLogIcon {
+        margin-left: 350px;
+    }
+
     #newLog {
         width: 80%;
     }
@@ -2583,6 +2587,10 @@ main {
         height: 90%;
         top: 0px;
         left: calc(0px + 280px);
+    }
+
+    #editLogIcon {
+        margin-left: 57%;
     }
 
     #newLog {

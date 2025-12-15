@@ -1,6 +1,6 @@
 
 #DELETA TODAS AS MIDIAS RELACIONADAS AO LOG DELETADO
-
+select * from tbl_usuario;
 DELIMITER $$
 
 	CREATE TRIGGER trg_deleta_midias_log
@@ -14,7 +14,7 @@ DELIMITER $$
     
 # DELETA O LOCAL ASSOCIADO AO LOG DELETADO
 	CREATE TRIGGER trg_deleta_local_log
-    BEFORE DELETE ON tbl_log
+    AFTER DELETE ON tbl_log
     FOR EACH ROW
     BEGIN
         DELETE FROM tbl_local WHERE id = OLD.local_id;
