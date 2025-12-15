@@ -276,7 +276,7 @@ function setDataUser(user) {
         loadVisitorContent(user)
 
     } else {
-        // loadOwnerContent(user)
+        loadOwnerContent(user)
     }
 
 
@@ -284,10 +284,9 @@ function setDataUser(user) {
     imgSettings.src = user.foto_perfil
     nicknameSettings.innerHTML = user.apelido
     nameSettings.innerHTML = user.nome
+    console.log(user)
 
-    if (user.logs) {
-        logsSettings.innerHTML = `Logs ${user.logs.length}`
-    }
+
 
     seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
     seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
@@ -300,10 +299,16 @@ function setDataUser(user) {
     let description = document.querySelector('.profileDescription')
 
     name.innerHTML = user.apelido
-
-    if (user.logs) {
-        logs.innerHTML = `Logs ${user.logs.length}`
+        if (user.logs) {
+        logs.textContent = `Logs ${user.logs.length}`
+        logsSettings.textContent = `Logs ${user.logs.length}`
     }
+    else{
+        logsSettings.textContent = `Logs 0`
+        logs.textContent = `Logs 0`
+    }
+
+
 
     followers.innerHTML = `Seguidores ${user.seguidores.length}`
     following.innerHTML = `Seguindo ${user.seguindo.length}`
@@ -331,6 +336,13 @@ function setDataUser(user) {
     }
 }
 
+function loadOwnerContent(){
+    
+    const btnFollow = document.getElementById('followUser')
+    btnFollow.remove()
+
+}
+
 function loadVisitorContent(user) {
     const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
     const newLog = document.querySelector('.logCreator')
@@ -342,7 +354,6 @@ function loadVisitorContent(user) {
 
     const perfilSeguidores = user.seguidores
 
-    console.log(perfilSeguidores)
     for (let seguidor of perfilSeguidores) {
         if (seguidor.seguidor_id == userId) {
             btnFollow.classList.add('enabled')
@@ -373,7 +384,6 @@ async function alternarSeguindo(perfil_id, btnFollow) {
         seguidor_id: Number(userId)
     }
 
-    console.log(btnFollow)
     if (btnFollow.classList.contains('enabled')) {
         removeFollow(body)
         btnFollow.classList.remove('enabled')
@@ -390,7 +400,6 @@ async function alternarSeguindo(perfil_id, btnFollow) {
 
 
 async function addFollow(followBody) {
-    console.log(followBody)
     let url = `http://localhost:8080/v1/travellog/follow/`
 
     const options = {
@@ -401,7 +410,6 @@ async function addFollow(followBody) {
         body: JSON.stringify(followBody)
     }
     let response = await fetch(url, options)
-    console.log(response)
 }
 
 async function removeFollow(followBody) {
@@ -686,7 +694,6 @@ async function logFull(id) {
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
-    console.log(logFull)
 
     logFull[14].src = logClick[0].src
 
@@ -707,11 +714,8 @@ async function logFull(id) {
     logFull[21].classList.add('selectable')
 
 
-    console.log(logFull)
     //Carregando se foi favoritado ou curtido
-    console.log(logClickElement.dataset)
     let dadosInteracoes = await getDataInteractions(logClickElement.dataset.id)
-    console.log(dadosInteracoes)
 
     if (dadosInteracoes[0].curtido == 1) {
         likeLogFull.classList.add('enabled')
@@ -734,8 +738,6 @@ async function logFull(id) {
     if (comments.status_code == 404) {
         logFull[33].textContent = 0
     } else {
-        console.log('aíi')
-        console.log(comments)
         logFull[33].innerHTML = comments.items.comentarios.length
         const container = document.querySelector('.containerCommentsMain')
         clearChildren(container)
