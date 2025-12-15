@@ -814,7 +814,8 @@ newLogDesk.addEventListener('click', showNewLog)
 //Destaca a aba de criação de Log para mobile
 newPostMobile.addEventListener('click', showNewLog)
 
-iconProfileUser.addEventListener('click', () => {
+iconProfileUser.addEventListener('click', (event) => {
+    event.stopPropagation()
     loadProfile(userId)
 })
 
@@ -1219,6 +1220,7 @@ function loadEmptyHome() {
 }
 
 async function loadExploreContent(id, inputFilters) {
+    currentPage = 'explore'
     clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
     if (exploreLogs.status_code == 404){
