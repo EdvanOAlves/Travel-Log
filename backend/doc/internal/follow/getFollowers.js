@@ -1,35 +1,35 @@
 module.exports = {
-    put: {
-
-        tags: ["EndPoints [PAÍS]"],
-        description: 'Atualiza um país do sistema.',
-        operationId: 'atualizarPais(id, country, contentType)',
+    get: {
+        tags: ["EndPoints [FOLLOW]"],
+        description: 'Retorna todos os seguidores pelo id do usuário',
+        operationId: 'buscarSeguidores',
         parameters: [{
             name: "id",
             in: "path",
-            description: "ID do país",
+            description: "ID do usuário",
             required: true,
             schema: {
                 type: "int",
                 format: "int64"
             }
         }],
-        requestBody: {
-            content: {
-                "application/json": {
-                    schema: {
-                        $ref: '#/components/schemas/paisCreate'
-                    }
-                }
-            }
-        },
         responses: {
             200: {
                 description: "Requisição bem sucedida",
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/success_update"
+                            $ref: "#/components/schemas/followers"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }
@@ -40,16 +40,6 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/error404"
-                        }
-                    }
-                }
-            },
-            415: {
-                description: "Tipos de dados invalidos.",
-                content: {
-                    "application/json": {
-                        schema: {
-                            $ref: "#/components/schemas/error415"
                         }
                     }
                 }

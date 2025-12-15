@@ -15,22 +15,22 @@ module.exports = {
             }
         },
         responses: {
-            400: {
-                description: "Não encontrado",
-                content: {
-                    "application/json": {
-                        schema: {
-                            $ref: "#/components/schemas/error400"
-                        }
-                    }
-                }
-            },
             200: {
                 description: "Requisição bem sucedida",
                 content: {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/comment"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Não encontrado",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }
