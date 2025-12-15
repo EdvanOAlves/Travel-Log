@@ -1,6 +1,6 @@
 module.exports = {
     delete: {
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Deleta um post do usuário',
         operationId: 'deletarLog',
         parameters: [{

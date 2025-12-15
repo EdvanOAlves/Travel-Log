@@ -1,7 +1,7 @@
 module.exports = {
     put: {
 
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Atualiza um post do sistema.',
         operationId: 'atualizarPost',
         parameters: [{

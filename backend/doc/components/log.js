@@ -1,5 +1,3 @@
-const local = require("./local");
-
 module.exports = {
     log: {
         type: 'object',

@@ -1,6 +1,6 @@
 module.exports = {
     get: {
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Retorna os logs dos usuários que ele segue',
         operationId: 'buscarLogsSeguidores',
         parameters: [{

@@ -1,6 +1,6 @@
 module.exports = {
     get: {
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Retorna posts para o feed de recentes do usuário pelo id',
         operationId: 'buscarLogsRecentes',
         parameters: [{

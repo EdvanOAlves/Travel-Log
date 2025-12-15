@@ -2,7 +2,7 @@ module.exports = {
 
     post: {
 
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Cadastra um post no sistema.',
         operationId: 'inserirPost',
         requestBody: {
