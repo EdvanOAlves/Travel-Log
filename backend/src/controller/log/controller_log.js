@@ -13,6 +13,8 @@ const logDAO = require("../../model/DAO/log-dao/log.js")
 const controllerMidia = require("../midia/controller_midia.js")
 const controllerLocal = require("../local/controller_local.js")
 const controllerPais = require("../pais/controller_pais.js")
+const controllerCurtida = require("../curtida/controller_curtida.js")
+const controllerFavorito = require("../favorito/controller_favorito.js")
 
 // Importando mensagens de retorno com status code
 const DEFAULT_MESSAGES = require("../module/config_messages.js")
@@ -467,8 +469,11 @@ const deletaLog = async (log_id) => {
 
         if (validarId.status_code == 200) {
 
-            let resultLog = await logDAO.setDeleteLog(log_id)
+            resultCurtida   = await controllerCurtida.deletaRelacoesCurtida(Number(log_id))
+            
+            resultFavorito  = await controllerFavorito.deletaRelacoesFavorito(Number(log_id))
 
+            let resultLog = await logDAO.setDeleteLog(log_id)
 
             if (resultLog) {
 

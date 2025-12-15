@@ -52,6 +52,39 @@ const alternaFavorito = async (favorito, contentType) => {
 
 }
 
+const deletaRelacoesFavorito = async (log_id) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        
+        if(!isNaN(log_id) && log_id != "" && log_id != undefined && log_id != null && log_id > 0) {
+
+            resultFavorito = await favoritoDAO.deleteAllRelationFavorite(log_id)
+
+            if(resultFavorito) {
+
+                MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_DELETE.status
+                MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETE.status_code
+                MESSAGES.DEFAULT_HEADER.message     = MESSAGES.SUCCESS_DELETE.message
+                delete MESSAGES.DEFAULT_HEADER.items
+
+                return MESSAGES.DEFAULT_HEADER
+
+            } else {
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+            }
+
+        } else {
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+
+}
+
 const validarFavorito = (favorito) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -73,5 +106,6 @@ const validarFavorito = (favorito) => {
 }
 
 module.exports = {
-    alternaFavorito
+    alternaFavorito,
+    deletaRelacoesFavorito
 }

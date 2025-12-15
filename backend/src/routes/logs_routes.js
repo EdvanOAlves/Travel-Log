@@ -102,7 +102,7 @@ router.delete('/log/:id', cors(), bodyParserJSON, async (req, res) => {
     const id = req.params.id
 
     const log = await controllerLog.deletaLog(id)
-
+    
     res.status(log.status_code)
     res.json(log)
 

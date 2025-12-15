@@ -33,6 +33,27 @@ const setToggleFavoriteLog = async (favorite) => {
 
 }
 
+const deleteAllRelationFavorite = async (log_id) => {
+
+    try {
+        
+        sql = `DELETE FROM tbl_favorito WHERE log_id = ${log_id}`
+
+        result = await prisma.$executeRawUnsafe(sql)
+
+        if(result) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 module.exports = {
-    setToggleFavoriteLog
+    setToggleFavoriteLog,
+    deleteAllRelationFavorite
 }
