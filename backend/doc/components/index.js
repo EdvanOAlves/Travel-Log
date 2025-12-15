@@ -7,6 +7,7 @@ const country   = require("./country.js")
 const local     = require("./local.js")
 const comment   = require("./comment.js")
 const follow    = require('./follow.js')
+const like      = require('./like.js')
 
 module.exports = {
     components: {
@@ -20,6 +21,7 @@ module.exports = {
             ...country,
             ...local,
             ...follow,
+            ...like,
 
             success_delete: {
                 type: "object",
