@@ -503,7 +503,8 @@ async function logFull(id) {
             })
         }
     }
-}
+}}
+
 //Destaca a aba de criação de Log
 function showNewLog() {
     const newLog = document.getElementById('newLog')
@@ -1029,6 +1030,7 @@ async function init() {
 
         let componentsAdress = place.address_components
 
+        let cidade
         for (let components of componentsAdress) {
 
             if (components.types[0] == 'country') {
@@ -1036,14 +1038,15 @@ async function init() {
             } else if (components.types[0] == 'administrative_area_level_1') {
                 localObject.push({ estado: components.long_name })
             } else if (components.types[0] == 'administrative_area_level_2') {
-                localObject.push({ cidade: components.long_name })
+                cidade = components.long_name
             } else if (components.types[0] == 'sublocality') {
-                localObject.push({ cidade: components.long_name })
+                cidade = components.long_name
             } else if (components.types[0] == 'locality') {
-                localObject.push({ cidade: components.long_name })
+                cidade = components.long_name
             }
 
         }
+        localObject.push({cidade: cidade})
 
     })
 
