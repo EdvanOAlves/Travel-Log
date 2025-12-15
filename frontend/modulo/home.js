@@ -176,10 +176,8 @@ async function createLogs(log) {
     logDiv.dataset.descricao = log.log[0].descricao
     logDiv.dataset.curtidas = log.log[0].curtidas
     logDiv.dataset.favoritos = log.log[0].favoritos
-    logDiv.dataset.travel = log.log[0].viagem_titulo
-    logDiv.dataset.idtravel = log.log[0].viagem_id
-
-
+    logDiv.dataset.travel = log.viagem[0].titulo
+    logDiv.dataset.idtravel = log.viagem[0].viagem_id
 
     //Validar quantidade Imgs
     // if (log.midia.length == 0) {
@@ -456,8 +454,9 @@ async function logFull(id) {
     elementHigh = logFull1.id
     filterBlack.classList.toggle('showFilter')
     logFull1.classList.toggle('showModal')
-    console.log(logFull)
-    logFull[5].dataset.id = logClickElement.dataset.id
+
+    logFull[3].dataset.id = logClickElement.dataset.id
+    logFull[3].innerHTML = logClick[3].textContent
     logFull[12].dataset.img = logClick[0].dataset.img
     logFull[5].innerHTML = logClickElement.dataset.travel
     logFull[8].innerHTML = location.textContent
@@ -475,35 +474,17 @@ async function logFull(id) {
     if (comments.status_code == 404) {
         logFull[31].innerHTML = 0
 
-        logFull[7].dataset.id = logClickElement.dataset.id
-        logFull[14].dataset.img = logClick[0].dataset.img
-        logFull[6].innerHTML = logClickElement.dataset.travel
-        logFull[10].innerHTML = location.textContent
-        logFull[20].innerHTML = logClickElement.dataset.curtidas
-        logFull[23].innerHTML = logClickElement.dataset.favoritos
-        logFull[25].innerHTML = logClickElement.dataset.date
-        logFull[27].innerHTML = logClickElement.dataset.descricao
-
-        console.log(logClickElement.dataset.id)
-        let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
-
-        let response = await fetch(url)
-
-        let comments = await response.json()
-
-        if (comments.status_code == 404) {
-            logFull[33].innerHTML = 0
-
-        } else {
-            logFull[33].innerHTML = comments.length
-            const container = document.querySelector('.containerCommentsMain')
-            clearChildren(container)
-            comments.items.comentario.forEach((comment) => {
-                createComments(comment)
-            })
-        }
+    } else {
+        logFull[31].innerHTML = comments.length
+        const container = document.querySelector('.containerCommentsMain')
+        clearChildren(container)
+        comments.items.comentario.forEach((comment) => {
+            createComments(comment)
+        })
     }
+
 }
+
 //Destaca a aba de criação de Log
 function showNewLog() {
     const newLog = document.getElementById('newLog')
@@ -685,17 +666,17 @@ filterMobile.addEventListener('click', () => {
 
 })
 
-async function alternarAbaFiltroMobile(){
+async function alternarAbaFiltroMobile() {
     const filterContainer = document.getElementById('containerFilterMob')
 
     //Exibindo o menu de filtro
-    if (!filterContainer.classList.contains('showFilterMob')){
+    if (!filterContainer.classList.contains('showFilterMob')) {
         filterContainer.classList.toggle('showFilterMob')
-    }else{ //Fechando, vai coletar os filtros e aplicar
+    } else { //Fechando, vai coletar os filtros e aplicar
         const dataInicio = inputDateBeginMob.value;
         const dataFim = inputDateEndMob.value;
         // A IMPLEMENTAR
-        const localPais =  ''
+        const localPais = ''
         const localEstado = ''
         const localCidade = ''
         const nomeLocal = ''
@@ -711,18 +692,18 @@ async function alternarAbaFiltroMobile(){
         }
 
         //Decidindo qual página vai recarregar (tem que ser a atual)
-        if (currentPage == 'home'){
+        if (currentPage == 'home') {
             loadHomeContent(userId, filterBody)
         }
-        if (currentPage == 'favorites'){
+        if (currentPage == 'favorites') {
             loadFavoriteContent(userId, filterBody)
         }
-        if (currentPage == 'explore'){
+        if (currentPage == 'explore') {
             loadExploreContent(userId, filterBody)
 
         }
-        
-        
+
+
         filterContainer.classList.toggle('showFilterMob')
     }
 
@@ -1045,7 +1026,7 @@ async function init() {
             }
 
         }
-        localObject.push({cidade: cidade})
+        localObject.push({ cidade: cidade })
 
     })
 
@@ -1183,7 +1164,7 @@ async function loadToFollowTab(containerLogs) {
 
 // carregando conteúdo da home
 async function loadHomeContent(id, inputFilters) {
-    currentPage ='home'
+    currentPage = 'home'
     clearChildren(containerLogs)
 
     const homeLogs = await getHomeContent(id, inputFilters)
@@ -1225,14 +1206,14 @@ async function loadExploreContent(id, inputFilters) {
     currentPage = 'explore'
     clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
-    if (exploreLogs.status_code == 404){
+    if (exploreLogs.status_code == 404) {
         let emptyText = document.createElement('h2')
         emptyText.textContent = "Nenhum conteudo encontrado"
-    
+
         containerLogs.appendChild(emptyText)
     }
 
-    if (exploreLogs.items.logs){
+    if (exploreLogs.items.logs) {
         exploreLogs.items.logs.forEach(createLogs);
     }
 
@@ -1305,13 +1286,14 @@ async function postLog() {
 
     let imgLink = await uploadImageLog()
 
+    console.log(localObject)
     let newLog = {
         descricao: des.value,
         viagem_id: Number(via.dataset.id),
         visivel: true,
-        nome_pais: localObject[3].pais,
-        estado: localObject[2].estado,
-        cidade: localObject[1].cidade,
+        nome_pais: localObject[3].cidade,
+        estado: localObject[2].pais,
+        cidade: localObject[1].estado,
         nome_local: localObject[0].local_nome,
         midias: [
             { link: imgLink }
@@ -1335,23 +1317,23 @@ async function postLog() {
         let url = `http://localhost:8080/v1/travellog/log/`
         let response = await fetch(url, bodyPost)
 
-        let containerMessageMain = document.getElementById('containerMessageMain')
-        let plane = document.querySelector('.planeAnimation')
-        let hiddeSpan = document.querySelector('.converSpan')
+        // let containerMessageMain = document.getElementById('containerMessageMain')
+        // let plane = document.querySelector('.planeAnimation')
+        // let hiddeSpan = document.querySelector('.converSpan')
 
-        containerMessageMain.style.animation = 'showMessage 5.2s linear'
-        plane.style.animation = 'movePlane 4.6s linear'
-        hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+        // containerMessageMain.style.animation = 'showMessage 5.2s linear'
+        // plane.style.animation = 'movePlane 4.6s linear'
+        // hiddeSpan.style.animation = 'moveSpan 4.8s linear'
 
-        setTimeout(() => {
-            containerMessageMain.style.animation = 'none'
-            plane.style.animation = 'none'
-            hiddeSpan.style.animation = 'none'
-        }, 6000);
+        // setTimeout(() => {
+        //     containerMessageMain.style.animation = 'none'
+        //     plane.style.animation = 'none'
+        //     hiddeSpan.style.animation = 'none'
+        // }, 6000);
 
         filterBlack.classList.toggle('showFilter')
         const elementHide = document.getElementById(elementHigh)
-
+        alert('Log criado com sucesso!')
         elementHide.classList.toggle('showModal')
     }
 
@@ -1362,10 +1344,6 @@ async function postLog() {
     via.innerHTML = 'Selecione a Viagem'
     localObject = []
 }
-
-
-
-
 
 // ----------------------------------------------------------
 //              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO

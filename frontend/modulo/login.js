@@ -254,6 +254,8 @@ buttonRegisterGo.addEventListener('click', async () => {
         let response = await fetch(url, options)
         let responseLogin = await response.json()
 
+        console.log(responseLogin)
+
         storageEmail(e_mail.value)
 
         cardRegister.style.display = 'none'

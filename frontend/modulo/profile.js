@@ -475,9 +475,9 @@ async function postLog() {
         descricao: des,
         viagem_id: via,
         visivel: true,
-        nome_pais: localObject[3].pais,
-        estado: localObject[2].estado,
-        cidade: localObject[1].cidade,
+        nome_pais: localObject[3].cidade,
+        estado: localObject[2].pais,
+        cidade: localObject[1].estado,
         nome_local: localObject[0].local_nome,
         midias: [
             { link: imgLink }
@@ -488,10 +488,8 @@ async function postLog() {
 
     localObject = []
 
-    let message = document.querySelector('.messageMainSpan')
-
     if (resultValidar != false) {
-        message.innerHTML = resultValidar
+        alert(resultValidar)
 
     } else {
         let bodyPost = {
@@ -505,27 +503,32 @@ async function postLog() {
         let url = `http://localhost:8080/v1/travellog/log/`
         let response = await fetch(url, bodyPost)
 
+        alert('Log criado com sucesso!')
         filterBlack.classList.toggle('showFilter')
         const elementHide = document.getElementById(elementHigh)
-
         elementHide.classList.toggle('showModal')
     }
 
-    let containerMessageMain = document.getElementById('containerMessageMain')
-    let plane = document.querySelector('.planeAnimation')
-    let hiddeSpan = document.querySelector('.converSpan')
+    // let containerMessageMain = document.getElementById('containerMessageMain')
+    // let plane = document.querySelector('.planeAnimation')
+    // let hiddeSpan = document.querySelector('.converSpan')
 
-    message.innerHTML = 'Log criado com sucesso!'
-    containerMessageMain.style.animation = 'showMessage 5.2s linear'
-    plane.style.animation = 'movePlane 4.6s linear'
-    hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+    // containerMessageMain.style.animation = 'showMessage 5.2s linear'
+    // plane.style.animation = 'movePlane 4.6s linear'
+    // hiddeSpan.style.animation = 'moveSpan 4.8s linear'
 
-    setTimeout(() => {
-        containerMessageMain.style.animation = 'none'
-        plane.style.animation = 'none'
-        hiddeSpan.style.animation = 'none'
-    }, 6000);
+    // setTimeout(() => {
+    //     containerMessageMain.style.animation = 'none'
+    //     plane.style.animation = 'none'
+    //     hiddeSpan.style.animation = 'none'
+    // }, 6000);
 
+    let input = document.getElementById('locationNewLogInput')
+
+    input.value = ''
+    des.value = ''
+    via.innerHTML = 'Selecione a Viagem'
+    
     localObject = []
 }
 
@@ -549,9 +552,9 @@ async function updateLog() {
         descricao: des,
         viagem_id: via,
         visivel: true,
-        nome_pais: localObject[3].pais,
-        estado: localObject[2].estado,
-        cidade: localObject[1].cidade,
+        nome_pais: localObject[3].cidade,
+        estado: localObject[2].pais,
+        cidade: localObject[1].estado,
         nome_local: localObject[0].local_nome,
         midias: [
             { link: imgLink }
@@ -561,11 +564,9 @@ async function updateLog() {
     let resultValidar = validarDateLog(newLog)
 
     localObject = []
-    
-    let message = document.querySelector('.messageMainSpan')
 
     if (resultValidar != false) {
-        message.innerHTML = resultValidar
+        alert(resultValidar)
 
     } else {
         let bodyPost = {
@@ -581,24 +582,41 @@ async function updateLog() {
 
         filterBlack.classList.toggle('showFilter')
         const elementHide = document.getElementById(elementHigh)
-
+        alert('Log atualizado com sucesso!')
         elementHide.classList.toggle('showModal')
     }
 
-    let containerMessageMain = document.getElementById('containerMessageMain')
-    let plane = document.querySelector('.planeAnimation')
-    let hiddeSpan = document.querySelector('.converSpan')
+    // let containerMessageMain = document.getElementById('containerMessageMain')
+    // let plane = document.querySelector('.planeAnimation')
+    // let hiddeSpan = document.querySelector('.converSpan')
 
-    message.innerHTML = 'Log atualizado com sucesso!'
-    containerMessageMain.style.animation = 'showMessage 5.2s linear'
-    plane.style.animation = 'movePlane 4.6s linear'
-    hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+    // message.innerHTML = 'Log atualizado com sucesso!'
+    // containerMessageMain.style.animation = 'showMessage 5.2s linear'
+    // plane.style.animation = 'movePlane 4.6s linear'
+    // hiddeSpan.style.animation = 'moveSpan 4.8s linear'
 
-    setTimeout(() => {
-        containerMessageMain.style.animation = 'none'
-        plane.style.animation = 'none'
-        hiddeSpan.style.animation = 'none'
-    }, 6000);
+    // setTimeout(() => {
+    //     containerMessageMain.style.animation = 'none'
+    //     plane.style.animation = 'none'
+    //     hiddeSpan.style.animation = 'none'
+    // }, 6000);
+}
+
+async function deleteLog(id_log) {
+    let bodyPost = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    let url = `http://localhost:8080/v1/travellog/log/${id_log}`
+    let response = await fetch(url, bodyPost)
+
+    filterBlack.classList.toggle('showFilter')
+    const elementHide = document.getElementById(elementHigh)
+
+    elementHide.classList.toggle('showModal')
 }
 
 function validarDateTravel(travel) {
@@ -660,10 +678,8 @@ async function postTravel() {
 
     localObject = []
 
-    let message = document.querySelector('.messageMainSpan')
-
     if (resultValidar != false) {
-        message.innerHTML = resultValidar
+        alert(resultValidar)
 
     } else {
         let bodyPost = {
@@ -679,25 +695,25 @@ async function postTravel() {
 
         filterBlack.classList.toggle('showFilter')
         const elementHide = document.getElementById(elementHigh)
-
+        alert('Viagem criada com sucesso!')
         elementHide.classList.toggle('showModal')
 
     }
 
-    let containerMessageMain = document.getElementById('containerMessageMain')
-    let plane = document.querySelector('.planeAnimation')
-    let hiddeSpan = document.querySelector('.converSpan')
+    // let containerMessageMain = document.getElementById('containerMessageMain')
+    // let plane = document.querySelector('.planeAnimation')
+    // let hiddeSpan = document.querySelector('.converSpan')
 
-    message.innerHTML = 'Viagem criada com sucesso!'
-    containerMessageMain.style.animation = 'showMessage 5.2s linear'
-    plane.style.animation = 'movePlane 4.6s linear'
-    hiddeSpan.style.animation = 'moveSpan 4.8s linear'
+    // message.innerHTML = 'Viagem criada com sucesso!'
+    // containerMessageMain.style.animation = 'showMessage 5.2s linear'
+    // plane.style.animation = 'movePlane 4.6s linear'
+    // hiddeSpan.style.animation = 'moveSpan 4.8s linear'
 
-    setTimeout(() => {
-        containerMessageMain.style.animation = 'none'
-        plane.style.animation = 'none'
-        hiddeSpan.style.animation = 'none'
-    }, 6000);
+    // setTimeout(() => {
+    //     containerMessageMain.style.animation = 'none'
+    //     plane.style.animation = 'none'
+    //     hiddeSpan.style.animation = 'none'
+    // }, 6000);
 }
 
 //Altera a imagem do log para a esquerda
@@ -824,13 +840,11 @@ function setTypeTravel(li) {
 
 //Exibe Logs relacionados com aquela viagem
 function showLogsTravel(travel_id) {
-    console.log(travel_id)
     const nameTravel = document.querySelector(`#travel${travel_id} .footerTxt`)
     const sectionLogs = document.getElementById('logsOfTravel')
     const titleTravel = document.getElementById('tittleTravelSelect')
 
     sectionLogs.classList.toggle('showLogsTravel')
-    sectionLogs.style.animation = '1.5s showScaleLogs linear'
 
     titleTravel.innerHTML = nameTravel.textContent
 
@@ -852,24 +866,24 @@ async function logFull(id) {
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
-
-    logFull[14].src = logClick[0].src
+    console.log(logFull)
+    logFull[15].src = logClick[0].src
 
     elementHigh = logFull1.id
     filterBlack.classList.toggle('showFilter')
     logFull1.classList.toggle('showModal')
 
     logFull[7].dataset.id = logClickElement.dataset.id
-    logFull[14].dataset.img = logClick[0].dataset.img
+    logFull[15].dataset.img = logClick[0].dataset.img
     logFull[6].innerHTML = logClickElement.dataset.travel
-    logFull[10].innerHTML = location.textContent
-    logFull[20].innerHTML = logClickElement.dataset.curtidas
-    logFull[23].innerHTML = logClickElement.dataset.favoritos
-    logFull[25].innerHTML = logClickElement.dataset.date
-    logFull[27].innerHTML = logClickElement.dataset.descricao
+    logFull[11].innerHTML = location.textContent
+    logFull[21].innerHTML = logClickElement.dataset.curtidas
+    logFull[24].innerHTML = logClickElement.dataset.favoritos
+    logFull[26].innerHTML = logClickElement.dataset.date
+    logFull[28].innerHTML = logClickElement.dataset.descricao
 
-    logFull[18].classList.add('selectable')
-    logFull[21].classList.add('selectable')
+    logFull[19].classList.add('selectable')
+    logFull[22].classList.add('selectable')
 
 
     //Carregando se foi favoritado ou curtido
@@ -894,9 +908,9 @@ async function logFull(id) {
     let response = await fetch(url)
     let comments = await response.json()
     if (comments.status_code == 404) {
-        logFull[33].textContent = 0
+        logFull[34].textContent = 0
     } else {
-        logFull[33].innerHTML = comments.items.comentarios.length
+        logFull[34].innerHTML = comments.items.comentarios.length
         const container = document.querySelector('.containerCommentsMain')
         clearChildren(container)
         comments.items.comentarios.forEach(comment => {
@@ -905,17 +919,17 @@ async function logFull(id) {
     }
 
     // Evento de deixar curtida
-    logFull[18].onclick = async () => {
+    logFull[19].onclick = async () => {
         let alteracao = await alternarCurtida(logClickElement.dataset.id)
-        let oldContagem = logFull[20].textContent
-        logFull[20].textContent = Number(oldContagem) + alteracao
+        let oldContagem = logFull[21].textContent
+        logFull[21].textContent = Number(oldContagem) + alteracao
     }
 
     //Evento de favoritar
-    logFull[21].onclick = async () => {
+    logFull[22].onclick = async () => {
         let alteracao = await alternarFavorito(logClickElement.dataset.id)
-        let oldContagem = logFull[23].textContent
-        logFull[23].textContent = Number(oldContagem) + alteracao
+        let oldContagem = logFull[24].textContent
+        logFull[24].textContent = Number(oldContagem) + alteracao
     }
 
 
@@ -1355,37 +1369,37 @@ arrowTypeFilterMobile.addEventListener('click', () => {
 
 })
 
-//Altera a imagem do Log em destaque para a esquerda
-arrowChangeImgLogLeftLogFull.addEventListener('click', () => {
-    let imgLog = document.querySelector(`#logFull .imgLog`)
-    let dataImg = imgLog.dataset.img.split(',')
-    let dataPosition = Number(imgLog.dataset.position)
+// Altera a imagem do Log em destaque para a esquerda
+// arrowChangeImgLogLeftLogFull.addEventListener('click', () => {
+//     let imgLog = document.querySelector(`#logFull .imgLog`)
+//     let dataImg = imgLog.dataset.img.split(',')
+//     let dataPosition = Number(imgLog.dataset.position)
 
-    if (dataPosition <= dataImg.length - 1 && dataPosition != 0) {
-        let dataImgPosition = dataPosition - 1
-        imgLog.src = `${dataImg[dataImgPosition]}`
-        imgLog.dataset.position = dataImgPosition
+//     if (dataPosition <= dataImg.length - 1 && dataPosition != 0) {
+//         let dataImgPosition = dataPosition - 1
+//         imgLog.src = `${dataImg[dataImgPosition]}`
+//         imgLog.dataset.position = dataImgPosition
 
-        validePositionImgLog(dataImg, dataImgPosition, arrowChangeImgLogLeftLogFull)
-    }
+//         validePositionImgLog(dataImg, dataImgPosition, arrowChangeImgLogLeftLogFull)
+//     }
 
-})
+// })
 
-//Altera a imagem do Log em destaque para a direita
-arrowChangeImgLogRightLogFull.addEventListener('click', () => {
-    let imgLog = document.querySelector(`#logFull .imgLog`)
+// //Altera a imagem do Log em destaque para a direita
+// arrowChangeImgLogRightLogFull.addEventListener('click', () => {
+//     let imgLog = document.querySelector(`#logFull .imgLog`)
 
-    let dataImg = imgLog.dataset.img.split(',')
-    let dataPosition = Number(imgLog.dataset.position)
+//     let dataImg = imgLog.dataset.img.split(',')
+//     let dataPosition = Number(imgLog.dataset.position)
 
-    if (dataPosition < dataImg.length - 1) {
-        let dataImgPosition = dataPosition + 1
-        imgLog.src = `${dataImg[dataImgPosition]}`
-        imgLog.dataset.position = dataImgPosition
+//     if (dataPosition < dataImg.length - 1) {
+//         let dataImgPosition = dataPosition + 1
+//         imgLog.src = `${dataImg[dataImgPosition]}`
+//         imgLog.dataset.position = dataImgPosition
 
-        validePositionImgLog(dataImg, dataImgPosition, arrowChangeImgLogRightLogFull)
-    }
-})
+//         validePositionImgLog(dataImg, dataImgPosition, arrowChangeImgLogRightLogFull)
+//     }
+// })
 
 // Destaca a aba de atualização de Log para mobile
 updateLogIcon.addEventListener('click', () => {
@@ -1511,10 +1525,8 @@ travels.forEach(travel => {
 returnTravels.addEventListener('click', () => {
     const sectionLogs = document.getElementById('logsOfTravel')
 
-    sectionLogs.style.animation = '1.5s hiddeScaleLogs linear'
-    setTimeout(() => {
-        sectionLogs.classList.toggle('showLogsTravel')
-    }, 1400);
+    sectionLogs.classList.toggle('showLogsTravel')
+
 })
 
 //Ícone para exibir aba de configurações
