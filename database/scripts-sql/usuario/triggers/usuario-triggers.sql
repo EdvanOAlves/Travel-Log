@@ -42,6 +42,5 @@ CREATE TRIGGER tgr_cria_viagem_default_usuario
     INSERT INTO tbl_viagem(titulo, data_inicio, usuario_id, tipo_viagem_id)
     VALUES('Férias Bem Legais', CURRENT_DATE(), NEW.id, 4);
 END $$
-select * from tbl_tipo_viagem$$
 
 DELIMITER ;

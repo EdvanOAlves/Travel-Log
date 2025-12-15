@@ -125,7 +125,6 @@ DELIMITER $$
     END $$
 
 -- ALTERA O STATUS DE VISIBILIDADE DE UMA VIAGEM
--- Acho que essa não é muito necessária, se alguém quiser alterar a visibilidade de uma viagem ele pode usar o atualizar
     CREATE PROCEDURE AlternarStatusViagem(IN v_id INT)
     BEGIN
 		DECLARE viagem_existe INT;
