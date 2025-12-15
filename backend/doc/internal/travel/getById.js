@@ -1,12 +1,12 @@
 module.exports = {
     get: {
         tags: ["EndPoints [VIAGEM]"],
-        description: 'Retorna uma viagem do sistema pelo id.',
-        operationId: 'listarViagemId(id)',
+        description: 'Retorna viagens do usuário pelo id',
+        operationId: 'listarViagensUsuarioId',
         parameters: [{
             name: "id",
             in: "path",
-            description: "ID da viagem",
+            description: "ID do usuário",
             required: true,
             schema: {
                 type: "int",
@@ -20,6 +20,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/travel"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

@@ -25,6 +25,16 @@ module.exports = {
                     }
                 }
             },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
+                        }
+                    }
+                }
+            },
             404: {
                 description: "Não encontrado",
                 content: {

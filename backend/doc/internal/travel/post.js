@@ -4,7 +4,7 @@ module.exports = {
 
         tags: ["EndPoints [VIAGEM]"],
         description: 'Cadastra uma viagem no sistema.',
-        operationId: 'inserirViagem(travel, contentType)',
+        operationId: 'inserirViagem',
         requestBody: {
             content: {
                 "application/json": {
@@ -21,6 +21,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/travel"
+                        }
+                    }
+                }
+            },
+            400: { 
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

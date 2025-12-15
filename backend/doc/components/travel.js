@@ -22,16 +22,20 @@ module.exports = {
                 "description": "data_inicio",
                 "example": "2025-10-24"
             },
-            "link_thumbnail": {
+            "thumbnail": {
                 "type": "string",
                 "description": "thumbnail",
                 "example": "http://storage/photo.png"
             },
-            "usuario": {
-                $ref: "#/components/schemas/usersAlias"
+            "visivel": {
+                "type": "boolean",
+                "description": "visivel",
+                "example": true
             },
             "tipo_viagem": {
-                $ref: "#/components/schemas/filter"
+                "type": "string",
+                "description": "tipo_viagem",
+                "example": "Férias"
             }
         }
     },
