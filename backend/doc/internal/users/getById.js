@@ -2,7 +2,7 @@ module.exports = {
     get: {
         tags: ["EndPoints [USUÁRIOS]"],
         description: 'Retorna um usuário do sistema pelo id.',
-        operationId: 'listarUsuariosId(id)',
+        operationId: 'listarUsuariosId',
         parameters: [{
             name: "id",
             in: "path",
@@ -19,7 +19,17 @@ module.exports = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/users"
+                            $ref: "#/components/schemas/usersGet"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

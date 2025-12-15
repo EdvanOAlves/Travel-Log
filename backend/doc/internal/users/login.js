@@ -1,12 +1,22 @@
 module.exports = {
-    delete: {
+    get: {
         tags: ["EndPoints [USUÁRIOS]"],
-        description: 'Deleta um usuário do sistema.',
-        operationId: 'deletarUsuario(id)',
+        description: 'Busca o usuário no sistema para executar o login',
+        operationId: 'login',
         parameters: [{
-            name: "id",
-            in: "path",
-            description: "ID do usuário",
+            name: "email",
+            in: "query",
+            description: "Email do usuário",
+            required: true,
+            schema: {
+                type: "int",
+                format: "int64"
+            }
+        },
+        {
+            name: "senha",
+            in: "query",
+            description: "Senha do usuário",
             required: true,
             schema: {
                 type: "int",
@@ -19,7 +29,17 @@ module.exports = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/success_delete"
+                            $ref: "#/components/schemas/login"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }
