@@ -120,6 +120,11 @@ Esses recursos foram implementados para **otimizar o processamento de dados** e 
 
 Todas as rotas da API estão **documentadas via Swagger**, facilitando testes e integração com o front-end.
 
+**Endpoint**
+```http
+DOCUMENTAÇÃO: http://localhost:8080/api-docs/
+```
+
 ---
 
 ## 🎨 Front-end
