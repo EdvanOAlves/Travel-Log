@@ -21,7 +21,7 @@ const setToggleLikeLog = async (like) => {
 
         result = await prisma.$executeRawUnsafe(sql)
 
-        if(result) {
+        if (result) {
             return result
         } else {
             return false
@@ -33,6 +33,28 @@ const setToggleLikeLog = async (like) => {
 
 }
 
+// Retorna situação de interação do usuário em um log
+const getSelectInteractions = async (curtida) => {
+    try {
+        let sql = `
+        SELECT
+        CAST(IF((SELECT COUNT(id) FROM tbl_curtida WHERE usuario_id = ${curtida.usuario_id} AND log_id = ${curtida.log_id}) > 0, true, false) AS JSON) AS curtido,
+        CAST(IF((SELECT COUNT(id) FROM tbl_favorito WHERE usuario_id = ${curtida.usuario_id} AND log_id = ${curtida.log_id}) > 0, true, false) AS JSON) AS favoritado;
+        `
+        result = await prisma.$queryRawUnsafe(sql)
+
+        if (Array.isArray(result))
+            return result;
+        else
+            return false;
+
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 module.exports = {
-    setToggleLikeLog
+    setToggleLikeLog,
+    getSelectInteractions
 }

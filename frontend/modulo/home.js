@@ -40,8 +40,7 @@ const favoriteLogFull = document.querySelector('.favLogFullImg')
 var elementHigh = null
 
 //Cria e adiciona os Logs a tela principal
-function createLogs(log) {
-    console.log(log)
+async function createLogs(log) {
     const containerLogs = document.getElementById('containerLogs')
     let logDiv = document.createElement('div')
     let headerLog = document.createElement('div')
@@ -83,16 +82,49 @@ function createLogs(log) {
     divLocation.classList.add('containerLocationLog')
     spanLocation.classList.add('locationLog')
 
+    //Header do log (identificador do autor)
+    spanName.classList.add('selectable')
+    divProfile.classList.add('selectable')
+
+    spanName.onclick = async () => {
+        loadProfile(log.usuario_id)
+    }
+    divProfile.onclick = async () => {
+        loadProfile(log.usuario_id)
+    }
+
+
     // Conteudo do log
     logDiv.id = `log${log.log[0].log_id}`
     imgLike.src = 'img/likeDisable.png'
     imgFav.src = 'img/favDisable.png'
     spanName.textContent = log.apelido;
 
-    let thumbnailLog = String(log.log[0].midias[0].link).replace(/"/g, '')
-    imgLog.src = thumbnailLog
+    //Coloquei essa tratativa para conseguir acessar com banco de dados sem imagens
+    if (log.log[0].midias != undefined) {
+        let thumbnailLog = String(log.log[0].midias[0].link).replace(/"/g, '')
+        imgLog.src = thumbnailLog
+    }
     numberLikes.textContent = log.log[0].curtidas;
     numberFav.textContent = log.log[0].favoritos;
+
+    //Carregando se foi favoritado ou curtido
+
+    if (log.curtido == 1) {
+        imgLike.classList.add('enabled')
+        imgLike.src = 'img/likeEnable.png'
+    } else {
+        imgLike.src = 'img/likeDisable.png'
+    }
+
+    if (log.favoritado) {
+        imgFav.classList.add('enabled')
+        imgFav.src = 'img/favEnable.png'
+    }
+    else {
+        imgFav.src = 'img/favDisable.png'
+    }
+
     imgLocation.src = 'img/location.png'
 
     if (log.foto_perfil == "null") {
@@ -116,7 +148,6 @@ function createLogs(log) {
 
     spanLocation.textContent = locationString
 
-
     headerLog.append(divProfile, spanName)
     divProfile.appendChild(imgProfile)
     backImg.append(divArrow1, divArrow2, imgLog)
@@ -136,7 +167,6 @@ function createLogs(log) {
         logFull(logDiv.id)
     })
 
-
     let dateFimChar = log.log[0].data_postagem.slice(0, 10)
     let spliceDate = dateFimChar.split('-')
 
@@ -147,8 +177,10 @@ function createLogs(log) {
     logDiv.dataset.descricao = log.log[0].descricao
     logDiv.dataset.curtidas = log.log[0].curtidas
     logDiv.dataset.favoritos = log.log[0].favoritos
-    logDiv.dataset.travel = log.viagem[0].titulo
-    logDiv.dataset.idtravel = log.viagem[0].viagem_id
+    logDiv.dataset.travel = log.log[0].viagem_titulo
+    logDiv.dataset.idtravel = log.log[0].viagem_id
+
+    
 
     //Validar quantidade Imgs
     // if (log.midia.length == 0) {
@@ -156,7 +188,92 @@ function createLogs(log) {
     //     divArrow2.classList.add('hiddeArrowImg')
 
     // }
+    // Evento de deixar curtida
+    divLikes.onclick = async (event) => {
+        event.stopPropagation()
 
+        let alteracao = await alternarCurtida(log.log[0].log_id, imgLike)
+
+        let oldContagem = numberLikes.textContent
+        numberLikes.textContent = Number(oldContagem) + alteracao
+    }
+
+    //Evento de favoritar
+    divFav.onclick = async (event) => {
+        event.stopPropagation()
+
+        let alteracao = await alternarFavorito(log.log[0].log_id, imgFav)
+
+        let oldContagem = numberFav.textContent
+        numberFav.textContent = Number(oldContagem) + alteracao
+    }
+
+}
+
+
+// Quando der click em curtir
+async function alternarCurtida(log_id, imgLike) {
+    //Rota
+    const url = `http://localhost:8080/v1/travellog/like/`
+
+    //configurando
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+
+        //conteúdo
+        body: JSON.stringify({
+            log_id: log_id, usuario_id: userId
+        })
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+
+
+    if (imgLike.classList.contains('enabled')) {
+        imgLike.classList.remove('enabled')
+        imgLike.src = 'img/likeDisable.png'
+        return -1
+
+    } else {
+        imgLike.classList.add('enabled')
+        imgLike.src = 'img/likeEnable.png'
+        return +1
+    }
+}
+
+// Quando der click em favorito
+async function alternarFavorito(log_id, imgFav) {
+    //Rota
+    const url = `http://localhost:8080/v1/travellog/favorite/`
+
+    //configurando
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+
+        //conteúdo
+        body: JSON.stringify({
+            log_id: log_id, usuario_id: userId
+        })
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+
+    if (imgFav.classList.contains('enabled')) {
+        imgFav.classList.remove('enabled')
+        imgFav.src = 'img/favDisable.png'
+        return -1
+
+    } else {
+        imgFav.classList.add('enabled')
+        imgFav.src = 'img/favEnable.png'
+        return +1
+    }
 }
 
 //Altera a imagem do log para a esquerda
@@ -231,6 +348,7 @@ function createFollower(follower) {
 
     spanName.classList.add('nameFollower')
     divFollower.classList.add('follower')
+    divFollower.classList.add('selectable')
     divProfile.classList.add('profileFollower')
 
     divFollower.append(divProfile, spanName)
@@ -360,8 +478,27 @@ async function logFull(id) {
     if (comments.status_code == 404) {
         logFull[31].innerHTML = 0
 
+    logFull[7].dataset.id = logClickElement.dataset.id
+    logFull[14].dataset.img = logClick[0].dataset.img
+    logFull[6].innerHTML = logClickElement.dataset.travel
+    logFull[10].innerHTML = location.textContent
+    logFull[20].innerHTML = logClickElement.dataset.curtidas
+    logFull[23].innerHTML = logClickElement.dataset.favoritos
+    logFull[25].innerHTML = logClickElement.dataset.date
+    logFull[27].innerHTML = logClickElement.dataset.descricao
+
+    console.log(logClickElement.dataset.id)
+    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
+
+    let response = await fetch(url)
+
+    let comments = await response.json()
+
+    if (comments.status_code == 404) {
+        logFull[33].innerHTML = 0
+
     } else {
-        logFull[31].innerHTML = comments.length
+        logFull[33].innerHTML = comments.length
         const container = document.querySelector('.containerCommentsMain')
         clearChildren(container)
         comments.items.comentario.forEach((comment) => {
@@ -926,9 +1063,26 @@ async function getUserTravels() {
 //              MÉTODOS DE INTEGRAÇÃO (Carregamento)
 // ----------------------------------------------------------
 
+function initHome() {
+    const btnHome = document.getElementById('mobHome')
+    const btnHomePc = document.getElementById('deskHome')
+    btnHome.addEventListener('click', () => loadFollowingTab(userId))
+    btnHomePc.addEventListener('click', () => loadFollowingTab(userId))
+}
+
 function initExplorar() {
-    const btnExplorar = document.getElementById('mobLikes');
+    const btnExplorar = document.getElementById('mobLikes')
+    const btnExplorarPc = document.getElementById('deskLikes')
     btnExplorar.addEventListener('click', () => loadExploreContent(userId))
+    btnExplorarPc.addEventListener('click', () => loadExploreContent(userId))
+}
+
+function initFavoritos() {
+    const btnFavoritos = document.getElementById('mobFav')
+    const btnFavoritsPc = document.getElementById('deskFav')
+    btnFavoritos.addEventListener('click', () => loadFavoriteContent(userId))
+    btnFavoritsPc.addEventListener('click', () => loadFavoriteContent(userId))
+
 }
 
 function initExplorarDesk() {
@@ -997,6 +1151,23 @@ async function loadHomeContent(id, inputFilters) {
     }
 }
 
+// favoritos provisório, fazer um endpoint no backend para maior eficiência
+async function loadFavoriteContent(id) {
+    clearChildren(containerLogs)
+    const exploreLogs = await getExploreContent(id)
+    const logArray = exploreLogs.items.logs
+    let favoriteLogs = []
+
+    for (let i = logArray.length - 1; i >= 0; i--) {
+        const log = logArray[i]
+        if (log.favoritado) {
+            favoriteLogs.push(log)
+        }
+    }
+
+    favoriteLogs.forEach(createLogs)
+}
+
 function loadEmptyHome() {
     let emptyText = document.createElement('h2')
     emptyText.textContent = `"Opa! Nenhum conteúdo dos perfis que você segue, experimente a aba "Explorar"`
@@ -1008,6 +1179,7 @@ async function loadExploreContent(id, inputFilters) {
     clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
     exploreLogs.items.logs.forEach(createLogs);
+    console.log(exploreLogs)
 }
 
 // ----------------------------------------------------------
@@ -1141,6 +1313,8 @@ async function postLog() {
 const userId = localStorage.getItem('userId')
 initExplorar()
 initExplorarDesk()
+initHome()
+initFavoritos()
 loadHomeContent(userId)
 loadFollowingTab(userId)
 setDataProfile()

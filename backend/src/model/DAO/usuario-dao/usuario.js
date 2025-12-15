@@ -143,6 +143,8 @@ const setUpdateUser = async (id, user) => {
             foto_perfil = '${user.foto_perfil}',
             descricao   = '${user.descricao}',
             ativo       = ${user.status}
+
+            WHERE id = ${id}
         `
 
         result = await prisma.$executeRawUnsafe(sql)

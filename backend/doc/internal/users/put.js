@@ -3,7 +3,7 @@ module.exports = {
 
         tags: ["EndPoints [USUÁRIOS]"],
         description: 'Atualiza um usuário do sistema.',
-        operationId: 'atualizarUsuario(id, user_data, contentType)',
+        operationId: 'atualizarUsuario',
         parameters: [{
             name: "id",
             in: "path",
@@ -30,6 +30,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/success_update"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

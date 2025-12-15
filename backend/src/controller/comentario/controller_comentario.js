@@ -29,20 +29,27 @@ const buscarComentariosLogId = async (log_id) => {
 
                 if(resultComentario.length > 0) {
 
-                    comentario = resultComentario[0]
-                    idUsuario = comentario.usuario_id
+                    comentarios = []
 
-                    resultUsuario = await controllerUsuario.buscarUsuarioId(idUsuario)
-                    usuario = resultUsuario.items.usuario
+                    for (comentario of resultComentario) {
 
-                    comentarioObject = {
+                        idUsuario = comentario.usuario_id
+                        usuarioResult = await controllerUsuario.buscarUsuarioId(idUsuario)
 
-                        usuario_id:      usuario.id,
-                        apelido:         usuario.apelido,
-                        foto_perfil:     usuario.foto_perfil,
-                        comentario_id:   comentario.id,
-                        conteudo:        comentario.conteudo,
-                        data_publicacao: comentario.data_publicacao
+                        usuario = usuarioResult.items.usuario
+
+                        comentarios.push(
+
+                            {
+                                usuario_id: usuario.id,
+                                apelido: usuario.apelido,
+                                foto_perfil: usuario.foto_perfil,
+                                comentario_id: comentario.id,
+                                conteudo: comentario.conteudo,
+                                data_publicacao: comentario.data_publicacao
+                            }
+
+                        )
 
                     }
 
@@ -50,7 +57,7 @@ const buscarComentariosLogId = async (log_id) => {
 
                     MESSAGES.DEFAULT_HEADER.status              = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.DEFAULT_HEADER.status_code         = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.DEFAULT_HEADER.items.comentario    = comentarioObject
+                    MESSAGES.DEFAULT_HEADER.items.comentarios   = comentarios
                     
                     return MESSAGES.DEFAULT_HEADER //200
 
@@ -82,7 +89,7 @@ const buscarComentarioId = async (id) => {
             if (!isNaN(id) && id != '' && id != null && id != undefined && id > 0) {
     
                 resultComentario = await comentarioDAO.getSelectCommentById(id)
-    
+
                 if (resultComentario) {
     
                     if (resultComentario.length > 0) {
@@ -162,6 +169,7 @@ const desativaComentario = async (id) => {
     try {
 
         validarId = await buscarComentarioId(id)
+        console.log(validarId)
 
         if (validarId.status_code == 200) {
 
@@ -195,17 +203,17 @@ const validarComentario = (comentario) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
-    if (comentario.conteudo == null || comentario.conteudo == undefined || comentario.conteudo == "" || typeof comentario.conteudo !== "string" || comentario.conteudo.length > 255) {
+    if (comentario.conteudo == null || comentario.conteudo == undefined || comentario.conteudo == "" || typeof comentario.conteudo != "string" || comentario.conteudo.length > 255) {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [CONTEUDO INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (comentario.usuario_id == null || comentario.usuario_id == undefined || comentario.usuario_id == "" || typeof comentario.usuario_id !== "number") {
+    } else if (comentario.usuario_id == null || comentario.usuario_id == undefined || comentario.usuario_id == "" || typeof comentario.usuario_id != "number") {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [USUARIO ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if (comentario.log_id == null || comentario.log_id == undefined || comentario.log_id == "" || typeof comentario.log_id !== "number") {
+    } else if (comentario.log_id == null || comentario.log_id == undefined || comentario.log_id == "" || typeof comentario.log_id != "number") {
 
         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [LOG ID INCORRETO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS

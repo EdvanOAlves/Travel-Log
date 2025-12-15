@@ -45,6 +45,13 @@ ul {
     background-color: rgba(0, 0, 0, 0.205);
 }
 
+.selectable:hover {
+    background-color: var(--azul_default_opacity);
+    cursor: pointer;
+    border-radius: 8px;
+
+}
+
 body {
     width: 100dvw;
     height: 100dvh;
@@ -782,6 +789,20 @@ main {
 
 .nameTravel {
     font-size: 20px;
+}
+
+.containerSpanEdit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#editLogIcon {
+    width: auto;
+    height: 25px;
+    margin-top: 3px;
+    transition: 0.3s ease-in-out;
 }
 
 .containerLocationLogFull img {

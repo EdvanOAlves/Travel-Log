@@ -1,25 +1,25 @@
 module.exports = {
-    delete: {
-        tags: ["EndPoints [USUÁRIOS]"],
-        description: 'Deleta um usuário do sistema.',
-        operationId: 'deletarUsuario(id)',
-        parameters: [{
-            name: "id",
-            in: "path",
-            description: "ID do usuário",
-            required: true,
-            schema: {
-                type: "int",
-                format: "int64"
-            }
-        }],
+    post: {
+        tags: ["EndPoints [FAVORITE]"],
+        description: 'insere uma relação de favorito entre log e usuario',
+        operationId: 'insereFavorito',
         responses: {
             200: {
                 description: "Requisição bem sucedida",
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/success_delete"
+                            $ref: "#/components/schemas/success_update"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }
@@ -30,6 +30,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/error404"
+                        }
+                    }
+                }
+            },
+            415: {
+                description: "Tipos de dados invalidos.",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error415"
                         }
                     }
                 }

@@ -16,6 +16,7 @@
  *********************************************************************/
 
 // Import da dependência do client do prisma para conexão com o BD.
+const { ERROR_CONTENT_TYPE } = require("../../../controller/module/config_messages");
 const { PrismaClient } = require("../../../generated/prisma");
 
 // Criando novo objeto baseado na classe PrismaClient
@@ -220,40 +221,45 @@ const setUpdateTravelById = async (id_travel, travel) => {
 
         if (travel.data_fim == null) {
 
-            sql = `CALL AtualizarViagem(
-                ${id_travel},
-                '${travel.titulo}',
-                '${travel.data_inicio}',
-                NULL,
-                '${travel.thumbnail}',
-                ${travel.usuario_id},
-                ${travel.tipo_viagem_id},
-                ${travel.visivel}
-            )`
+            sql = `
+                UPDATE tbl_viagem SET
+                    titulo          = '${travel.titulo}',
+                    data_inicio     = '${travel.data_inicio}',
+                    data_fim        = NULL,
+                    thumbnail       = '${travel.thumbnail}',
+                    usuario_id      = '${travel.usuario_id}',
+                    tipo_viagem_id  = '${travel.tipo_viagem_id}',
+                    visivel         = ${travel.visivel}
+
+                WHERE id = ${id_travel}
+                `
 
         } else {
 
-            sql = `CALL AtualizarViagem(
-                ${id_travel},
-                '${travel.titulo}',
-                '${travel.data_inicio}',
-                '${travel.data_fim}',
-                '${travel.thumbnail}',
-                ${travel.usuario_id},
-                ${travel.tipo_viagem_id},
-                ${travel.visivel}
-            )`
+            sql = `
+                UPDATE tbl_viagem SET
+                    titulo          = '${travel.titulo}',
+                    data_inicio     = '${travel.data_inicio}',
+                    data_fim        = '${travel.data_fim}',
+                    thumbnail       = '${travel.thumbnail}',
+                    usuario_id      = '${travel.usuario_id}',
+                    tipo_viagem_id  = '${travel.tipo_viagem_id}',
+                    visivel         = ${travel.visivel}
+
+                WHERE id = ${id_travel}
+                `
 
         }
 
         result = await prisma.$executeRawUnsafe(sql)
 
         if (result) {
-            return result;
+            return result
         }
         else {
-            return false;
+            return false
         }
+
     } catch (error) {
         return false
     }

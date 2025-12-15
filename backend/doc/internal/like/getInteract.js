@@ -1,12 +1,22 @@
 module.exports = {
-    delete: {
-        tags: ["EndPoints [MIDIA]"],
-        description: 'Deleta uma midia do log do usuário',
-        operationId: 'deletarMidia(id)',
+    get: {
+        tags: ["EndPoints [LIKE]"],
+        description: 'Retorna as interações que usuário teve com esse post (curtida e favorito)',
+        operationId: 'buscarInteracao',
         parameters: [{
-            name: "id",
+            name: "usuario_id",
             in: "path",
-            description: "ID da midia",
+            description: "ID do post",
+            required: true,
+            schema: {
+                type: "int",
+                format: "int64"
+            }
+        },
+        {
+            name: "log_id",
+            in: "query",
+            description: "ID do log",
             required: true,
             schema: {
                 type: "int",
@@ -19,7 +29,17 @@ module.exports = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/success_delete"
+                            $ref: "#/components/schemas/interacao"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

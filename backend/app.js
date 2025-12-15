@@ -34,6 +34,8 @@ app.use(express.json());
 
 //Import das rotas
 const comentarioRoutes  = require("./src/routes/comentario_routes.js")
+const curtidaRoutes     = require("./src/routes/curtida_routes.js")
+const favoritoRoutes    = require("./src/routes/favorito_routes.js")
 const logsRoutes        = require("./src/routes/logs_routes")
 const usuarioRoutes     = require("./src/routes/usuario_routes.js")
 const seguidorRoutes    = require("./src/routes/seguidor_routes.js")
@@ -42,11 +44,14 @@ const viagemRoutes      = require("./src/routes/viagem_routes.js")
 
 //EndPoints
 app.use('/v1/travellog', comentarioRoutes)
+app.use('/v1/travellog', curtidaRoutes)
+app.use('/v1/travellog', favoritoRoutes)
 app.use('/v1/travellog', logsRoutes)
 app.use('/v1/travellog', usuarioRoutes)
 app.use('/v1/travellog', seguidorRoutes)
 app.use('/v1/travellog', tipoViagemRoutes)
 app.use('/v1/travellog', viagemRoutes)
+
 
 //EndPoint da documentação
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))

@@ -1,6 +1,6 @@
 module.exports = {
     get: {
-        tags: ["EndPoints [POST]"],
+        tags: ["EndPoints [LOG]"],
         description: 'Retorna posts para o feed de recentes do usuário pelo id',
         operationId: 'buscarLogsRecentes',
         parameters: [{
@@ -20,6 +20,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/logExplore"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

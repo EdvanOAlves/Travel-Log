@@ -2,7 +2,22 @@ module.exports = {
     comment: {
         type: 'object',
         properties: {
-            "id": {
+            "usuario_id": {
+                "type": "int",
+                "description": "id",
+                "example": 1
+            },
+            "apelido": {
+                "type": "string",
+                "description": "apelido",
+                "example": "lacerda"
+            },
+            "foto_perfil": {
+                "type": "string",
+                "description": "link",
+                "example": "https://travellog.blob.core.windows.net/logs/1765657540898-TraveLog Modelo Logico.png"
+            },
+            "comentario_id": {
                 "type": "int",
                 "description": "id",
                 "example": 1
@@ -10,13 +25,12 @@ module.exports = {
             "conteudo": {
                 "type": "string",
                 "description": "conteudo",
-                "example": "Nossa! Que legal hein cara!!"
+                "example": "Que legal em cara!"
             },
-            "usuario": {
-                $ref: "#/components/schemas/usersAlias"
-            },
-            "postagem": {
-                $ref: "#/components/schemas/log"
+            "data_publicacao": {
+                "type": "string",
+                "description": "conteudo",
+                "example": "2025-12-14"
             }
         }
     },
@@ -24,22 +38,17 @@ module.exports = {
     commentCreate: {
         type: 'object',
         properties: {
-            "id": {
-                "type": "int",
-                "description": "id",
-                "example": 1
-            },
             "conteudo": {
                 "type": "string",
                 "description": "conteudo",
                 "example": "Nossa! Que legal hein cara!!"
             },
-            "usuario": {
+            "usuario_id": {
                 "type": "int",
                 "description": "id",
                 "example": 1
             },
-            "postagem": {
+            "log_id": {
                 "type": "int",
                 "description": "id",
                 "example": 1

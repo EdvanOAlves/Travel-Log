@@ -15,6 +15,16 @@ const bodyParser = require('body-parser')    // Responsável por gerenciar a che
 
 const bodyParserJSON = bodyParser.json()
 
+//Buscar dados de um log específico
+router.get('/log/details/:id', cors(), async (req, res) =>{
+    const logId = req.params.id
+    
+    const log = await controllerLog.buscarLogId(logId);
+
+    res.status(log.status_code)
+    res.json(log)
+})
+
 //Buscar Feed Seguindo
 router.get('/log/following/:id', cors(), async (req, res) => {
     const userId = req.params.id

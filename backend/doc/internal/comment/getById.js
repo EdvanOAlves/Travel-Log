@@ -1,12 +1,12 @@
 module.exports = {
     get: {
         tags: ["EndPoints [COMENTÁRIO]"],
-        description: 'Retorna um comentário do sistema pelo id.',
-        operationId: 'listarComentarioId(id)',
+        description: 'Retorna todos os comentários pelo id do log',
+        operationId: 'listarComentarios',
         parameters: [{
-            name: "id",
+            name: "log_id",
             in: "path",
-            description: "ID do comentário",
+            description: "ID do log",
             required: true,
             schema: {
                 type: "int",
@@ -20,6 +20,16 @@ module.exports = {
                     "application/json": {
                         schema: {
                             $ref: "#/components/schemas/comment"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Não encontrado",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }

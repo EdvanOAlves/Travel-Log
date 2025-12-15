@@ -258,7 +258,7 @@ function createTravel(travel) {
     })
 }
 
-//Adiciona dados do usuério
+//Adiciona dados do usuário
 function setDataUser(user) {
     let imgSettings = document.querySelector('.profileImgSettings')
     let nicknameSettings = document.querySelector('.nickNameSettings')
@@ -271,23 +271,22 @@ function setDataUser(user) {
     let profileIconDesk = document.getElementById('imgProfileDesk')
     let profileIcon = document.getElementById('profileHeader')
 
-    // // Caso o perfil não pertença ao usuário
-    // if (perfilId != userId) {
-    //     loadVisitorContent(user)
+    // Caso o perfil não pertença ao usuário
+    if (perfilId != userId) {
+        loadVisitorContent(user)
 
-    // } else {
-    //     loadOwnerContent(user)
-    // }
+    } else {
+        loadOwnerContent(user)
+    }
 
 
     nameUserDesk.innerHTML = user.apelido
     imgSettings.src = user.foto_perfil
     nicknameSettings.innerHTML = user.apelido
     nameSettings.innerHTML = user.nome
+    console.log(user)
 
-    if (user.logs) {
-        logsSettings.innerHTML = `Logs ${user.logs.length}`
-    }
+
 
     seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
     seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
@@ -300,10 +299,16 @@ function setDataUser(user) {
     let description = document.querySelector('.profileDescription')
 
     name.innerHTML = user.apelido
-
-    if (user.logs) {
-        logs.innerHTML = `Logs ${user.logs.length}`
+        if (user.logs) {
+        logs.textContent = `Logs ${user.logs.length}`
+        logsSettings.textContent = `Logs ${user.logs.length}`
     }
+    else{
+        logsSettings.textContent = `Logs 0`
+        logs.textContent = `Logs 0`
+    }
+
+
 
     followers.innerHTML = `Seguidores ${user.seguidores.length}`
     following.innerHTML = `Seguindo ${user.seguindo.length}`
@@ -331,63 +336,70 @@ function setDataUser(user) {
     }
 }
 
+function loadOwnerContent(){
+    
+    const btnFollow = document.getElementById('followUser')
+    btnFollow.remove()
+
+}
+
 function loadVisitorContent(user) {
     const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
     const newLog = document.querySelector('.logCreator')
 
-    console.log('inferno')
     newLog.classList.add('display-none')
 
-
-    let containerFollowerUser = document.querySelector('.containerFollowerUser')
     const btnFollow = document.getElementById('followUser')
-    const btnImg = document.createElement('img')
-    btnFollow.id = 'followUser'
-    containerFollowerUser.appendChild(btnFollow)
+    
 
     const perfilSeguidores = user.seguidores
 
-    let userSeguindo = false
-    for (let seguidor in perfilSeguidores) {
-        if (seguidor.id == userId) {
-            userSeguindo = true
+    for (let seguidor of perfilSeguidores) {
+        if (seguidor.seguidor_id == userId) {
+            btnFollow.classList.add('enabled')
         }
     }
-    if (userSeguindo) {
-        btnImg.src = './img/confirm.png'
+    if (btnFollow.classList.contains('enabled')) {
+        btnFollow.textContent = 'Seguindo'
     } else {
-        btnImg.src = './img/plus.png'
+        btnFollow.textContent = 'Seguir'
     }
-    btnFollow.appendChild(btnImg)
 
     // Função de seguir
-    btnFollow.addEventListener('click', () => {
-        if (!userSeguindo) {
-            addFollow(followBody)
-            userSeguindo = true;
-            btnImg.style.animation = '3s rotateFollow linear'
-            setTimeout(() => {
-                btnImg.src = 'img/confirm.png'
-            }, 1000);
-        } else {
-            removeFollow(followBody)
-            userSeguindo = false;
-
-            btnImg.style.animation = '3s rotateFollow linear'
-            setTimeout(() => {
-                btnImg.src = 'img/plus.png'
-            }, 1000);
-
-        }
-
-        // let imgButton = document.querySelector('#followUser img')
-
-
-
-    })
+    btnFollow.onclick = async () => {
+        const seguidoresSettings = document.querySelector('.followerSettings')
+        const seguidoresContagem = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
+        let alteracao = await alternarSeguindo(user.id, btnFollow)
+        let oldContagem = seguidoresSettings.textContent.split(' ')[1]
+        let newContagem = Number(oldContagem) + alteracao
+        seguidoresSettings.textContent = `Seguidores ${newContagem}`
+        seguidoresContagem.textContent = `Seguidores ${newContagem}`
+    }
 }
+
+// Quando der click no botão de seguir
+async function alternarSeguindo(perfil_id, btnFollow) {
+    const body = {
+        usuario_id: Number(perfil_id),
+        seguidor_id: Number(userId)
+    }
+
+    if (btnFollow.classList.contains('enabled')) {
+        removeFollow(body)
+        btnFollow.classList.remove('enabled')
+        btnFollow.textContent = 'Seguir'
+        return -1
+
+    } else {
+        addFollow(body)
+        btnFollow.classList.add('enabled')
+        btnFollow.textContent = 'Seguindo'
+        return +1
+    }
+}
+
+
 async function addFollow(followBody) {
-    console.log(followBody)
     let url = `http://localhost:8080/v1/travellog/follow/`
 
     const options = {
@@ -398,7 +410,6 @@ async function addFollow(followBody) {
         body: JSON.stringify(followBody)
     }
     let response = await fetch(url, options)
-    console.log(response)
 }
 
 async function removeFollow(followBody) {
@@ -683,6 +694,7 @@ async function logFull(id) {
     const logFull = document.getElementById('logFull').querySelectorAll('*')
     const logFull1 = document.getElementById('logFull')
 
+
     logFull[14].src = logClick[0].src
 
     elementHigh = logFull1.id
@@ -698,25 +710,130 @@ async function logFull(id) {
     logFull[25].innerHTML = logClickElement.dataset.date
     logFull[27].innerHTML = logClickElement.dataset.descricao
 
-    console.log(logClickElement.dataset.id)
-    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
+    logFull[18].classList.add('selectable')
+    logFull[21].classList.add('selectable')
 
-    let response = await fetch(url)
 
-    let comments = await response.json()
+    //Carregando se foi favoritado ou curtido
+    let dadosInteracoes = await getDataInteractions(logClickElement.dataset.id)
 
-    if (comments.status_code == 404) {
-        logFull[33].innerHTML = 0
-
+    if (dadosInteracoes[0].curtido == 1) {
+        likeLogFull.classList.add('enabled')
+        likeLogFull.src = 'img/likeEnable.png'
     } else {
-        logFull[33].innerHTML = comments.length
+        likeLogFull.src = 'img/likeDisable.png'
+    }
+    
+    if (dadosInteracoes[0].favorito) {
+        favoriteLogFull.classList.add('enabled')
+        favoriteLogFull.src = 'img/favEnable.png'
+    }
+    else {
+        favoriteLogFull.src = 'img/favDisable.png'
+    }
+
+    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
+    let response = await fetch(url)
+    let comments = await response.json()
+    if (comments.status_code == 404) {
+        logFull[33].textContent = 0
+    } else {
+        logFull[33].innerHTML = comments.items.comentarios.length
         const container = document.querySelector('.containerCommentsMain')
         clearChildren(container)
-        comments.items.comentario.forEach((comment) => {
+        comments.items.comentarios.forEach(comment => {
             createComments(comment)
         })
     }
 
+    // Evento de deixar curtida
+    logFull[18].onclick = async () => {
+        let alteracao = await alternarCurtida(logClickElement.dataset.id)
+        let oldContagem = logFull[20].textContent
+        logFull[20].textContent =  Number(oldContagem)+alteracao
+    }
+
+    //Evento de favoritar
+    logFull[21].onclick = async () => {
+        let alteracao = await alternarFavorito(logClickElement.dataset.id)
+        let oldContagem = logFull[23].textContent
+        logFull[23].textContent =  Number(oldContagem)+alteracao
+    }
+    
+
+}
+
+//Puxando informações sobre interação
+async function getDataInteractions(log_id) {
+    let url = `http://localhost:8080/v1/travellog/interacoes/${userId}?log_id=${log_id}`
+
+    let response = await fetch(url)
+
+    let interacoes = await response.json()
+    return interacoes.items.interacoes
+}
+
+// Quando der click em curtir
+async function alternarCurtida(log_id) {
+    //Rota
+    const url = `http://localhost:8080/v1/travellog/like/`
+
+    //configurando
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+
+        //conteúdo
+        body: JSON.stringify({
+            log_id: log_id, usuario_id: userId
+        })
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+
+    if (likeLogFull.classList.contains('enabled')) {
+        likeLogFull.classList.remove('enabled')
+        likeLogFull.src = 'img/likeDisable.png'
+        return -1
+
+    } else {
+        likeLogFull.classList.add('enabled')
+        likeLogFull.src = 'img/likeEnable.png'
+        return +1
+    }
+}
+// Quando der click em favorito
+async function alternarFavorito(log_id) {
+    //Rota
+    const url = `http://localhost:8080/v1/travellog/favorite/`
+
+    //configurando
+    const options = {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+
+        //conteúdo
+        body: JSON.stringify({
+            log_id: log_id, usuario_id: userId
+        })
+    }
+    let response = await fetch(url, options)
+    console.log(response)
+
+    if (favoriteLogFull.classList.contains('enabled')) {
+        favoriteLogFull.classList.remove('enabled')
+        favoriteLogFull.src = 'img/favDisable.png'
+        return -1
+
+    } else {
+        favoriteLogFull.classList.add('enabled')
+        favoriteLogFull.src = 'img/favEnable.png'
+        return +1
+    }
 }
 
 //Criar comentários
@@ -745,7 +862,7 @@ function createComments(comment) {
     p.innerHTML = comment.conteudo
     imgProfile.src = comment.foto_perfil
 
-    let dateChar = comment.data.slice(0, 10)
+    let dateChar = comment.data_publicacao.slice(0, 10)
     let spliceDate = dateChar.split('-')
 
     let dateComment = `${spliceDate[2]}/${spliceDate[1]}/${spliceDate[0]}`
@@ -835,15 +952,6 @@ function valideDateValueMob() {
     }
 }
 
-//Botão para seguir
-buttonFollower.addEventListener('click', () => {
-    let imgButton = document.querySelector('#followUser img')
-    imgButton.style.animation = '3s rotateFollow linear'
-
-    setTimeout(() => {
-        imgButton.src = 'img/confirm.png'
-    }, 1500);
-})
 
 //Ícone para voltar a tela do perfil
 iconProfileUser.addEventListener('click', () => {
@@ -1213,16 +1321,6 @@ logs.forEach(log => {
     })
 });
 
-//Event do clique da curtida no Log em destaque
-likeLogFull.addEventListener('click', () => {
-    if (String(likeLogFull.src).includes('img/likeEnable.png')) {
-        likeLogFull.src = 'img/likeDisable.png'
-
-    } else {
-        likeLogFull.src = 'img/likeEnable.png'
-    }
-})
-
 //Event do clique do favorito no Log em destaque
 favoriteLogFull.addEventListener('click', () => {
     if (String(favoriteLogFull.src).includes('img/favEnable.png')) {
@@ -1375,14 +1473,10 @@ async function getAllDatasProfile(inputFilters) {
     let response = await fetch(url)
 
     let data = await response.json()
-    console.log('oopa')
-    console.log(data.items)
     data_user = data.items
 
     if (data.items.perfil.logs) {
         data.items.perfil.logs.forEach((log) => {
-
-            let nameTravel = null
 
             createLogs(log)
         })

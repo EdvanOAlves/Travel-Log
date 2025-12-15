@@ -1,15 +1,15 @@
 module.exports = {
     get: {
         tags: ["EndPoints [USUÁRIOS]"],
-        description: 'Retorna todos os usuários da cadastrados no sistema.',
-        operationId: 'listarUsuarios()',
+        description: 'Retorna todos os usuários cadastrados no sistema.',
+        operationId: 'listarUsuarios',
         responses: {
             200: {
                 description: "Requisição bem sucedida",
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/usersGet"
+                            $ref: "#/components/schemas/users"
                         }
                     }
                 }

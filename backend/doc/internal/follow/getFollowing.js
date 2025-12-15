@@ -1,12 +1,12 @@
 module.exports = {
-    delete: {
-        tags: ["EndPoints [LOCAL]"],
-        description: 'Deleta uma local do sistema pelo id.',
-        operationId: 'deletarLocal(id)',
+    get: {
+        tags: ["EndPoints [FOLLOW]"],
+        description: 'Retorna todos os usuarios que o usuario segue',
+        operationId: 'buscarSeguindo',
         parameters: [{
             name: "id",
             in: "path",
-            description: "ID do local",
+            description: "ID do usuário",
             required: true,
             schema: {
                 type: "int",
@@ -19,7 +19,17 @@ module.exports = {
                 content: {
                     "application/json": {
                         schema: {
-                            $ref: "#/components/schemas/success_delete"
+                            $ref: "#/components/schemas/following"
+                        }
+                    }
+                }
+            },
+            400: {
+                description: "Campo inválido",
+                content: {
+                    "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/error400"
                         }
                     }
                 }
