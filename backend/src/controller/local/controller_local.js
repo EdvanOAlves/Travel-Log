@@ -222,17 +222,25 @@ const validaLocal = (local) => {
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     if (local.nome_local == null || !isNaN(local.nome_local) || local.nome_local == "" || local.nome_local == undefined) {
+        
         MESSAGES.ERROR_REQUIRED_FIELDS += ' [NOME LOCAL INVALIDO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
+
     } else if (local.estado == null || !isNaN(local.estado) || local.estado == "" || local.estado == undefined) {
+
         MESSAGES.ERROR_REQUIRED_FIELDS += ' [ESTADO INVALIDO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
+        
     } else if (local.cidade == null || !isNaN(local.cidade) || local.cidade == "" || local.cidade == undefined) {
+        
         MESSAGES.ERROR_REQUIRED_FIELDS += ' [CIDADE INVALIDO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
+
     } else if (isNaN(local.pais_id) || local.pais_id == "" || local.pais_id == undefined || local.pais_id == null) {
+        
         MESSAGES.ERROR_REQUIRED_FIELDS += ' [PAIS ID INVALIDO]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
+        
     } else {
         return false
     }
