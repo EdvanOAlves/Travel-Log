@@ -503,8 +503,7 @@ async function logFull(id) {
             })
         }
     }
-}}
-
+}
 //Destaca a aba de criação de Log
 function showNewLog() {
     const newLog = document.getElementById('newLog')
