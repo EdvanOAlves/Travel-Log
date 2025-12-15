@@ -1011,7 +1011,7 @@ main {
 
 #editLogIcon {
     width: auto;
-    height: 25px;
+    height: 20px;
     margin-top: 3px;
     transition: 0.3s ease-in-out;
 }
