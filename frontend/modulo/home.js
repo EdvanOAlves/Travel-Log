@@ -135,7 +135,6 @@ async function createLogs(log) {
     }
 
     // Local precisa de uma tratativa
-
     const localJson = log.log[0].local[0];
 
     const parts = [
@@ -180,7 +179,7 @@ async function createLogs(log) {
     logDiv.dataset.travel = log.log[0].viagem_titulo
     logDiv.dataset.idtravel = log.log[0].viagem_id
 
-    
+
 
     //Validar quantidade Imgs
     // if (log.midia.length == 0) {
@@ -229,7 +228,6 @@ async function alternarCurtida(log_id, imgLike) {
         })
     }
     let response = await fetch(url, options)
-    console.log(response)
 
 
     if (imgLike.classList.contains('enabled')) {
@@ -262,7 +260,6 @@ async function alternarFavorito(log_id, imgFav) {
         })
     }
     let response = await fetch(url, options)
-    console.log(response)
 
     if (imgFav.classList.contains('enabled')) {
         imgFav.classList.remove('enabled')
@@ -478,35 +475,35 @@ async function logFull(id) {
     if (comments.status_code == 404) {
         logFull[31].innerHTML = 0
 
-    logFull[7].dataset.id = logClickElement.dataset.id
-    logFull[14].dataset.img = logClick[0].dataset.img
-    logFull[6].innerHTML = logClickElement.dataset.travel
-    logFull[10].innerHTML = location.textContent
-    logFull[20].innerHTML = logClickElement.dataset.curtidas
-    logFull[23].innerHTML = logClickElement.dataset.favoritos
-    logFull[25].innerHTML = logClickElement.dataset.date
-    logFull[27].innerHTML = logClickElement.dataset.descricao
+        logFull[7].dataset.id = logClickElement.dataset.id
+        logFull[14].dataset.img = logClick[0].dataset.img
+        logFull[6].innerHTML = logClickElement.dataset.travel
+        logFull[10].innerHTML = location.textContent
+        logFull[20].innerHTML = logClickElement.dataset.curtidas
+        logFull[23].innerHTML = logClickElement.dataset.favoritos
+        logFull[25].innerHTML = logClickElement.dataset.date
+        logFull[27].innerHTML = logClickElement.dataset.descricao
 
-    console.log(logClickElement.dataset.id)
-    let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
+        console.log(logClickElement.dataset.id)
+        let url = `http://localhost:8080/v1/travellog/comment/${logClickElement.dataset.id}`
 
-    let response = await fetch(url)
+        let response = await fetch(url)
 
-    let comments = await response.json()
+        let comments = await response.json()
 
-    if (comments.status_code == 404) {
-        logFull[33].innerHTML = 0
+        if (comments.status_code == 404) {
+            logFull[33].innerHTML = 0
 
-    } else {
-        logFull[33].innerHTML = comments.length
-        const container = document.querySelector('.containerCommentsMain')
-        clearChildren(container)
-        comments.items.comentario.forEach((comment) => {
-            createComments(comment)
-        })
+        } else {
+            logFull[33].innerHTML = comments.length
+            const container = document.querySelector('.containerCommentsMain')
+            clearChildren(container)
+            comments.items.comentario.forEach((comment) => {
+                createComments(comment)
+            })
+        }
     }
 }
-
 //Destaca a aba de criação de Log
 function showNewLog() {
     const newLog = document.getElementById('newLog')
@@ -684,10 +681,54 @@ arrowTypeFilterDesk.addEventListener('click', () => {
 
 //Mostra o filtro para mobile
 filterMobile.addEventListener('click', () => {
+    alternarAbaFiltroMobile()
+
+})
+
+async function alternarAbaFiltroMobile(){
     const filterContainer = document.getElementById('containerFilterMob')
 
-    filterContainer.classList.toggle('showFilterMob')
-})
+    //Exibindo o menu de filtro
+    if (!filterContainer.classList.contains('showFilterMob')){
+        filterContainer.classList.toggle('showFilterMob')
+    }else{ //Fechando, vai coletar os filtros e aplicar
+        const dataInicio = inputDateBeginMob.value;
+        const dataFim = inputDateEndMob.value;
+        // A IMPLEMENTAR
+        const localPais =  ''
+        const localEstado = ''
+        const localCidade = ''
+        const nomeLocal = ''
+        const tipoViagemId = ''
+        const filterBody = {
+            data_inicio: dataInicio,
+            data_fim: dataFim,
+            local_pais: localPais,
+            local_estado: localEstado,
+            local_cidade: localCidade,
+            nome_local: nomeLocal,
+            tipo_viagem_id: tipoViagemId
+        }
+
+        //Decidindo qual página vai recarregar (tem que ser a atual)
+        if (currentPage == 'home'){
+            loadHomeContent(userId, filterBody)
+        }
+        if (currentPage == 'favorites'){
+            loadFavoriteContent(userId, filterBody)
+        }
+        if (currentPage == 'explore'){
+            loadExploreContent(userId, filterBody)
+
+        }
+        
+        
+        filterContainer.classList.toggle('showFilterMob')
+    }
+
+
+
+}
 
 //Mostra a lista do tipo de viagem no mobile
 arrowTypeFilterMobile.addEventListener('click', () => {
@@ -1066,8 +1107,8 @@ async function getUserTravels() {
 function initHome() {
     const btnHome = document.getElementById('mobHome')
     const btnHomePc = document.getElementById('deskHome')
-    btnHome.addEventListener('click', () => loadFollowingTab(userId))
-    btnHomePc.addEventListener('click', () => loadFollowingTab(userId))
+    btnHome.addEventListener('click', () => loadHomeContent(userId))
+    btnHomePc.addEventListener('click', () => loadHomeContent(userId))
 }
 
 function initExplorar() {
@@ -1139,6 +1180,7 @@ async function loadToFollowTab(containerLogs) {
 
 // carregando conteúdo da home
 async function loadHomeContent(id, inputFilters) {
+    currentPage ='home'
     clearChildren(containerLogs)
 
     const homeLogs = await getHomeContent(id, inputFilters)
@@ -1152,9 +1194,10 @@ async function loadHomeContent(id, inputFilters) {
 }
 
 // favoritos provisório, fazer um endpoint no backend para maior eficiência
-async function loadFavoriteContent(id) {
+async function loadFavoriteContent(id, inputFilters) {
+    currentPage = 'favorites'
     clearChildren(containerLogs)
-    const exploreLogs = await getExploreContent(id)
+    const exploreLogs = await getExploreContent(id, inputFilters)
     const logArray = exploreLogs.items.logs
     let favoriteLogs = []
 
@@ -1178,8 +1221,17 @@ function loadEmptyHome() {
 async function loadExploreContent(id, inputFilters) {
     clearChildren(containerLogs)
     const exploreLogs = await getExploreContent(id, inputFilters)
-    exploreLogs.items.logs.forEach(createLogs);
-    console.log(exploreLogs)
+    if (exploreLogs.status_code == 404){
+        let emptyText = document.createElement('h2')
+        emptyText.textContent = "Nenhum conteudo encontrado"
+    
+        containerLogs.appendChild(emptyText)
+    }
+
+    if (exploreLogs.items.logs){
+        exploreLogs.items.logs.forEach(createLogs);
+    }
+
 }
 
 // ----------------------------------------------------------
@@ -1307,10 +1359,15 @@ async function postLog() {
     localObject = []
 }
 
+
+
+
+
 // ----------------------------------------------------------
 //              CHAMANDO OS MÉTODOS DE INTEGRAÇÃO
 // ----------------------------------------------------------
 const userId = localStorage.getItem('userId')
+let currentPage;
 initExplorar()
 initExplorarDesk()
 initHome()
@@ -1318,4 +1375,4 @@ initFavoritos()
 loadHomeContent(userId)
 loadFollowingTab(userId)
 setDataProfile()
-getTravels()    
+getTravels()
