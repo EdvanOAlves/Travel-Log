@@ -4,6 +4,7 @@ const log             = require('./log')
 const comment         = require("./comment")
 const follow          = require("./follow")
 const like            = require("./like")
+const favorite        = require("./favorite")
 
 module.exports = {
     ...users,
@@ -11,5 +12,6 @@ module.exports = {
     ...log,
     ...comment,
     ...travel,
-    ...like
+    ...like,
+    ...favorite
 }

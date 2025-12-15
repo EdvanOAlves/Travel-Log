@@ -8,6 +8,7 @@ const local     = require("./local.js")
 const comment   = require("./comment.js")
 const follow    = require('./follow.js')
 const like      = require('./like.js')
+const favorite = require('./favorite.js')
 
 module.exports = {
     components: {
@@ -22,6 +23,7 @@ module.exports = {
             ...local,
             ...follow,
             ...like,
+            ...favorite,
 
             success_delete: {
                 type: "object",
