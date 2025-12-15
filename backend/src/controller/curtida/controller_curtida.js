@@ -85,6 +85,39 @@ const consultarInteracoesLog = async (usuario_id, log_id) => {
     }
 }
 
+const deletaRelacoesCurtida = async (log_id) => {
+
+    MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        
+        if(!isNaN(log_id) && log_id != "" && log_id != undefined && log_id != null && log_id > 0) {
+
+            resultCurtida = await curtidaDAO.deleteAllRelationLike(log_id)
+            
+            if(resultCurtida) {
+
+                MESSAGES.DEFAULT_HEADER.status      = MESSAGES.SUCCESS_DELETE.status
+                MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETE.status_code
+                MESSAGES.DEFAULT_HEADER.message     = MESSAGES.SUCCESS_DELETE.message
+                delete MESSAGES.DEFAULT_HEADER.items
+
+                return MESSAGES.DEFAULT_HEADER
+
+            } else {
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+            }
+
+        } else {
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+
+}
+
 const validarCurtida = (curtida) => {
 
     MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -106,5 +139,6 @@ const validarCurtida = (curtida) => {
 
 module.exports = {
     alternaCurtida,
-    consultarInteracoesLog
+    consultarInteracoesLog,
+    deletaRelacoesCurtida
 }

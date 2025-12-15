@@ -415,7 +415,7 @@ const setDeleteLog = async (log_id) => {
 
     try {
 
-        sql = `CALL DeletaLog(${log_id})`
+        sql = `DELETE FROM tbl_log WHERE id = ${log_id}`
 
         result = await prisma.$executeRawUnsafe(sql)
 

@@ -54,7 +54,28 @@ const getSelectInteractions = async (curtida) => {
     }
 }
 
+const deleteAllRelationLike = async (log_id) => {
+
+    try {
+        
+        sql = `DELETE FROM tbl_curtida WHERE log_id = ${log_id}`
+
+        result = await prisma.$executeRawUnsafe(sql)
+        
+        if(result) {
+            return result
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+
+}
+
 module.exports = {
     setToggleLikeLog,
-    getSelectInteractions
+    getSelectInteractions,
+    deleteAllRelationLike
 }
