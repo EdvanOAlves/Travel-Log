@@ -262,81 +262,149 @@ function createTravel(travel) {
 }
 
 //Adiciona dados do usuário
-function setDataUser(user) {
-    let imgSettings = document.querySelector('.profileImgSettings')
-    let nicknameSettings = document.querySelector('.nickNameSettings')
-    let nameSettings = document.querySelector('.nameSettings')
-    let logsSettings = document.querySelector('.logsSettings')
-    let seguidoresSettings = document.querySelector('.followerSettings')
-    let seguindoSettings = document.querySelector('.followingSettings')
-    let descricaoSettings = document.querySelector('.descriptionSettings')
-    let nameUserDesk = document.getElementById('nameUserDesk')
-    let profileIconDesk = document.getElementById('imgProfileDesk')
-    let profileIcon = document.getElementById('profileHeader')
-
+async function setDataUser(user, inputFilters) {
     // Caso o perfil não pertença ao usuário
     if (perfilId != userId) {
+        const params = new URLSearchParams(inputFilters)
+        let url = `http://localhost:8080/v1/travellog/user/profile/${userId}?${params.toString()}&perfil_id=${userId}`
+        let response = await fetch(url)
+
+        let data = await response.json()
+        data_user = data.items.perfil
+        console.log(data_user)
+
+        let imgSettings = document.querySelector('.profileImgSettings')
+        let nicknameSettings = document.querySelector('.nickNameSettings')
+        let nameSettings = document.querySelector('.nameSettings')
+        let logsSettings = document.querySelector('.logsSettings')
+        let seguidoresSettings = document.querySelector('.followerSettings')
+        let seguindoSettings = document.querySelector('.followingSettings')
+        let descricaoSettings = document.querySelector('.descriptionSettings')
+        let nameUserDesk = document.getElementById('nameUserDesk')
+        let profileIconDesk = document.getElementById('imgProfileDesk')
+        let profileIcon = document.getElementById('profileHeader')
+
+
+        nameUserDesk.innerHTML = data_user.apelido
+        imgSettings.src = data_user.foto_perfil
+        nicknameSettings.innerHTML = data_user.apelido
+        nameSettings.innerHTML = data_user.nome
+        seguidoresSettings.innerHTML = `Seguidores ${data_user.seguidores.length}`
+        seguindoSettings.innerHTML = `Seguindo ${data_user.seguindo.length}`
+
+        let imgProfile = document.getElementById('imgProfile')
+        let name = document.querySelector('.profileNickname')
+        let logs = document.querySelector('.titleInfo')
+        let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
+        let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
+        let description = document.querySelector('.profileDescription')
+
+        name.innerHTML = user.apelido
+        if (user.logs) {
+            logs.textContent = `Logs ${user.logs.length}`
+            logsSettings.textContent = `Logs ${user.logs.length}`
+        }
+        else {
+            logsSettings.textContent = `Logs 0`
+            logs.textContent = `Logs 0`
+        }
+
+        followers.innerHTML = `Seguidores ${user.seguidores.length}`
+        following.innerHTML = `Seguindo ${user.seguindo.length}`
+
+        if (user.foto_perfil == "null") {
+            profileIcon.src = 'img/emptyProfileUser.jpg'
+            profileIconDesk.src = 'img/emptyProfileUser.jpg'
+            imgProfile.src = 'img/emptyProfileUser.jpg'
+            imgSettings.src = 'img/emptyProfileUser.jpg'
+
+        } else {
+            profileIcon.src = user.foto_perfil
+            profileIconDesk.src = user.foto_perfil
+            imgProfile.src = user.foto_perfil
+            imgSettings.src = user.foto_perfil
+        }
+
+        if (user.descricao === "null") {
+            descricaoSettings.innerHTML = 'Que tal adicionar uma descrição?'
+            description.innerHTML = 'Que tal adicionar uma descrição?'
+
+        } else {
+            descricaoSettings.innerHTML = user.descricao
+            description.innerHTML = user.descricao
+        }
+
         loadVisitorContent(user)
 
     } else {
+        let imgSettings = document.querySelector('.profileImgSettings')
+        let nicknameSettings = document.querySelector('.nickNameSettings')
+        let nameSettings = document.querySelector('.nameSettings')
+        let logsSettings = document.querySelector('.logsSettings')
+        let seguidoresSettings = document.querySelector('.followerSettings')
+        let seguindoSettings = document.querySelector('.followingSettings')
+        let descricaoSettings = document.querySelector('.descriptionSettings')
+        let nameUserDesk = document.getElementById('nameUserDesk')
+        let profileIconDesk = document.getElementById('imgProfileDesk')
+        let profileIcon = document.getElementById('profileHeader')
+
+
+        nameUserDesk.innerHTML = user.apelido
+        imgSettings.src = user.foto_perfil
+        nicknameSettings.innerHTML = user.apelido
+        nameSettings.innerHTML = user.nome
+        seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
+        seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
+
+        let imgProfile = document.getElementById('imgProfile')
+        let name = document.querySelector('.profileNickname')
+        let logs = document.querySelector('.titleInfo')
+        let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
+        let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
+        let description = document.querySelector('.profileDescription')
+
+        name.innerHTML = user.apelido
+        if (user.logs) {
+            logs.textContent = `Logs ${user.logs.length}`
+            logsSettings.textContent = `Logs ${user.logs.length}`
+        }
+        else {
+            logsSettings.textContent = `Logs 0`
+            logs.textContent = `Logs 0`
+        }
+
+        followers.innerHTML = `Seguidores ${user.seguidores.length}`
+        following.innerHTML = `Seguindo ${user.seguindo.length}`
+
+        if (user.foto_perfil == "null") {
+            profileIcon.src = 'img/emptyProfileUser.jpg'
+            profileIconDesk.src = 'img/emptyProfileUser.jpg'
+            imgProfile.src = 'img/emptyProfileUser.jpg'
+            imgSettings.src = 'img/emptyProfileUser.jpg'
+
+        } else {
+            profileIcon.src = user.foto_perfil
+            profileIconDesk.src = user.foto_perfil
+            imgProfile.src = user.foto_perfil
+            imgSettings.src = user.foto_perfil
+        }
+
+        if (user.descricao === "null") {
+            descricaoSettings.innerHTML = 'Que tal adicionar uma descrição?'
+            description.innerHTML = 'Que tal adicionar uma descrição?'
+
+        } else {
+            descricaoSettings.innerHTML = user.descricao
+            description.innerHTML = user.descricao
+        }
+
+
+
         loadOwnerContent(user)
     }
 
 
-    nameUserDesk.innerHTML = user.apelido
-    imgSettings.src = user.foto_perfil
-    nicknameSettings.innerHTML = user.apelido
-    nameSettings.innerHTML = user.nome
-    console.log(user)
 
-
-
-    seguidoresSettings.innerHTML = `Seguidores ${user.seguidores.length}`
-    seguindoSettings.innerHTML = `Seguindo ${user.seguindo.length}`
-
-    let imgProfile = document.getElementById('imgProfile')
-    let name = document.querySelector('.profileNickname')
-    let logs = document.querySelector('.titleInfo')
-    let followers = document.querySelector('.followerInfo .titleInfo:nth-child(1)')
-    let following = document.querySelector('.followerInfo .titleInfo:nth-child(2)')
-    let description = document.querySelector('.profileDescription')
-
-    name.innerHTML = user.apelido
-    if (user.logs) {
-        logs.textContent = `Logs ${user.logs.length}`
-        logsSettings.textContent = `Logs ${user.logs.length}`
-    }
-    else {
-        logsSettings.textContent = `Logs 0`
-        logs.textContent = `Logs 0`
-    }
-
-
-
-    followers.innerHTML = `Seguidores ${user.seguidores.length}`
-    following.innerHTML = `Seguindo ${user.seguindo.length}`
-
-    if (user.foto_perfil == "null") {
-        profileIcon.src = 'img/emptyProfileUser.jpg'
-        profileIconDesk.src = 'img/emptyProfileUser.jpg'
-        imgProfile.src = 'img/emptyProfileUser.jpg'
-        imgSettings.src = 'img/emptyProfileUser.jpg'
-
-    } else {
-        profileIcon.src = user.foto_perfil
-        profileIconDesk.src = user.foto_perfil
-        imgProfile.src = user.foto_perfil
-        imgSettings.src = user.foto_perfil
-    }
-
-    if (user.descricao === "null") {
-        descricaoSettings.innerHTML = 'Que tal adicionar uma descrição?'
-        description.innerHTML = 'Que tal adicionar uma descrição?'
-
-    } else {
-        descricaoSettings.innerHTML = user.descricao
-        description.innerHTML = user.descricao
-    }
 }
 
 function loadOwnerContent() {
@@ -349,8 +417,11 @@ function loadOwnerContent() {
 function loadVisitorContent(user) {
     const followBody = { usuario_id: Number(perfilId), seguidor_id: Number(userId) }
     const newLog = document.querySelector('.logCreator')
+    const newTravel = document.querySelector('.viagemCreator')
 
+    newTravel.classList.add('display-none')
     newLog.classList.add('display-none')
+
 
     const btnFollow = document.getElementById('followUser')
 
@@ -476,9 +547,9 @@ async function postLog() {
         descricao: des,
         viagem_id: via,
         visivel: true,
-        nome_pais: localObject[3].cidade,
-        estado: localObject[2].pais,
-        cidade: localObject[1].estado,
+        cidade: localObject[3].cidade,
+        nome_pais: localObject[2].pais,
+        estado: localObject[1].estado,
         nome_local: localObject[0].local_nome,
         midias: [
             { link: imgLink }
@@ -529,7 +600,7 @@ async function postLog() {
     input.value = ''
     des.value = ''
     via.innerHTML = 'Selecione a Viagem'
-    
+
     localObject = []
 }
 
@@ -553,9 +624,9 @@ async function updateLog() {
         descricao: des,
         viagem_id: via,
         visivel: true,
-        nome_pais: localObject[3].cidade,
-        estado: localObject[2].pais,
-        cidade: localObject[1].estado,
+        cidade: localObject[3].cidade,
+        nome_pais: localObject[2].pais,
+        estado: localObject[1].estado,
         nome_local: localObject[0].local_nome,
         midias: [
             { link: imgLink }
@@ -1665,12 +1736,12 @@ document.addEventListener('click', () => {
 // INTEGRAÇÃO
 async function getAllDatasProfile(inputFilters) {
     const params = new URLSearchParams(inputFilters)
-    let url = `http://localhost:8080/v1/travellog/user/profile/${userId}?${params.toString()}&perfil_id=${perfilId}`
+    let url = `http://localhost:8080/v1/travellog/user/profile/${perfilId}?${params.toString()}&perfil_id=${perfilId}`
     let response = await fetch(url)
 
     let data = await response.json()
     data_user = data.items
-
+    console.log(data)
     if (data.items.perfil.logs) {
         data.items.perfil.logs.forEach((log) => {
 
@@ -1823,7 +1894,7 @@ async function init() {
         localObject.push({ local_nome: place.name })
 
         let componentsAdress = place.address_components
-        
+
         let cidade
         for (let components of componentsAdress) {
 
@@ -1840,7 +1911,7 @@ async function init() {
             }
 
         }
-        localObject.push({cidade: cidade})
+        localObject.push({ cidade: cidade })
     })
 
 }

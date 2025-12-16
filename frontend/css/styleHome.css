@@ -666,6 +666,13 @@ main {
     border-style: solid;
     border-width: 1px;
     border-color: var(--cinza_escuro);
+    z-index: 99;
+    transition: 0.2s ease-in-out;
+    opacity: 1;
+}
+
+.hiddeSpanList {
+    opacity: 0;
 }
 
 .containerListTypeLogMob span {
@@ -697,10 +704,12 @@ main {
     border-radius: 20px;
     z-index: -10;
     transition: 0.5s ease-in-out;
+    opacity: 0;
 }
 
 #listTypeLogMob.expandirListMob {
     height: 200px;
+    opacity: 1;
 }
 
 #listTypeLogMob ul {
@@ -1851,6 +1860,7 @@ main {
         border-bottom-style: solid;
         border-color: var(--cinza_default);
         border-width: 1px;
+        font-size: 14px;
     }
 
     #arrowType {

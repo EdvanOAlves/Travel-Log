@@ -165,7 +165,7 @@ async function createLogs(log) {
     logDiv.addEventListener('click', () => {
         logFull(logDiv.id)
     })
-
+    
     let dateFimChar = log.log[0].data_postagem.slice(0, 10)
     let spliceDate = dateFimChar.split('-')
 
@@ -409,6 +409,9 @@ function getTypeTravelDefault(li) {
 
     let liDesk = document.createElement('li')
     let liMob = document.createElement('li')
+
+    liDesk.innerHTML = li.nome
+    liMob.innerHTML = li.nome
 
     listTravelDesk.appendChild(liDesk)
     listTravelMob.appendChild(liMob)
@@ -655,7 +658,9 @@ inputLocationFilter.addEventListener('keypress', () => {
 //Mostra a lista de tipos de viagens no desktop
 arrowTypeFilterDesk.addEventListener('click', () => {
     const listTypeTravel = document.getElementById('listTypeLog')
+    const container = document.querySelector('.containerListTypeLogMob span')
 
+    container.classList.toggle('hiddeSpanList')
     arrowTypeFilterDesk.classList.toggle('arrowSelect')
     listTypeTravel.classList.toggle('expandirListDesk')
 })
@@ -714,7 +719,9 @@ async function alternarAbaFiltroMobile() {
 //Mostra a lista do tipo de viagem no mobile
 arrowTypeFilterMobile.addEventListener('click', () => {
     const listTypeTravel = document.getElementById('listTypeLogMob')
+    const container = document.querySelector('.containerListTypeLogMob span')
 
+    container.classList.toggle('hiddeSpanList')
     arrowTypeFilterMobile.classList.toggle('arrowSelect')
     listTypeTravel.classList.toggle('expandirListMob')
 
@@ -1117,7 +1124,6 @@ function initExplorarDesk() {
 
 async function getTravels() {
     let data = await getUserTravels()
-
     data.items.viagens.forEach((travel) => {
         getTravelLi(travel)
 
@@ -1128,6 +1134,48 @@ async function getTravels() {
             li.addEventListener('click', () => {
                 setTravel(li)
             })
+        })
+    })
+}
+
+async function getTypeTravel() {
+    let url = "http://localhost:8080/v1/travellog/traveltype/"
+    let response = await fetch(url)
+
+    let type = await response.json()
+    console.log(type)
+    type.items.tipos_viagens.forEach((type) => {
+        getTypeTravelDefault(type)
+    })
+
+    const liListTravelMob = document.querySelectorAll('#listTypeLogMob li')
+    const liListTravelDesk = document.querySelectorAll('#listTypeLog li')
+    const liListNewTravel = document.querySelectorAll('#listTypeTravel li')
+
+    //Adiciona event para os LI de tipo de viagem para mobile
+    liListTravelMob.forEach((li) => {
+        li.addEventListener('click', () => {
+            setTypeTravel(li)
+
+        })
+    })
+
+    //Adiciona event para os LI de tipo de viagem para desktop
+    liListTravelDesk.forEach(li => {
+        li.addEventListener('click', () => {
+            setTypeTravel(li)
+
+        })
+    })
+
+    liListNewTravel.forEach(li => {
+        li.addEventListener('click', () => {
+            const textNewTravel = document.querySelector('.selectTypeTravel span')
+            const listNewTravel = document.getElementById('listTypeTravel')
+
+            listNewTravel.classList.remove('expandListTravelNewTravel')
+            textNewTravel.innerHTML = li.textContent
+            textNewTravel.dataset.id = li.dataset.id
         })
     })
 }
@@ -1358,3 +1406,4 @@ loadHomeContent(userId)
 loadFollowingTab(userId)
 setDataProfile()
 getTravels()
+getTypeTravel()

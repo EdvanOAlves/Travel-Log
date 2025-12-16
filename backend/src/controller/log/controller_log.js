@@ -288,8 +288,9 @@ const insereLog = async (log, contentType) => {
     try {
 
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
-
+            console.log(log)
             resultPais = await controllerPais.buscarPaisNome(log.nome_pais)
+
             paisId = resultPais.items.pais[0].id
 
             local = {
@@ -365,6 +366,7 @@ const insereLog = async (log, contentType) => {
         }
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 
